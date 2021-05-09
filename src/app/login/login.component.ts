@@ -3,6 +3,9 @@ import { RestService } from '../service/rest.service';
 import { SessionService } from '../service/session.service';
 import { CustomUserDetails } from './CustomUserDetails';
 import { Router } from '@angular/router';
+import { LoginResponse } from './LoginResponse';
+import { LoginRequest } from './LoginRequest';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-login',
@@ -19,7 +22,7 @@ export class LoginComponent implements OnInit {
     errorMessage = '';
     roles: string[] = [];
 
-    loginResponse: { customUserDetails: CustomUserDetails; token: string; } = { customUserDetails: {} as CustomUserDetails, token: '' };
+    loginResponse: LoginResponse = {} as LoginResponse;//{ customUserDetails: CustomUserDetails; token: string; } = { customUserDetails: {} as CustomUserDetails, token: '' };
 
     constructor(
         private restService: RestService,
@@ -32,16 +35,24 @@ export class LoginComponent implements OnInit {
     }
 
     onSubmit(): void {
-        const { username, email, password } = this.form;
+        const loginRequest: LoginRequest = this.form;
         console.log('form:', this.form);
 
-        this.restService.authenticate(username, password)
-            .subscribe((data: any) => {
-                this.loginResponse = data;
-                console.log(data);
-                this.sessionService.setToken(this.loginResponse.token);
-                this.router.navigate(['/ping']);
-            });
+        this.restService.authenticate(loginRequest)
+            .subscribe(
+                {
+                    next: (data: LoginResponse) => {
+                        this.loginResponse = data;
+                        console.log(data);
+                        this.sessionService.setToken(this.loginResponse.token);
+                        this.router.navigate(['/ping']);
+                    },
+                    error: (err: string) => {
+                        console.error(err)
+                        this.isLoginFailed = true;
+                        this.errorMessage = err;
+                    }
+                });
         // this.authService.register(username, email, password).subscribe(
         //   data => {
         //     console.log(data);

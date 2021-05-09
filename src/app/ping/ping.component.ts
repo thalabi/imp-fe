@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { RestService } from '../service/rest.service';
 import { SessionService } from '../service/session.service';
+import { PingResponse } from './PingResponse';
 
 @Component({
     selector: 'app-ping',
@@ -11,7 +12,7 @@ import { SessionService } from '../service/session.service';
 })
 export class PingComponent implements OnInit {
     name: any;
-    pingResponse: { message: string; timestamp: Date; } = { message: '', timestamp: new Date() };
+    pingResponse: PingResponse = {} as PingResponse;
     token: string = '';
 
     constructor(
