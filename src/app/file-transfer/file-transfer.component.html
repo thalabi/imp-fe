@@ -1,0 +1,20 @@
+<p>file-transfer works!</p>
+
+<input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
+
+<button (click)="fileUpload.click()">
+    {{fileName || "Select file"}}
+</button>
+<button (click)="onUploadFile($event)">
+    upload
+</button>
+
+fileSize: {{fileSize}}
+<br />
+uploadProgressMessage: {{uploadProgressMessage}}
+<br />
+uploadResponse: {{uploadResponse | json}}
+
+<br />
+<p-fileUpload name="myfile[]" [customUpload]="true" (uploadHandler)="onUploadFilePrimeNg($event)" [multiple]="false">
+</p-fileUpload>

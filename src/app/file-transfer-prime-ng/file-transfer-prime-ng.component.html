@@ -1,0 +1,11 @@
+<br />
+<p-fileUpload #uploadComponent [customUpload]="true" (uploadHandler)="onUploadFile($event, uploadComponent)"
+    [multiple]="false" accept=".csv">
+</p-fileUpload>
+
+<br />
+fileName: {{fileName}}, fileSize: {{fileSize}}
+<br />
+uploadProgressMessage: {{uploadProgressMessage}}
+<br />
+uploadResponse: {{uploadResponse | json}}

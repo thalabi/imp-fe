@@ -17,7 +17,6 @@ export class LoginComponent implements OnInit {
         username: null,
         password: null
     };
-    isLoggedIn = false;
     isLoginFailed = false;
     errorMessage = '';
     roles: string[] = [];

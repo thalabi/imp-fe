@@ -11,22 +11,16 @@ export class JwtInterceptorService implements HttpInterceptor {
     constructor(private sessionService: SessionService) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        let token: string = '';
-        this.sessionService.token.subscribe(message => token = message);
-        let jwtReq: HttpRequest<any>;
+        let token: string = ''
+        this.sessionService.token.subscribe(message => token = message)
+        let jwtReq: HttpRequest<any>
         if (token) {
+            let jwtReqHeaders = req.headers.append('Authorization', `Bearer ${token}`)
             jwtReq = req.clone({
-                setHeaders: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
+                headers: jwtReqHeaders
             })
         } else {
-            jwtReq = req.clone({
-                setHeaders: {
-                    'Content-Type': 'application/json',
-                }
-            })
+            jwtReq = req.clone()
         }
         return next.handle(jwtReq)
     }
