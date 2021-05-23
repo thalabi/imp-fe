@@ -30,7 +30,9 @@ export class LoginComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        console.log('ngOnInit()')
         this.sessionService.setToken('');
+        this.sessionService.setCustomUserDetails({} as CustomUserDetails);
     }
 
     onSubmit(): void {
@@ -44,6 +46,7 @@ export class LoginComponent implements OnInit {
                         this.loginResponse = data;
                         console.log(data);
                         this.sessionService.setToken(this.loginResponse.token);
+                        this.sessionService.setCustomUserDetails(this.loginResponse.customUserDetails);
                         this.router.navigate(['/ping']);
                     },
                     error: (err: string) => {

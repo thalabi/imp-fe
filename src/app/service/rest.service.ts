@@ -9,6 +9,9 @@ import { LoginResponse } from '../login/LoginResponse';
 import { LoginRequest } from '../login/LoginRequest';
 import { ConfigService } from './config.service';
 import { UploadResponse } from './UploadResponse';
+import { ForgotPasswordRequest } from '../forgot-password/ForgotPasswordRequest';
+import { ResetPasswordRequest } from '../reset-password/ResetPasswordRequest';
+
 
 @Injectable({
     providedIn: 'root'
@@ -60,4 +63,53 @@ export class RestService {
             observe: 'events'
         })
     }
+
+    forgotPassword(forgotPasswordRequest: ForgotPasswordRequest): Observable<void> {
+        return this.http.post<void>(this.serviceUrl + '/jwtController/forgotPassword', forgotPasswordRequest)
+            .pipe(
+                catchError((httpErrorResponse: HttpErrorResponse) => {
+                    console.error(httpErrorResponse.status)
+                    let message: string
+                    if (httpErrorResponse.error instanceof ErrorEvent) {
+                        // A client-side or network error, handle here
+                        message = httpErrorResponse.error.message
+                        console.error('A client-side or network error occurred:', message)
+                    } else {
+                        // a server side error, handle here
+                        console.error('A server error occurred, httpErrorResponse', httpErrorResponse)
+                        // if (httpErrorResponse.status === 401) {
+                        //     message = 'Wrong username or password'
+                        // } else {
+                        message = JSON.stringify(httpErrorResponse)
+                        // }
+                    }
+                    return throwError(message)
+                })
+            );
+    }
+
+    resetPassword(resetPassword: ResetPasswordRequest): Observable<void> {
+        return this.http.post<void>(this.serviceUrl + '/jwtController/resetPassword', resetPassword)
+            .pipe(
+                catchError((httpErrorResponse: HttpErrorResponse) => {
+                    console.error(httpErrorResponse.status)
+                    let message: string
+                    if (httpErrorResponse.error instanceof ErrorEvent) {
+                        // A client-side or network error, handle here
+                        message = httpErrorResponse.error.message
+                        console.error('A client-side or network error occurred:', message)
+                    } else {
+                        // a server side error, handle here
+                        console.error('A server error occurred, httpErrorResponse', httpErrorResponse)
+                        // if (httpErrorResponse.status === 401) {
+                        //     message = 'Wrong username or password'
+                        // } else {
+                        message = JSON.stringify(httpErrorResponse)
+                        // }
+                    }
+                    return throwError(message)
+                })
+            );
+    }
+
 }

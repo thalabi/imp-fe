@@ -36,7 +36,7 @@
 </div> -->
 
 
-<div>
+<div style="margin-block-start: 1em;">
     <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
 
         <div class="p-field p-grid">
@@ -58,9 +58,6 @@
                     style="padding: 1px 2px; border-radius: 0; font-size: 13.3333px;">
                 <div class="alert alert-danger" role="alert" *ngIf="password.errors && f.submitted">
                     <div *ngIf="password.errors.required">Password is required</div>
-                    <div *ngIf="password.errors.minlength">
-                        Password must be at least 6 characters
-                    </div>
                 </div>
             </div>
         </div>
@@ -72,4 +69,8 @@
             </div>
         </div>
     </form>
+
+    <div style="margin-top: 1rem;">
+        <a href="/forgotPassword" style="text-decoration: none; color: #007ad9;">Forgot Password</a>
+    </div>
 </div>

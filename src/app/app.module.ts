@@ -17,6 +17,10 @@ import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
 import { FileUploadModule } from 'primeng/fileupload';
 import { FileTransferPrimeNgComponent } from './file-transfer-prime-ng/file-transfer-prime-ng.component';
+import { MenubarModule } from 'primeng/menubar';
+import { MenuComponent } from './menu/menu.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
     declarations: [
@@ -26,6 +30,9 @@ import { FileTransferPrimeNgComponent } from './file-transfer-prime-ng/file-tran
         Httpstatus404Component,
         FileTransferComponent,
         FileTransferPrimeNgComponent,
+        MenuComponent,
+        ForgotPasswordComponent,
+        ResetPasswordComponent,
     ],
     imports: [
         BrowserModule,
@@ -33,7 +40,7 @@ import { FileTransferPrimeNgComponent } from './file-transfer-prime-ng/file-tran
         HttpClientModule,
         AppRoutingModule,
         FormsModule,
-        ButtonModule, PasswordModule, FileUploadModule,
+        ButtonModule, PasswordModule, FileUploadModule, MenubarModule,
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },

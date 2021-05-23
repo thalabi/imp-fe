@@ -1,0 +1,48 @@
+import { Component, OnInit } from '@angular/core';
+import { MenuItem } from 'primeng/api';
+import { CustomUserDetails } from '../login/CustomUserDetails';
+import { SessionService } from '../service/session.service';
+
+@Component({
+    selector: 'app-menu',
+    templateUrl: './menu.component.html',
+    styleUrls: ['./menu.component.css']
+})
+export class MenuComponent implements OnInit {
+    title = 'springsecurityjwt'
+    items: any //Array<MenuItem> = {} as Array<MenuItem>
+    //customUserDetails: CustomUserDetails = {} as CustomUserDetails;
+
+    constructor(
+        private sessionService: SessionService,
+    ) { }
+
+    ngOnInit(): void {
+        console.log('ngOnInit()')
+        this.sessionService.customUserDetails.subscribe(message => {
+            let customUserDetails: CustomUserDetails = message;
+            if (customUserDetails?.id) {
+                console.log('this.customUserDetails?.id is true')
+                this.items = [
+                    {
+                        label: 'Ping', routerLink: ['/ping']
+                    },
+                    {
+                        label: 'File Transfer',
+                        items: [
+                            { label: 'Plain', routerLink: ['/fileTransfer'] },
+                            { label: 'PrimeNG', routerLink: ['/fileTransferPrimeNg'] },
+
+                        ]
+                    },
+                    {
+                        label: 'Logout', routerLink: ['']
+                    },
+                ];
+            } else {
+                this.items = [];
+            }
+        });
+    }
+
+}
