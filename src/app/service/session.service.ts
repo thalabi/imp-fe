@@ -9,8 +9,10 @@ export class SessionService {
 
     private tokenSource = new BehaviorSubject<string>('');
     private customUserDetailsSource = new BehaviorSubject<CustomUserDetails>({} as CustomUserDetails);
-    token = this.tokenSource.asObservable();
-    customUserDetails = this.customUserDetailsSource.asObservable();
+    private isAuthenticatedSource = new BehaviorSubject<boolean>(false);
+    tokenObservable = this.tokenSource.asObservable();
+    customUserDetailsObservable = this.customUserDetailsSource.asObservable();
+    isAuthenticatedSourceObservable = this.isAuthenticatedSource.asObservable();
 
     constructor() { }
 
@@ -21,5 +23,9 @@ export class SessionService {
     setCustomUserDetails(customUserDetails: CustomUserDetails) {
         console.log('setCustomUserDetails(), customUserDetails:', customUserDetails)
         this.customUserDetailsSource.next(customUserDetails);
+    }
+    setIsAuthenticated(isAuthenticated: boolean) {
+        console.log('setIsAuthenticated()')
+        this.isAuthenticatedSource.next(isAuthenticated);
     }
 }

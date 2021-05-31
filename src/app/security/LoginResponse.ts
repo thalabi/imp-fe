@@ -1,4 +1,4 @@
-import { CustomUserDetails } from './CustomUserDetails';
+import { CustomUserDetails } from "../login/CustomUserDetails";
 
 export interface LoginResponse {
     customUserDetails: CustomUserDetails

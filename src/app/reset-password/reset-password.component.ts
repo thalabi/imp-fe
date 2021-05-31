@@ -1,5 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { RestService } from '../service/rest.service';
 import { ResetPasswordRequest } from './ResetPasswordRequest';
 
@@ -18,10 +20,12 @@ export class ResetPasswordComponent implements OnInit {
     errorMessage = ''
     resetPasswordJwt: string = ''
     baseUrl: string = ''
+    passworValidationMessage: string = ''
 
     constructor(
         private route: ActivatedRoute,
-        private restService: RestService
+        private restService: RestService,
+        private messageService: MessageService
     ) { }
 
     ngOnInit(): void {
@@ -40,8 +44,11 @@ export class ResetPasswordComponent implements OnInit {
         this.baseUrl = location.origin
         console.log('baseUrl', this.baseUrl)
 
-        //
-        // check if the paswords are equal
+        this.passworValidationMessage = ''
+        if (newPassword !== confirmPassword) {
+            this.passworValidationMessage = 'Passwords dont match.'
+            return
+        }
 
         const resetPasswordRequest: ResetPasswordRequest = {} as ResetPasswordRequest
         resetPasswordRequest.resetPasswordJwt = this.resetPasswordJwt
@@ -51,8 +58,16 @@ export class ResetPasswordComponent implements OnInit {
         this.restService.resetPassword(resetPasswordRequest)
             .subscribe(
                 {
-                    error: (err: string) => {
+                    complete: () => {
+                        this.messageService.add({ severity: 'info', summary: '200', detail: 'Your password has been reset. Please click the link below to login.' })
+                    },
+                    error: (err: HttpErrorResponse) => {
                         console.error(err)
+                        if (err.status === 400) { // Could not find a user with this email
+                            this.messageService.add({ severity: 'error', summary: err.status.toString(), detail: err.error })
+                        } else {
+                            this.messageService.add({ severity: 'error', summary: err.status.toString(), detail: 'Server error. Please contact support.' })
+                        }
                     }
                 });
 

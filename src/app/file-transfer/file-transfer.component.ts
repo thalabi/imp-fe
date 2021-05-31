@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RestService } from '../service/rest.service';
 import { Observable } from 'rxjs';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { UploadResponse } from '../service/UploadResponse';
+import { UploadResponse } from '../file-transfer-prime-ng/UploadResponse';
 
 @Component({
     selector: 'app-file-transfer',

@@ -1,6 +1,6 @@
 <br />
-<p-fileUpload #uploadComponent [customUpload]="true" (uploadHandler)="onUploadFile($event, uploadComponent)"
-    [multiple]="false" accept=".csv">
+<p-fileUpload #uploadComponent [customUpload]="true" (onSelect)="onSelect($event)"
+    (uploadHandler)="onUploadFile($event, uploadComponent)" [multiple]="false" accept=".csv">
 </p-fileUpload>
 
 <br />
@@ -9,3 +9,11 @@ fileName: {{fileName}}, fileSize: {{fileSize}}
 uploadProgressMessage: {{uploadProgressMessage}}
 <br />
 uploadResponse: {{uploadResponse | json}}
+
+<div *ngIf="fileHasExceptions">
+    <br />
+    <button pButton label="Errors File" (click)="onDownloadExceptionsFile($event)"></button>
+    <br />
+    <br />
+    downloadProgressMessage: {{ downloadProgressMessage }}
+</div>

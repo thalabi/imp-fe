@@ -21,6 +21,8 @@ import { MenubarModule } from 'primeng/menubar';
 import { MenuComponent } from './menu/menu.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MessageModule } from 'primeng/message';
 
 @NgModule({
     declarations: [
@@ -40,11 +42,11 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
         HttpClientModule,
         AppRoutingModule,
         FormsModule,
-        ButtonModule, PasswordModule, FileUploadModule, MenubarModule,
+        ButtonModule, PasswordModule, FileUploadModule, MenubarModule, BrowserAnimationsModule, MessageModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },
-        { provide: APP_INITIALIZER, deps: [ConfigService], useFactory: (configService: ConfigService) => () => configService.loadConfig(), multi: true }
+        { provide: APP_INITIALIZER, deps: [ConfigService], useFactory: (configService: ConfigService) => () => configService.loadConfig(), multi: true },
     ],
     bootstrap: [AppComponent]
 })

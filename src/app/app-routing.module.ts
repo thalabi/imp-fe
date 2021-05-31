@@ -7,17 +7,15 @@ import { FileTransferComponent } from './file-transfer/file-transfer.component';
 import { FileTransferPrimeNgComponent } from './file-transfer-prime-ng/file-transfer-prime-ng.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
-
-
-
+import { AuthGuard } from './security/auth.guard';
 
 const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'forgotPassword', component: ForgotPasswordComponent },
     { path: 'resetPassword', component: ResetPasswordComponent },
-    { path: 'ping', component: PingComponent },
-    { path: 'fileTransfer', component: FileTransferComponent },
-    { path: 'fileTransferPrimeNg', component: FileTransferPrimeNgComponent },
+    { path: 'ping', component: PingComponent, canActivate: [AuthGuard] },
+    { path: 'fileTransfer', component: FileTransferComponent, canActivate: [AuthGuard] },
+    { path: 'fileTransferPrimeNg', component: FileTransferPrimeNgComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: '**', component: Httpstatus404Component }
 ];

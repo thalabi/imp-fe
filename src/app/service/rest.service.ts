@@ -1,24 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpResponse, HttpErrorResponse, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpEvent } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
-import { SessionService } from './session.service';
-import { CustomUserDetails } from '../login/CustomUserDetails';
-import { LoginResponse } from '../login/LoginResponse';
-import { LoginRequest } from '../login/LoginRequest';
 import { ConfigService } from './config.service';
-import { UploadResponse } from './UploadResponse';
+import { UploadResponse } from '../file-transfer-prime-ng/UploadResponse';
 import { ForgotPasswordRequest } from '../forgot-password/ForgotPasswordRequest';
 import { ResetPasswordRequest } from '../reset-password/ResetPasswordRequest';
-
 
 @Injectable({
     providedIn: 'root'
 })
 export class RestService {
     readonly serviceUrl: string;
-    readonly jsonHeader = new HttpHeaders().set("Content-Type", "application/json");
+    //readonly jsonHeader = new HttpHeaders().set("Content-Type", "application/json");
     readonly multipartHeader = new HttpHeaders().set("Content-Type", "multipart/form-data");
 
     constructor(
@@ -30,31 +24,7 @@ export class RestService {
     }
 
     getPing() {
-        return this.http.get(this.serviceUrl + '/jwtController/ping', { headers: this.jsonHeader });
-    }
-
-    authenticate(loginRequest: LoginRequest): Observable<LoginResponse> {
-        return this.http.post<LoginResponse>(this.serviceUrl + '/jwtController/authenticate', loginRequest, { headers: this.jsonHeader })
-            .pipe(
-                catchError((httpErrorResponse: HttpErrorResponse) => {
-                    console.error(httpErrorResponse.status)
-                    let message: string
-                    if (httpErrorResponse.error instanceof ErrorEvent) {
-                        // A client-side or network error, handle here
-                        message = httpErrorResponse.error.message
-                        console.error('A client-side or network error occurred:', message)
-                    } else {
-                        // a server side error, handle here
-                        console.error('A server error occurred, httpErrorResponse', httpErrorResponse)
-                        if (httpErrorResponse.status === 401) {
-                            message = 'Wrong username or password'
-                        } else {
-                            message = JSON.stringify(httpErrorResponse)
-                        }
-                    }
-                    return throwError(message)
-                })
-            );
+        return this.http.get(this.serviceUrl + '/securityController/ping'/*, { headers: this.jsonHeader }*/);
     }
 
     uploadFile(formData: FormData): Observable<HttpEvent<UploadResponse>> {
@@ -63,53 +33,21 @@ export class RestService {
             observe: 'events'
         })
     }
+    downloadExceptionsFile(exceptionsFile: string): Observable<HttpEvent<Blob>> {
+        return this.http.get(this.serviceUrl + '/fileTransferController/downloadExceptionsFile?exceptionsFile=' + exceptionsFile, {
+            responseType: 'blob',
+            observe: 'events'
+
+        })
+    }
+
 
     forgotPassword(forgotPasswordRequest: ForgotPasswordRequest): Observable<void> {
-        return this.http.post<void>(this.serviceUrl + '/jwtController/forgotPassword', forgotPasswordRequest)
-            .pipe(
-                catchError((httpErrorResponse: HttpErrorResponse) => {
-                    console.error(httpErrorResponse.status)
-                    let message: string
-                    if (httpErrorResponse.error instanceof ErrorEvent) {
-                        // A client-side or network error, handle here
-                        message = httpErrorResponse.error.message
-                        console.error('A client-side or network error occurred:', message)
-                    } else {
-                        // a server side error, handle here
-                        console.error('A server error occurred, httpErrorResponse', httpErrorResponse)
-                        // if (httpErrorResponse.status === 401) {
-                        //     message = 'Wrong username or password'
-                        // } else {
-                        message = JSON.stringify(httpErrorResponse)
-                        // }
-                    }
-                    return throwError(message)
-                })
-            );
+        return this.http.post<void>(this.serviceUrl + '/securityController/forgotPassword', forgotPasswordRequest)
     }
 
     resetPassword(resetPassword: ResetPasswordRequest): Observable<void> {
-        return this.http.post<void>(this.serviceUrl + '/jwtController/resetPassword', resetPassword)
-            .pipe(
-                catchError((httpErrorResponse: HttpErrorResponse) => {
-                    console.error(httpErrorResponse.status)
-                    let message: string
-                    if (httpErrorResponse.error instanceof ErrorEvent) {
-                        // A client-side or network error, handle here
-                        message = httpErrorResponse.error.message
-                        console.error('A client-side or network error occurred:', message)
-                    } else {
-                        // a server side error, handle here
-                        console.error('A server error occurred, httpErrorResponse', httpErrorResponse)
-                        // if (httpErrorResponse.status === 401) {
-                        //     message = 'Wrong username or password'
-                        // } else {
-                        message = JSON.stringify(httpErrorResponse)
-                        // }
-                    }
-                    return throwError(message)
-                })
-            );
+        return this.http.post<void>(this.serviceUrl + '/securityController/resetPassword', resetPassword)
     }
 
 }

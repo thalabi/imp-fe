@@ -30,8 +30,8 @@ export class PingComponent implements OnInit {
 
         console.log('======================================');
 
-        this.sessionService.token.subscribe(message => this.token = message);
-        this.sessionService.customUserDetails.subscribe(message => this.customUserDetails = message);
+        this.sessionService.tokenObservable.subscribe(message => this.token = message);
+        this.sessionService.customUserDetailsObservable.subscribe(message => this.customUserDetails = message);
 
 
         let pingResponse: any;
