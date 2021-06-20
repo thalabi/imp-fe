@@ -1,19 +1,79 @@
-<br />
-<p-fileUpload #uploadComponent [customUpload]="true" (onSelect)="onSelect($event)"
-    (uploadHandler)="onUploadFile($event, uploadComponent)" [multiple]="false" accept=".csv">
-</p-fileUpload>
+<div style="margin-top: 1rem;">
+    <div class="p-formgroup-inline">
+        <div class="p-field">
+            <p-dropdown [options]="tableList" [(ngModel)]="selectedTable" placeholder="Select a table"
+                (onChange)="onChangeTable($event)" [showClear]="true">
+            </p-dropdown>
+        </div>
+        <div class="p-field">
+            <button pButton type="button" label="Download" (click)="onDownloadTable($event)"
+                [disabled]="!selectedTable"></button>
+        </div>
+        <div class="p-field" style="margin-top: 0.5rem;">
+            {{ tableFileDownloadProgressMessage }}
+        </div>
+    </div>
+</div>
 
-<br />
-fileName: {{fileName}}, fileSize: {{fileSize}}
-<br />
-uploadProgressMessage: {{uploadProgressMessage}}
-<br />
-uploadResponse: {{uploadResponse | json}}
+<div style="margin-top: 1rem;">
+    <p-fileUpload #uploadComponent [customUpload]="true" (onSelect)="onSelectFile($event)"
+        (uploadHandler)="onUploadFile($event, uploadComponent)" [multiple]="false" accept=".csv"
+        [disabled]="!selectedTable">
+        <!-- <ng-template pTemplate="toolbar">
+            <div>Upload 3 Files</div>
+        </ng-template> -->
+        <ng-template let-file pTemplate="file">
+            <div class="p-formgroup-inline">
+                <div class="p-field">
+                    <div>File name: {{fileName}}</div>
+                </div>
+                <div class="p-field">
+                    <!-- <div>Size: {{fileSize}} bytes</div> -->
+                    <div>Size: {{fileSize | byteFormat}}</div>
+                </div>
+                <div class="p-field">
+                    <label for="truncate_table">Delete stored data before upload?</label>
+                    <p-checkbox [(ngModel)]="truncateTable" [binary]="true" inputId="truncate_table"
+                        [disabled]="!selectedTable"></p-checkbox>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="content" let-files>
+            <div *ngIf="uploadProgressMessage">{{uploadProgressMessage}}</div>
+            <div *ngIf="(uploadResponse | json) != '{}'">
+                <div *ngIf="uploadResponse.numberOfLinesInFile">
+                    Number of rows: {{uploadResponse.numberOfLinesInFile}}
+                </div>
+                <div *ngIf="uploadResponse.numberOfValidLines">
+                    Number of valid rows: {{uploadResponse.numberOfValidLines}}
+                </div>
+                <div *ngIf="uploadResponse.totalNumberOfExceptions">
+                    Number of errors: {{uploadResponse.totalNumberOfExceptions}}
+                </div>
+                <div *ngIf="uploadResponse.numberOfLinesWitheExceptions">
+                    Number of rows with errors: {{uploadResponse.numberOfLinesWitheExceptions}}
+                </div>
+                <div *ngIf="uploadResponse.elapsedTime">
+                    Process time: {{uploadResponse.elapsedTime}}
+                </div>
+            </div>
+        </ng-template>
+    </p-fileUpload>
+</div>
+
+<!-- <div *ngIf="fileName" style="margin-top: 1rem;">
+    <br />
+    fileName: {{fileName}}, fileSize: {{fileSize}}
+    <br />
+    uploadProgressMessage: {{uploadProgressMessage}}
+    <br />
+    uploadResponse: {{uploadResponse | json}}
+</div> -->
 
 <div *ngIf="fileHasExceptions">
     <br />
     <button pButton label="Errors File" (click)="onDownloadExceptionsFile($event)"></button>
     <br />
     <br />
-    downloadProgressMessage: {{ downloadProgressMessage }}
+    exceptionsFileDownloadProgressMessage: {{ exceptionsFileDownloadProgressMessage }}
 </div>

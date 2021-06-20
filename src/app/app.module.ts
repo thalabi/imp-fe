@@ -23,6 +23,9 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MessageModule } from 'primeng/message';
+import { DropdownModule } from 'primeng/dropdown';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ByteFormatPipe } from './byte-format.pipe';
 
 @NgModule({
     declarations: [
@@ -35,6 +38,7 @@ import { MessageModule } from 'primeng/message';
         MenuComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,
+        ByteFormatPipe,
     ],
     imports: [
         BrowserModule,
@@ -42,7 +46,7 @@ import { MessageModule } from 'primeng/message';
         HttpClientModule,
         AppRoutingModule,
         FormsModule,
-        ButtonModule, PasswordModule, FileUploadModule, MenubarModule, BrowserAnimationsModule, MessageModule
+        ButtonModule, PasswordModule, FileUploadModule, MenubarModule, BrowserAnimationsModule, MessageModule, DropdownModule, CheckboxModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },

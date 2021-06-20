@@ -36,7 +36,13 @@ export class MenuComponent implements OnInit {
                         ]
                     },
                     {
-                        label: 'Logout', routerLink: ['']
+                        //label: 'Logout', icon: 'pi pi-user', routerLink: ['']
+                        icon: 'pi pi-user',
+                        items: [
+                            { label: 'Password', routerLink: [''] },
+                            { label: 'Logout', routerLink: [''] },
+
+                        ]
                     },
                 ];
             } else {

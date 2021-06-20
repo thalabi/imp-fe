@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { LoginRequest } from '../security/LoginRequest';
 import { LoginResponse } from '../security/LoginResponse';
 import { AuthenticationService } from '../security/authentication.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'app-login',
@@ -24,7 +25,7 @@ export class LoginComponent implements OnInit {
     loginResponse: LoginResponse = {} as LoginResponse;//{ customUserDetails: CustomUserDetails; token: string; } = { customUserDetails: {} as CustomUserDetails, token: '' };
 
     constructor(
-        //private restService: RestService,
+        private messageService: MessageService,
         private authenticationService: AuthenticationService,
         private sessionService: SessionService,
         private router: Router,
@@ -34,6 +35,8 @@ export class LoginComponent implements OnInit {
         console.log('ngOnInit()')
         this.sessionService.setToken('');
         this.sessionService.setCustomUserDetails({} as CustomUserDetails);
+
+        this.messageService.clear()
     }
 
     onSubmit(): void {
@@ -49,7 +52,7 @@ export class LoginComponent implements OnInit {
                         this.sessionService.setToken(this.loginResponse.token);
                         this.sessionService.setCustomUserDetails(this.loginResponse.customUserDetails);
                         this.sessionService.setIsAuthenticated(true);
-                        this.router.navigate(['/ping']);
+                        this.router.navigate(['/fileTransferPrimeNg']);
                     },
                     error: (err: string) => {
                         console.error(err)
