@@ -22,14 +22,14 @@
         <!-- <ng-template pTemplate="toolbar">
             <div>Upload 3 Files</div>
         </ng-template> -->
-        <ng-template let-file pTemplate="file">
+        <ng-template pTemplate="file" let-file>
             <div class="p-formgroup-inline">
                 <div class="p-field">
-                    <div>File name: {{fileName}}</div>
+                    <div>File name: {{file.name}}</div>
                 </div>
                 <div class="p-field">
                     <!-- <div>Size: {{fileSize}} bytes</div> -->
-                    <div>Size: {{fileSize | byteFormat}}</div>
+                    <div>Size: {{file.size | byteFormat}}</div>
                 </div>
                 <div class="p-field">
                     <label for="truncate_table">Delete stored data before upload?</label>

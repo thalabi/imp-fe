@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { RestService } from '../service/rest.service';
@@ -101,7 +101,7 @@ export class FileTransferPrimeNgComponent implements OnInit {
                             }
                         },
                         complete: () => {
-                            uploadComponent.clear()
+                            uploadComponent.clear() // clear the selected file in component
                             this.messageService.clear()
                             this.messageService.add({ severity: this.fileHasExceptions ? 'warn' : 'info', summary: '200', detail: this.uploadProgressMessage })
                         },
@@ -140,22 +140,7 @@ export class FileTransferPrimeNgComponent implements OnInit {
                             case HttpEventType.Response:
                                 console.log('HttpEventType.Response')
                                 console.log('httpEvent.headers', httpEvent.headers)
-                                const contentDisposition = httpEvent.headers.get('content-disposition')
-                                console.log('contentDisposition', contentDisposition)
-                                const data: Blob | null = httpEvent.body
-                                console.log(data)
-                                const exceptionsFileUrl = URL.createObjectURL(data)
-                                let exceptionsFileName = '<not provided>'
-                                if (contentDisposition) {
-                                    exceptionsFileName = contentDisposition.split(';')[1].split('filename')[1].split('=')[1].trim()
-                                    console.log('exceptionsFileName', exceptionsFileName)
-                                    const exceptionsFileAnchor = document.createElement("a")
-                                    exceptionsFileAnchor.download = exceptionsFileName
-                                    exceptionsFileAnchor.href = exceptionsFileUrl
-                                    exceptionsFileAnchor.click()
-                                } else {
-                                    window.open(exceptionsFileUrl)
-                                }
+                                const exceptionsFileName = this.downloadFile(httpEvent)
                                 this.exceptionsFileDownloadProgressMessage = `File "${exceptionsFileName}" is downloaded.`
                                 break;
                         }
@@ -200,30 +185,16 @@ export class FileTransferPrimeNgComponent implements OnInit {
                             case HttpEventType.Response:
                                 console.log('HttpEventType.Response')
                                 console.log('httpEvent.headers', httpEvent.headers)
-                                const contentDisposition = httpEvent.headers.get('content-disposition')
-                                console.log('contentDisposition', contentDisposition)
-                                const data: Blob | null = httpEvent.body
-                                console.log(data)
-                                const tableFileUrl = URL.createObjectURL(data)
-                                let tableFileName = '<not provided>'
-                                if (contentDisposition) {
-                                    tableFileName = contentDisposition.split(';')[1].split('filename')[1].split('=')[1].trim()
-                                    console.log('exceptionsFileName', tableFileName)
-                                    const tableFileAnchor = document.createElement("a")
-                                    tableFileAnchor.download = tableFileName
-                                    tableFileAnchor.href = tableFileUrl
-                                    tableFileAnchor.click()
-                                } else {
-                                    window.open(tableFileUrl)
-                                }
+                                const tableFileName = this.downloadFile(httpEvent)
                                 this.tableFileDownloadProgressMessage = `File "${tableFileName}" is downloaded.`
                                 break;
                         }
 
                     },
                     complete: () => {
-
                         this.messageService.clear()
+                        this.uploadProgressMessage = '';
+                        this.uploadResponse = {} as UploadResponse;
                         this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
                     },
                     error: (httpErrorResponse: HttpErrorResponse) => {
@@ -231,5 +202,28 @@ export class FileTransferPrimeNgComponent implements OnInit {
                         this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support.' })
                     }
                 });
+    }
+
+    /*
+    downloads file and return file name
+    */
+    private downloadFile(httpEvent: HttpResponse<Blob>): string {
+        const contentDisposition = httpEvent.headers.get('content-disposition')
+        console.log('contentDisposition', contentDisposition)
+        const data: Blob | null = httpEvent.body
+        console.log(data)
+        const tableFileUrl = URL.createObjectURL(data)
+        let fileName = '<not provided>'
+        if (contentDisposition) {
+            fileName = contentDisposition.split(';')[1].split('filename')[1].split('=')[1].trim()
+            console.log('fileName', fileName)
+            const tableFileAnchor = document.createElement("a")
+            tableFileAnchor.download = fileName
+            tableFileAnchor.href = tableFileUrl
+            tableFileAnchor.click()
+        } else {
+            window.open(tableFileUrl)
+        }
+        return fileName
     }
 }
