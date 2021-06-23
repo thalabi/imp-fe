@@ -40,15 +40,17 @@ export class RestService {
 
     downloadExceptionsFile(exceptionsFile: string): Observable<HttpEvent<Blob>> {
         return this.http.get(this.serviceUrl + '/fileTransferController/downloadExceptionsFile?exceptionsFile=' + exceptionsFile, {
-            responseType: 'blob',
-            observe: 'events'
+            reportProgress: true,
+            observe: 'events',
+            responseType: 'blob'
         })
     }
 
     downloadTable(tableName: string): Observable<HttpEvent<Blob>> {
         return this.http.get(this.serviceUrl + '/fileTransferController/downloadFile?tableName=' + tableName, {
-            responseType: 'blob',
-            observe: 'events'
+            reportProgress: true,
+            observe: 'events',
+            responseType: 'blob'
         })
     }
 

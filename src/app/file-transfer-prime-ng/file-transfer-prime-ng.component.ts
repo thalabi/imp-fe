@@ -128,7 +128,7 @@ export class FileTransferPrimeNgComponent implements OnInit {
                         switch (httpEvent.type) {
                             case HttpEventType.Sent:
                                 console.log('HttpEventType.Sent')
-                                this.exceptionsFileDownloadProgressMessage = 'Downloading exceptions file'
+                                this.exceptionsFileDownloadProgressMessage = 'Downloading exceptions file ...'
                                 break
                             case HttpEventType.DownloadProgress:
                                 console.log('HttpEventType.DownloadProgress')
@@ -173,13 +173,13 @@ export class FileTransferPrimeNgComponent implements OnInit {
                         switch (httpEvent.type) {
                             case HttpEventType.Sent:
                                 console.log('HttpEventType.Sent')
-                                this.tableFileDownloadProgressMessage = 'Downloading table file'
+                                this.tableFileDownloadProgressMessage = `Preparing ${this.selectedTable} table for download ...`
                                 break
                             case HttpEventType.DownloadProgress:
                                 console.log('HttpEventType.DownloadProgress')
                                 if (httpEvent.total) {
                                     const percentComplete = Math.round(100 * (httpEvent.loaded / httpEvent.total))
-                                    this.tableFileDownloadProgressMessage = `Table file is ${percentComplete}% downloaded.`
+                                    this.tableFileDownloadProgressMessage = `${this.selectedTable} table is ${percentComplete}% downloaded.`
                                 }
                                 break
                             case HttpEventType.Response:
