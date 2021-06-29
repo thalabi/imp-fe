@@ -41,17 +41,11 @@
         <ng-template pTemplate="content" let-files>
             <div *ngIf="uploadProgressMessage">{{uploadProgressMessage}}</div>
             <div *ngIf="(uploadResponse | json) != '{}'">
+                <div *ngIf="uploadResponse.numberOfExceptions">
+                    Number of errors: {{uploadResponse.numberOfExceptions}}
+                </div>
                 <div *ngIf="uploadResponse.numberOfLinesInFile">
-                    Number of rows: {{uploadResponse.numberOfLinesInFile}}
-                </div>
-                <div *ngIf="uploadResponse.numberOfValidLines">
-                    Number of valid rows: {{uploadResponse.numberOfValidLines}}
-                </div>
-                <div *ngIf="uploadResponse.totalNumberOfExceptions">
-                    Number of errors: {{uploadResponse.totalNumberOfExceptions}}
-                </div>
-                <div *ngIf="uploadResponse.numberOfLinesWitheExceptions">
-                    Number of rows with errors: {{uploadResponse.numberOfLinesWitheExceptions}}
+                    Number of lines in file: {{uploadResponse.numberOfLinesInFile}}
                 </div>
                 <div *ngIf="uploadResponse.elapsedTime">
                     Process time: {{uploadResponse.elapsedTime}}
