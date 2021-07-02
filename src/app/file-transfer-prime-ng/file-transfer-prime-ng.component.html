@@ -41,6 +41,9 @@
         <ng-template pTemplate="content" let-files>
             <div *ngIf="uploadProgressMessage">{{uploadProgressMessage}}</div>
             <div *ngIf="(uploadResponse | json) != '{}'">
+                <div *ngIf="uploadResponse.transformerExceptionMessage">
+                    Error (transformation): {{uploadResponse.transformerExceptionMessage}}
+                </div>
                 <div *ngIf="uploadResponse.numberOfExceptions">
                     Number of errors: {{uploadResponse.numberOfExceptions}}
                 </div>
@@ -54,15 +57,6 @@
         </ng-template>
     </p-fileUpload>
 </div>
-
-<!-- <div *ngIf="fileName" style="margin-top: 1rem;">
-    <br />
-    fileName: {{fileName}}, fileSize: {{fileSize}}
-    <br />
-    uploadProgressMessage: {{uploadProgressMessage}}
-    <br />
-    uploadResponse: {{uploadResponse | json}}
-</div> -->
 
 <div *ngIf="fileHasExceptions">
     <br />
