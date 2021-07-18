@@ -9,10 +9,30 @@
             <button pButton type="button" label="Download" (click)="onDownloadTable($event)"
                 [disabled]="!selectedTable"></button>
         </div>
+        <div class="p-field">
+            <button pButton type="button" label="Browse" (click)="onBrowseTable($event)"
+                [disabled]="!selectedTable"></button>
+        </div>
         <div class="p-field" style="margin-top: 0.5rem;">
             {{ tableFileDownloadProgressMessage }}
         </div>
     </div>
+</div>
+
+<div style="margin-top: 1rem;" *ngIf="showTable">
+    <p-table [value]="tableRows" [columns]="columns" [lazy]="true" (onLazyLoad)="fetchPage($event)" [paginator]="true"
+        [rowsPerPageOptions]="[10,20,30]" [rows]=" 20" [totalRecords]="totalRowCount" [loading]="loadingStatus">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let column of columns">{{column.header}}</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-tableRow let-columns="columns">
+            <tr>
+                <td *ngFor="let column of columns">{{tableRow[column.name]}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
 </div>
 
 <div style="margin-top: 1rem;">

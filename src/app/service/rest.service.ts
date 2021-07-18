@@ -12,7 +12,8 @@ import { TableListResponse } from '../file-transfer-prime-ng/TableListResponse';
 })
 export class RestService {
     readonly serviceUrl: string;
-    //readonly jsonHeader = new HttpHeaders().set("Content-Type", "application/json");
+    readonly alpsJsonHeader = new HttpHeaders().set("Content-Type", "application/alps-json"); // used with getting table metadata
+    readonly jsonSchemaHeader = new HttpHeaders().set("Accept", "application/schema+json"); // used with getting table metadata
     readonly multipartHeader = new HttpHeaders().set("Content-Type", "multipart/form-data");
 
     constructor(
@@ -54,6 +55,17 @@ export class RestService {
         })
     }
 
+    getTableData(tableName: string, pageNumber: number, pageSize: number): Observable<any> {
+        const entityNameResource = RestService.toPlural(RestService.toCamelCase(tableName))
+        console.log('entityNameResource', entityNameResource)
+        return this.http.get(this.serviceUrl + '/data-rest/' + entityNameResource + '?page=' + pageNumber + '&size=' + pageSize)
+    }
+
+    getTableMetaDataAlps(tableName: string): Observable<any> {
+        const entityNameResource = RestService.toPlural(RestService.toCamelCase(tableName))
+        return this.http.get(this.serviceUrl + '/data-rest/profile/' + entityNameResource)
+    }
+
     forgotPassword(forgotPasswordRequest: ForgotPasswordRequest): Observable<void> {
         return this.http.post<void>(this.serviceUrl + '/securityController/forgotPassword', forgotPasswordRequest)
     }
@@ -62,4 +74,10 @@ export class RestService {
         return this.http.post<void>(this.serviceUrl + '/securityController/resetPassword', resetPassword)
     }
 
+    public static toCamelCase(tableName: string): string {
+        return tableName.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase()); // convert to camel case
+    }
+    public static toPlural(entityName: string): string {
+        return entityName.endsWith('s') ? entityName + 'es' : entityName + 's'
+    }
 }

@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { LazyLoadEvent, MessageService } from 'primeng/api';
 import { RestService } from '../service/rest.service';
 import { TableListResponse } from './TableListResponse';
 import { UploadResponse } from './UploadResponse';
@@ -24,6 +24,11 @@ export class FileTransferPrimeNgComponent implements OnInit {
 
     tableList: string[] = {} as string[];//= ['sales', 'sales2', 'sales3', 'bio_stats']
     selectedTable: string = ''
+    showTable: boolean = false
+    tableRows = [{}]
+    totalRowCount: number = 0
+    loadingStatus: boolean = false;
+    columns!: { name: string; header: string; order: number }[];
 
     constructor(
         private restService: RestService,
@@ -41,6 +46,8 @@ export class FileTransferPrimeNgComponent implements OnInit {
 
     onChangeTable(event: any) {
         this.truncateTable = false
+        this.showTable = false
+        this.tableRows = []
     }
 
     onSelectFile(event: any): void {
@@ -204,6 +211,98 @@ export class FileTransferPrimeNgComponent implements OnInit {
                 });
     }
 
+    onBrowseTable(event: any): void {
+        console.log('onBrowseTable')
+        this.messageService.clear()
+        this.showTable = true
+        //this.fetchPage({});
+
+        console.log('before getTableMetaDataAlps')
+        this.restService.getTableMetaDataAlps(this.selectedTable)
+            .subscribe(
+                {
+                    next: (metaData: any) => {
+                        console.log('alps metaData', metaData)
+                        const alpsDescriptors = metaData.alps.descriptor
+                        console.log('alps alpsDescriptors', alpsDescriptors)
+                        const representationDescriptorId = RestService.toCamelCase(this.selectedTable) + '-representation';
+                        const representationDescriptor = alpsDescriptors.find((descriptor: { id: string; }) => descriptor.id = representationDescriptorId)
+                        console.log('representationDescriptor', representationDescriptor)
+                        const columnDescriptors = representationDescriptor.descriptor
+                        console.log('columnDescriptors', columnDescriptors)
+                        this.columns = []
+                        columnDescriptors.forEach((descriptor: any) => {
+                            console.log(descriptor.name, descriptor.doc?.value)
+                            const columnName = descriptor.name
+                            if (columnName === 'version') return // skip version column
+                            let columnAttributesMap = new Map()
+
+                            if (descriptor.doc?.value) {
+                                const columnAttributesArray: string[] = descriptor.doc?.value.split(',')
+                                columnAttributesArray.forEach(columnAttribute => {
+                                    const tuple = columnAttribute.split('=')
+                                    columnAttributesMap.set(tuple[0], tuple[1])
+                                })
+                            }
+                            let header: string = columnAttributesMap.get('title')
+                            if (! /* not */ header) {
+                                // use column name to generate a header. eq firstName => First Name
+                                header = columnName[0].toUpperCase() + columnName.slice(1)
+                                header = header.replace(/([A-Z])/g, ' $1').trim()
+                            }
+                            let columnOrder: number = columnAttributesMap.get('columnDisplayOrder')
+                            console.log('columnAttributesMap', columnAttributesMap)
+                            this.columns.push({ name: columnName, header: header, order: columnOrder ?? 1 })
+                        });
+                        console.log('this.columns', this.columns)
+                        this.columns.sort((a, b) => a.order > b.order ? 1 : -1)
+                        console.log('this.columns sorted', this.columns)
+                    },
+                    complete: () => {
+
+                    },
+                    error: (httpErrorResponse: HttpErrorResponse) => {
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support.' })
+                    }
+
+                }
+            )
+
+    }
+    fetchPage(lazyLoadEvent: LazyLoadEvent) {
+        console.log(lazyLoadEvent)
+        this.loadingStatus = true
+        const pageSize = lazyLoadEvent.rows ?? 20
+        const pageNumber = (lazyLoadEvent.first ?? 0) / 20;
+        console.log(pageNumber, pageSize)
+        const entityNameResource = RestService.toPlural(RestService.toCamelCase(this.selectedTable))
+        console.log('entityNameResource 2', entityNameResource)
+        this.restService.getTableData(this.selectedTable, pageNumber, pageSize)
+            .subscribe(
+                {
+                    next: (data: any) => {
+                        // console.log(data.text())
+                        // var csvUrl = URL.createObjectURL(data)
+                        // console.log('csvUrl', csvUrl)
+                        // window.open(csvUrl)
+                        console.log('data', data)
+                        console.log('data._embedded[' + entityNameResource + ']', data._embedded[entityNameResource])
+                        this.tableRows = data._embedded[entityNameResource]
+                        this.totalRowCount = data.page.totalElements
+                        this.loadingStatus = false
+                    },
+                    complete: () => {
+                        // this.messageService.clear()
+                        // this.uploadProgressMessage = '';
+                        // this.uploadResponse = {} as UploadResponse;
+                        // this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
+                    }
+                    ,
+                    error: (httpErrorResponse: HttpErrorResponse) => {
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support.' })
+                    }
+                });
+    }
     /*
     downloads file and return file name
     */
