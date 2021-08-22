@@ -74,6 +74,17 @@ export class RestService {
         return this.http.post<void>(this.serviceUrl + '/securityController/resetPassword', resetPassword)
     }
 
+
+    getPriceHoldings() {
+        return this.http.get(this.serviceUrl + '/investmentPortfolioConroller/priceHoldings');
+    }
+
+    getHoldingDetails(portfolioId: number): Observable<any> {
+        return this.http.get(this.serviceUrl + '/investmentPortfolioConroller/getHoldingDetails?portfolioId=' + portfolioId);
+    }
+
+
+
     public static toCamelCase(tableName: string): string {
         return tableName.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase()); // convert to camel case
     }

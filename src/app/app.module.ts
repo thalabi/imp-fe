@@ -27,6 +27,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TableModule } from 'primeng/table';
 import { ByteFormatPipe } from './byte-format.pipe';
+import { PriceHoldingsComponent } from './price-holdings/price-holdings.component';
+import { PortfolioManagementComponent } from './portfolio-management/portfolio-management.component';
 
 @NgModule({
     declarations: [
@@ -40,6 +42,8 @@ import { ByteFormatPipe } from './byte-format.pipe';
         ForgotPasswordComponent,
         ResetPasswordComponent,
         ByteFormatPipe,
+        PriceHoldingsComponent,
+        PortfolioManagementComponent,
     ],
     imports: [
         BrowserModule,

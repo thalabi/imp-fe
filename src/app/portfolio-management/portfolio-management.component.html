@@ -1,0 +1,39 @@
+<div>
+    Portfolio count: {{portfolioCount}}
+</div>
+<p-dropdown [options]="portfolioRows" [(ngModel)]="selectedPortfolio" placeholder="Select a portfolio"
+    (onChange)="onChangePortfolio($event)" [showClear]="true">
+    <ng-template pTemplate="item" let-portfolio>
+        <div>
+            {{portfolio.institution}}-{{portfolio.accountNumber}}
+        </div>
+    </ng-template>
+    <ng-template pTemplate="selectedItem">
+        <div>
+            {{selectedPortfolio.institution}} - {{selectedPortfolio.accountNumber}} - {{selectedPortfolio.name}} -
+            {{selectedPortfolio.currency}}
+        </div>
+    </ng-template>
+</p-dropdown>
+
+<div style="margin-top: 1rem;" *ngIf="holdingDetailListCount">
+    <p-table [value]="holdingDetailList" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [rows]=" 20"
+        [totalRecords]="holdingDetailListCount" [loading]="loadingStatus">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Ticker</th>
+                <th>Exchange</th>
+                <th>Name</th>
+                <th>Quantity</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-holdingDetail>
+            <tr>
+                <td>{{holdingDetail.ticker}}</td>
+                <td>{{holdingDetail.exchange}}</td>
+                <td>{{holdingDetail.name}}</td>
+                <td>{{holdingDetail.quantity}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
