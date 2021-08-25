@@ -273,7 +273,7 @@ export class FileTransferPrimeNgComponent implements OnInit {
         console.log(lazyLoadEvent)
         this.loadingStatus = true
         const pageSize = lazyLoadEvent.rows ?? 20
-        const pageNumber = (lazyLoadEvent.first ?? 0) / 20;
+        const pageNumber = (lazyLoadEvent.first ?? 0) / pageSize;
         console.log(pageNumber, pageSize)
         const entityNameResource = RestService.toPlural(RestService.toCamelCase(this.selectedTable))
         console.log('entityNameResource 2', entityNameResource)

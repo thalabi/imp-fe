@@ -1,4 +1,6 @@
 export interface HoldingDetail {
+    id: number;
+    asOfDate: Date;
     instrumentId: number;
     ticker: string;
     exchange: string;

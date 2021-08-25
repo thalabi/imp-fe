@@ -18,22 +18,90 @@
 
 <div style="margin-top: 1rem;" *ngIf="holdingDetailListCount">
     <p-table [value]="holdingDetailList" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [rows]=" 20"
-        [totalRecords]="holdingDetailListCount" [loading]="loadingStatus">
+        [totalRecords]="holdingDetailListCount" [loading]="loadingStatus" selectionMode="single"
+        [(selection)]="holdingDetailSelectedRow" (onRowSelect)="onRowSelect($event)"
+        (onRowUnselect)="onRowUnselect($event)" dataKey="id">
         <ng-template pTemplate="header">
             <tr>
-                <th>Ticker</th>
-                <th>Exchange</th>
+                <th>Instrument</th>
                 <th>Name</th>
+                <th>As of Date</th>
                 <th>Quantity</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-holdingDetail>
-            <tr>
-                <td>{{holdingDetail.ticker}}</td>
-                <td>{{holdingDetail.exchange}}</td>
+            <tr [pSelectableRow]="holdingDetail">
+                <td>{{holdingDetail.ticker}}:{{holdingDetail.exchange}}</td>
                 <td>{{holdingDetail.name}}</td>
+                <td>{{holdingDetail.asOfDate | date:'y-MM-dd'}}</td>
                 <td>{{holdingDetail.quantity}}</td>
             </tr>
         </ng-template>
+        <ng-template pTemplate="summary">
+            <div>
+                <button type="button" pButton icon="pi pi-plus" (click)="showDialog(crudEnum.ADD)" label="Add"></button>
+                <button type="button" pButton icon="pi pi-pencil" style="margin-left:0.5rem;"
+                    (click)="showDialog(crudEnum.UPDATE)" label="Modify"
+                    [disabled]="modifyAndDeleteButtonsDisable"></button>
+                <button type="button" pButton icon="pi pi-minus" style="margin-left:0.5rem;"
+                    (click)="showDialog(crudEnum.DELETE)" label="Delete"
+                    [disabled]="modifyAndDeleteButtonsDisable"></button>
+            </div>
+        </ng-template>
     </p-table>
 </div>
+
+<p-dialog header="Holdings - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
+    [modal]="true">
+
+    <form [formGroup]="holdingDetailForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="p-grid" style="width: 30em;">
+
+            <div class="p-col-4">
+                <label for="instrument">Instrument</label>
+            </div>
+            <div class="p-col-8">
+                <p-dropdown [options]="instrumentRows" formControlName="instrument" placeholder="Select an instrument"
+                    (onChange)="onChangeInstrument($event)" [showClear]="true" appendTo="body">
+                    <ng-template pTemplate="item" let-instrument>
+                        <div>
+                            {{instrument.ticker}}:{{instrument.exchange}} - {{instrument.name}}
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="selectedItem">
+                        <div>
+                            {{holdingDetailForm.controls['instrument'].value.ticker}}
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+                <div *ngIf="holdingDetailForm.controls['instrument'].invalid && holdingDetailForm.controls['instrument'].touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <div class="p-col-4">
+                <label for="quantity">Quantity</label>
+            </div>
+            <div class="p-col-8">
+                <!-- <input pInputText id="quantity" formControlName="quantity" /> -->
+                <p-inputNumber id="quantity" formControlName="quantity" mode="decimal" [minFractionDigits]="2"
+                    [maxFractionDigits]="4">
+                </p-inputNumber>
+                <div *ngIf="holdingDetailForm.controls['quantity'].invalid && holdingDetailForm.controls['quantity'].touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+            <p-footer class="p-grid">
+                <div class="p-col-6">
+                    <!-- TODO replace disabled logic with a function -->
+                    <button pButton type="submit" label="Submit" [disabled]="holdingDetailForm.invalid"
+                        icon="pi pi-check"></button>
+                </div>
+                <div class="p-col-6">
+                    <button pButton type="reset" label="Cancel" (click)="onCancel()"></button>
+                </div>
+            </p-footer>
+
+        </div>
+    </form>
+</p-dialog>
