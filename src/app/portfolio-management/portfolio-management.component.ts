@@ -1,9 +1,10 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { CrudEnum } from '../crud-enum';
 import { RestService } from '../service/rest.service';
+import { SaveHoldingRequest } from './SaveHoldingRequest';
 import { HoldingDetail } from './HoldingDetail';
 import { Instrument } from './Instrument';
 import { Portfolio } from './Portfolio';
@@ -18,8 +19,10 @@ export class PortfolioManagementComponent implements OnInit {
     portfolioRows: Array<Portfolio> = []
     portfolioCount: number = 0
     selectedPortfolio: Portfolio = {} as Portfolio
-    instrumentRows: Array<Instrument> = []
-    instrumentCount: number = 0
+    //allInstrumentRows: Array<Instrument> = []
+    instrumentRowsByCurrency: Map<string, Array<Instrument>> = new Map()
+    instrumentArrayForCurrency: Array<Instrument> = []
+    //instrumentCount: number = 0
     selectedInstrument: Instrument = {} as Instrument
     loadingStatus: boolean = false;
 
@@ -82,9 +85,15 @@ export class PortfolioManagementComponent implements OnInit {
             .subscribe(
                 {
                     next: (data: any) => {
-                        this.instrumentRows = data._embedded[entityNameResource]
-                        console.log('this.instrumentRows', this.instrumentRows)
-                        this.instrumentCount = data.page.totalElements
+                        const allInstrumentRows: Array<Instrument> = data._embedded[entityNameResource]
+                        console.log('this.instrumentRows', allInstrumentRows)
+                        // 
+                        allInstrumentRows.forEach(instrumentRow => {
+                            let instrumentArrayForCurrency: Array<Instrument> = this.instrumentRowsByCurrency.get(instrumentRow.currency) || []
+                            instrumentArrayForCurrency.push(instrumentRow)
+                            this.instrumentRowsByCurrency.set(instrumentRow.currency, instrumentArrayForCurrency)
+                        })
+                        console.log('this.instrumentRowsByCurrency', this.instrumentRowsByCurrency)
                         this.loadingStatus = false
 
                         //this.portfolioList = this.buildPortfolioList(this.portfolioRows)
@@ -104,12 +113,17 @@ export class PortfolioManagementComponent implements OnInit {
 
     createForm() {
         this.holdingDetailForm = this.formBuilder.group({
+            asOfDate: ['', Validators.required],
             instrument: ['', Validators.required],
             quantity: ['', Validators.required]
         })
     }
 
     onChangePortfolio(event: any) {
+        this.retrieveSelectedPortfolioHoldings()
+    }
+
+    private retrieveSelectedPortfolioHoldings() {
         if (! /* not */ this.selectedPortfolio) {
             this.holdingDetailList = []
             this.holdingDetailListCount = 0
@@ -118,8 +132,7 @@ export class PortfolioManagementComponent implements OnInit {
         // this.truncateTable = false
         // this.showTable = false
         // this.tableRows = []
-        const url: string = this.selectedPortfolio._links.self.href.toString();
-        const portfolioId = +url.substring(url.lastIndexOf('/') + 1)
+        const portfolioId = RestService.idFromUrl(this.selectedPortfolio._links.self.href)
         console.log(portfolioId)
         this.restService.getHoldingDetails(portfolioId)
             .subscribe(
@@ -168,37 +181,19 @@ export class PortfolioManagementComponent implements OnInit {
         this.displayDialog = true;
         this.crudMode = crudMode;
         console.log('this.crudMode', this.crudMode);
+        this.instrumentArrayForCurrency = this.instrumentRowsByCurrency.get(this.selectedPortfolio.currency) || []
         switch (this.crudMode) {
             case CrudEnum.ADD:
-                // this.fieldAttributesArray.forEach(fieldAttributes => {
-                //     let control: AbstractControl = this.crudForm.controls[fieldAttributes.columnName];
-                //     console.log('fieldAttributes.dataType', fieldAttributes.dataType);
-                //     ComponentHelper.initControlValues(control, fieldAttributes.dataType);
-                //     control.enable();
-                // });
-                // this.selectedAssociationArray = [];
-                // this.populateAvailableAssociationArray();
+                this.holdingDetailForm.controls.asOfDate.patchValue(new Date(new Date().setHours(0, 0, 0, 0))); // new date with only date portion
+                this.enableDisableFormFields(true);
                 break;
             case CrudEnum.UPDATE:
-                let instrumentControl: AbstractControl = this.holdingDetailForm.controls['instrument'];
-                // lookup instrument object from instrumentRows (table)
-                instrumentControl.patchValue(this.instrumentRows.find(instrumentRow => {
-                    const url: string = instrumentRow._links.self.href.toString();
-                    const instrumentRowId = +url.substring(url.lastIndexOf('/') + 1);
-                    return instrumentRowId == this.holdingDetailSelectedRow.instrumentId;
-                }));
-                instrumentControl.enable();
-
-                let quantityControl: AbstractControl = this.holdingDetailForm.controls['quantity'];
-                quantityControl.patchValue(this.holdingDetailSelectedRow.quantity);
-                quantityControl.enable();
+                this.fillInFormWithInstrumentAndQuantity();
+                this.enableDisableFormFields(true);
                 break;
             case CrudEnum.DELETE:
-                // this.fieldAttributesArray.forEach(fieldAttributes => {
-                //     let control: AbstractControl = this.crudForm.controls[fieldAttributes.columnName];
-                //     control.patchValue(this.crudRow[fieldAttributes.columnName]);
-                //     control.disable();
-                // });
+                this.fillInFormWithInstrumentAndQuantity();
+                this.enableDisableFormFields(false);
                 break;
             default:
                 console.error('this.crudMode is invalid. this.crudMode: ' + this.crudMode);
@@ -206,13 +201,146 @@ export class PortfolioManagementComponent implements OnInit {
         // console.log('this.crudForm', this.crudForm);
     }
 
+    private fillInFormWithInstrumentAndQuantity(): void {
+        this.holdingDetailForm.controls.asOfDate.patchValue(this.holdingDetailSelectedRow.asOfDate);
+
+        // lookup instrument object from instrumentRows (table)
+        this.holdingDetailForm.controls.instrument.patchValue(this.lookupInstrumentById(this.holdingDetailSelectedRow.instrumentId));
+
+        this.holdingDetailForm.controls.quantity.patchValue(this.holdingDetailSelectedRow.quantity);
+
+    }
+
+    private enableDisableFormFields(enableFields: boolean): void {
+        if (enableFields) {
+            this.holdingDetailForm.controls.asOfDate.enable();
+            this.holdingDetailForm.controls.instrument.enable();
+            this.holdingDetailForm.controls.quantity.enable();
+        } else {
+            this.holdingDetailForm.controls.asOfDate.disable();
+            this.holdingDetailForm.controls.instrument.disable();
+            this.holdingDetailForm.controls.quantity.disable();
+        }
+    }
+
+    private lookupInstrumentById(instrumentId: number): Instrument | undefined {
+        return this.instrumentArrayForCurrency.find(instrumentRow => {
+            const instrumentRowId = RestService.idFromUrl(instrumentRow._links.self.href)
+            return instrumentRowId == this.holdingDetailSelectedRow.instrumentId;
+        })
+    }
+    onInputQuantity(event: any) {
+        this.holdingDetailForm.controls.quantity.patchValue(event.value)
+        console.log('this.holdingDetailForm.valid', this.holdingDetailForm.valid)
+    }
     onSubmit() {
-        console.warn(this.holdingDetailForm.value);
+        console.warn('onSubmit()', this.holdingDetailForm.value);
+        const saveHoldingRequest: SaveHoldingRequest = {} as SaveHoldingRequest
+        switch (this.crudMode) {
+            case CrudEnum.ADD:
+                saveHoldingRequest.asOfDate = this.holdingDetailForm.controls.asOfDate.value
+                saveHoldingRequest.instrumentId = RestService.idFromUrl(this.holdingDetailForm.controls.instrument.value._links.self.href)
+                saveHoldingRequest.portfolioId = RestService.idFromUrl(this.selectedPortfolio._links.self.href)
+                saveHoldingRequest.quantity = this.holdingDetailForm.controls.quantity.value
+                console.log('saveHoldingRequest', saveHoldingRequest)
+                this.restService.addHolding(saveHoldingRequest)
+                    .subscribe(
+                        {
+                            next: (saveHoldingResponse: any) => {
+                                console.log('saveHoldingResponse', saveHoldingResponse)
+                                if (saveHoldingResponse.saveHoldingStatusMessage) {
+                                    this.messageService.add({ severity: 'error', summary: saveHoldingResponse.saveHoldingStatusMessage })
+                                } else {
+                                    this.retrieveSelectedPortfolioHoldings()
+                                    this.displayDialog = false;
+                                    this.holdingDetailSelectedRow = {} as HoldingDetail
+                                }
+                            },
+                            complete: () => {
+                                // this.messageService.clear()
+                                // this.uploadProgressMessage = '';
+                                // this.uploadResponse = {} as UploadResponse;
+                                // this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
+                            }
+                            ,
+                            error: (httpErrorResponse: HttpErrorResponse) => {
+                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support. ' })
+                            }
+                        });
+                break;
+            case CrudEnum.UPDATE:
+                saveHoldingRequest.id = this.holdingDetailSelectedRow.id
+                saveHoldingRequest.version = this.holdingDetailSelectedRow.version
+                saveHoldingRequest.asOfDate = this.holdingDetailForm.controls.asOfDate.value
+                saveHoldingRequest.instrumentId = RestService.idFromUrl(this.holdingDetailForm.controls.instrument.value._links.self.href)
+                saveHoldingRequest.portfolioId = RestService.idFromUrl(this.selectedPortfolio._links.self.href)
+                saveHoldingRequest.quantity = this.holdingDetailForm.controls.quantity.value
+                console.log('saveHoldingRequest', saveHoldingRequest)
+                this.restService.updateHolding(saveHoldingRequest)
+                    .subscribe(
+                        {
+                            next: (saveHoldingResponse: any) => {
+                                console.log('saveHoldingResponse', saveHoldingResponse)
+                                if (saveHoldingResponse.saveHoldingStatusMessage) {
+                                    this.messageService.add({ severity: 'error', summary: saveHoldingResponse.saveHoldingStatusMessage })
+                                } else {
+                                    this.retrieveSelectedPortfolioHoldings()
+                                    this.displayDialog = false;
+                                    this.holdingDetailSelectedRow = {} as HoldingDetail
+                                }
+                            },
+                            complete: () => {
+                                // this.messageService.clear()
+                                // this.uploadProgressMessage = '';
+                                // this.uploadResponse = {} as UploadResponse;
+                                // this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
+                            }
+                            ,
+                            error: (httpErrorResponse: HttpErrorResponse) => {
+                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support. ' })
+                            }
+                        });
+                break;
+            case CrudEnum.DELETE:
+                console.log('this.holdingDetailSelectedRow', this.holdingDetailSelectedRow)
+                this.restService.deleteHolding(this.holdingDetailSelectedRow.id)
+                    .subscribe(
+                        {
+                            next: (httpResponse: HttpResponse<void>) => {
+                                console.log('httpResponse', httpResponse)
 
+                                this.retrieveSelectedPortfolioHoldings()
+                                this.displayDialog = false;
+                                this.holdingDetailSelectedRow = {} as HoldingDetail
+                            },
+                            complete: () => {
+                                // this.messageService.clear()
+                                // this.uploadProgressMessage = '';
+                                // this.uploadResponse = {} as UploadResponse;
+                                // this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
+                            }
+                            ,
+                            error: (httpErrorResponse: HttpErrorResponse) => {
+                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support.' })
+                            }
+                        });
+                break;
+            default:
+                console.error('this.crudMode is invalid. this.crudMode: ' + this.crudMode);
+        }
+        this.holdingDetailForm.reset()
     }
+
     onCancel() {
-
+        this.resetDialoForm();
+        this.displayDialog = false;
+        this.modifyAndDeleteButtonsDisable = true
     }
+    private resetDialoForm() {
+        this.holdingDetailForm.reset()
+        this.holdingDetailSelectedRow = {} as HoldingDetail
+    }
+
     private buildPortfolioList(portfolioRows: Array<Portfolio>): Array<string> {
         let portfolioList: Array<string> = []
         console.log('portfolioRows', portfolioRows)

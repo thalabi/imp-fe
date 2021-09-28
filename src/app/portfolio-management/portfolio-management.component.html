@@ -55,14 +55,18 @@
     [modal]="true">
 
     <form [formGroup]="holdingDetailForm" (ngSubmit)="onSubmit()" novalidate>
+
+        <p-messages></p-messages>
+
         <div class="p-grid" style="width: 30em;">
 
             <div class="p-col-4">
                 <label for="instrument">Instrument</label>
             </div>
             <div class="p-col-8">
-                <p-dropdown [options]="instrumentRows" formControlName="instrument" placeholder="Select an instrument"
-                    (onChange)="onChangeInstrument($event)" [showClear]="true" appendTo="body">
+                <p-dropdown [options]="instrumentArrayForCurrency" formControlName="instrument"
+                    placeholder="Select an instrument" (onChange)="onChangeInstrument($event)" [showClear]="true"
+                    appendTo="body">
                     <ng-template pTemplate="item" let-instrument>
                         <div>
                             {{instrument.ticker}}:{{instrument.exchange}} - {{instrument.name}}
@@ -74,7 +78,7 @@
                         </div>
                     </ng-template>
                 </p-dropdown>
-                <div *ngIf="holdingDetailForm.controls['instrument'].invalid && holdingDetailForm.controls['instrument'].touched"
+                <div *ngIf="holdingDetailForm.controls.instrument.invalid && holdingDetailForm.controls.instrument.touched"
                     class="red-font">
                     Field is required</div>
             </div>
@@ -83,22 +87,41 @@
                 <label for="quantity">Quantity</label>
             </div>
             <div class="p-col-8">
-                <!-- <input pInputText id="quantity" formControlName="quantity" /> -->
                 <p-inputNumber id="quantity" formControlName="quantity" mode="decimal" [minFractionDigits]="2"
-                    [maxFractionDigits]="4">
+                    [maxFractionDigits]="4" (onInput)="onInputQuantity($event)" appendTo="body">
                 </p-inputNumber>
-                <div *ngIf="holdingDetailForm.controls['quantity'].invalid && holdingDetailForm.controls['quantity'].touched"
+                <div *ngIf="holdingDetailForm.controls.quantity.invalid && holdingDetailForm.controls.quantity.touched"
                     class="red-font">
                     Field is required</div>
             </div>
-            <p-footer class="p-grid">
-                <div class="p-col-6">
-                    <!-- TODO replace disabled logic with a function -->
-                    <button pButton type="submit" label="Submit" [disabled]="holdingDetailForm.invalid"
-                        icon="pi pi-check"></button>
-                </div>
-                <div class="p-col-6">
-                    <button pButton type="reset" label="Cancel" (click)="onCancel()"></button>
+
+            <div class="p-col-4">
+                <label for="asOfDate">As of Date</label>
+            </div>
+            <div class="p-col-8">
+
+
+                <p-calendar id="asOfDate" formControlName="asOfDate" [monthNavigator]="true" [showButtonBar]="true"
+                    [yearNavigator]="true" yearRange="2000:2050" [dateFormat]="'yy-mm-dd'" [showIcon]="true"
+                    [readonlyInput]="true" [showOnFocus]="false" [inputStyle]="{'width':'8rem'}" appendTo="body">
+                </p-calendar>
+
+                <div *ngIf="holdingDetailForm.controls.asOfDate.invalid && holdingDetailForm.controls.asOfDate.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+
+
+            <p-footer>
+                <div class="p-formgroup-inline">
+                    <div class="p-field">
+                        <button pButton type="submit" label="Submit" [disabled]="holdingDetailForm.invalid"
+                            icon="pi pi-check"></button>
+                    </div>
+                    <div class="p-field">
+                        <button pButton type="reset" label="Cancel" (click)="onCancel()"></button>
+                    </div>
                 </div>
             </p-footer>
 

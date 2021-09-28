@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpEvent, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { ConfigService } from './config.service';
 import { UploadResponse } from '../file-transfer-prime-ng/UploadResponse';
 import { ForgotPasswordRequest } from '../forgot-password/ForgotPasswordRequest';
 import { ResetPasswordRequest } from '../reset-password/ResetPasswordRequest';
 import { TableListResponse } from '../file-transfer-prime-ng/TableListResponse';
+import { SaveHoldingRequest } from '../portfolio-management/SaveHoldingRequest';
 
 @Injectable({
     providedIn: 'root'
@@ -83,6 +84,18 @@ export class RestService {
         return this.http.get(this.serviceUrl + '/investmentPortfolioConroller/getHoldingDetails?portfolioId=' + portfolioId);
     }
 
+    findByPortfolioIdAndInstrumentIdAndAsOfDate(holding: SaveHoldingRequest): Observable<HttpResponse<Array<SaveHoldingRequest>>> {
+        return this.http.get<HttpResponse<Array<SaveHoldingRequest>>>(this.serviceUrl + '/data-rest/holdings/search/findByPortfolioIdAndInstrumentIdAndAsOfDate?portfolioId=10&instrumentId=21&asOfDate=2021-09-23');
+    }
+    addHolding(saveHoldingRequest: SaveHoldingRequest): Observable<HttpResponse<any>> {
+        return this.http.post<HttpResponse<any>>(this.serviceUrl + '/investmentPortfolioConroller/addHolding/', saveHoldingRequest);
+    }
+    updateHolding(saveHoldingRequest: SaveHoldingRequest): Observable<HttpResponse<any>> {
+        return this.http.post<HttpResponse<any>>(this.serviceUrl + '/investmentPortfolioConroller/updateHolding/', saveHoldingRequest);
+    }
+    deleteHolding(holdingId: number): Observable<HttpResponse<void>> {
+        return this.http.delete<HttpResponse<void>>(this.serviceUrl + '/data-rest/holdings/' + holdingId);
+    }
 
 
     public static toCamelCase(tableName: string): string {
@@ -90,5 +103,10 @@ export class RestService {
     }
     public static toPlural(entityName: string): string {
         return entityName.endsWith('s') ? entityName + 'es' : entityName + 's'
+    }
+    public static idFromUrl(url: URL): number {
+        const urlString: string = url.toString();
+        const id = urlString.substring(urlString.lastIndexOf('/') + 1)
+        return +id; // convert string to number
     }
 }

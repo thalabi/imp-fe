@@ -29,6 +29,7 @@ import { MessageModule } from 'primeng/message';
 import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TableModule } from 'primeng/table';
+import { CalendarModule } from 'primeng/calendar';
 import { ByteFormatPipe } from './byte-format.pipe';
 import { PriceHoldingsComponent } from './price-holdings/price-holdings.component';
 import { PortfolioManagementComponent } from './portfolio-management/portfolio-management.component';
@@ -53,7 +54,7 @@ import { PortfolioManagementComponent } from './portfolio-management/portfolio-m
         // import HttpClientModule after BrowserModule.
         HttpClientModule,
         AppRoutingModule,
-        FormsModule, ReactiveFormsModule, DialogModule, InputNumberModule,
+        FormsModule, ReactiveFormsModule, DialogModule, InputNumberModule, CalendarModule,
         ButtonModule, PasswordModule, FileUploadModule, MenubarModule, BrowserAnimationsModule, MessageModule, DropdownModule, CheckboxModule, TableModule
     ],
     providers: [

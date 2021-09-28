@@ -7,4 +7,5 @@ export interface HoldingDetail {
     currency: string;
     name: string;
     quantity: number;
+    version: number;
 }

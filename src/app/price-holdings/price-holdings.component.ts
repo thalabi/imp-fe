@@ -18,8 +18,10 @@ export class PriceHoldingsComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+    }
+
+    onSubmit(event: any) {
         this.restService.getPriceHoldings()
             .subscribe((data: any) => this.priceHoldingsResponse = data);
     }
-
 }
