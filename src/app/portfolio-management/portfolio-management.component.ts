@@ -19,6 +19,7 @@ export class PortfolioManagementComponent implements OnInit {
     portfolioRows: Array<Portfolio> = []
     portfolioCount: number = 0
     selectedPortfolio: Portfolio = {} as Portfolio
+    portfolioValue: number = 0
     //allInstrumentRows: Array<Instrument> = []
     instrumentRowsByCurrency: Map<string, Array<Instrument>> = new Map()
     instrumentArrayForCurrency: Array<Instrument> = []
@@ -124,7 +125,7 @@ export class PortfolioManagementComponent implements OnInit {
     }
 
     private retrieveSelectedPortfolioHoldings() {
-        if (! /* not */ this.selectedPortfolio) {
+        if (! /* not */ this.selectedPortfolio.accountNumber) {
             this.holdingDetailList = []
             this.holdingDetailListCount = 0
             return
@@ -143,7 +144,7 @@ export class PortfolioManagementComponent implements OnInit {
                         console.log('this.holdingDetailList', this.holdingDetailList)
                         this.holdingDetailListCount = this.holdingDetailList.length
                         this.loadingStatus = false
-
+                        this.calculatePortfolioValue()
                     },
                     complete: () => {
                         // this.messageService.clear()
@@ -156,6 +157,14 @@ export class PortfolioManagementComponent implements OnInit {
                         this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support.' })
                     }
                 });
+    }
+
+    private calculatePortfolioValue(): number {
+        this.portfolioValue = 0
+        this.holdingDetailList.forEach(holdingDetail => {
+            this.portfolioValue += holdingDetail.quantity * holdingDetail.latestPrice
+        });
+        return this.portfolioValue
     }
 
     onChangeInstrument(event: any) {

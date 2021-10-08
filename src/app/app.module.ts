@@ -33,6 +33,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { ByteFormatPipe } from './byte-format.pipe';
 import { PriceHoldingsComponent } from './price-holdings/price-holdings.component';
 import { PortfolioManagementComponent } from './portfolio-management/portfolio-management.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
     declarations: [
@@ -55,7 +56,7 @@ import { PortfolioManagementComponent } from './portfolio-management/portfolio-m
         HttpClientModule,
         AppRoutingModule,
         FormsModule, ReactiveFormsModule, DialogModule, InputNumberModule, CalendarModule,
-        ButtonModule, PasswordModule, FileUploadModule, MenubarModule, BrowserAnimationsModule, MessageModule, DropdownModule, CheckboxModule, TableModule
+        ButtonModule, PasswordModule, FileUploadModule, MenubarModule, BrowserAnimationsModule, MessageModule, DropdownModule, CheckboxModule, TableModule, TooltipModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },

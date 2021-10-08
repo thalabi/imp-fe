@@ -7,5 +7,7 @@ export interface HoldingDetail {
     currency: string;
     name: string;
     quantity: number;
+    latestPrice: number;
+    latestPriceTimestamp: Date;
     version: number;
 }

@@ -1,40 +1,50 @@
 <div>
     Portfolio count: {{portfolioCount}}
 </div>
-<p-dropdown [options]="portfolioRows" [(ngModel)]="selectedPortfolio" placeholder="Select a portfolio"
-    (onChange)="onChangePortfolio($event)" [showClear]="true">
-    <ng-template pTemplate="item" let-portfolio>
-        <div>
-            {{portfolio.institution}}-{{portfolio.accountNumber}}
-        </div>
-    </ng-template>
-    <ng-template pTemplate="selectedItem">
-        <div>
-            {{selectedPortfolio.institution}} - {{selectedPortfolio.accountNumber}} - {{selectedPortfolio.name}} -
-            {{selectedPortfolio.currency}}
-        </div>
-    </ng-template>
-</p-dropdown>
+<div>
 
-<div style="margin-top: 1rem;" *ngIf="holdingDetailListCount">
-    <p-table [value]="holdingDetailList" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [rows]=" 20"
-        [totalRecords]="holdingDetailListCount" [loading]="loadingStatus" selectionMode="single"
+    <p-dropdown [options]="portfolioRows" [(ngModel)]="selectedPortfolio" placeholder="Select a portfolio"
+        (onChange)="onChangePortfolio($event)" [showClear]="true">
+        <ng-template pTemplate="item" let-portfolio>
+            <div>
+                {{portfolio.institution}}-{{portfolio.accountNumber}}
+            </div>
+        </ng-template>
+        <ng-template pTemplate="selectedItem">
+            <div>
+                {{selectedPortfolio.institution}} - {{selectedPortfolio.accountNumber}} - {{selectedPortfolio.name}} -
+                {{selectedPortfolio.currency}}
+            </div>
+        </ng-template>
+    </p-dropdown>
+
+    <span *ngIf="holdingDetailListCount" style="margin-left:1rem;">Portfolio value: {{portfolioValue | currency}}</span>
+
+</div>
+
+<div style="margin-top: 1rem;" *ngIf="selectedPortfolio.accountNumber">
+    <p-table [value]="holdingDetailList" [paginator]="holdingDetailListCount != 0" [rowsPerPageOptions]="[10,20,30]"
+        [rows]=" 20" [totalRecords]="holdingDetailListCount" [loading]="loadingStatus" selectionMode="single"
         [(selection)]="holdingDetailSelectedRow" (onRowSelect)="onRowSelect($event)"
         (onRowUnselect)="onRowUnselect($event)" dataKey="id">
         <ng-template pTemplate="header">
             <tr>
                 <th>Instrument</th>
                 <th>Name</th>
-                <th>As of Date</th>
                 <th>Quantity</th>
+                <th>Price</th>
+                <th>Mkt Value</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-holdingDetail>
             <tr [pSelectableRow]="holdingDetail">
                 <td>{{holdingDetail.ticker}}:{{holdingDetail.exchange}}</td>
                 <td>{{holdingDetail.name}}</td>
-                <td>{{holdingDetail.asOfDate | date:'y-MM-dd'}}</td>
-                <td>{{holdingDetail.quantity}}</td>
+                <td><span [pTooltip]="holdingDetail.asOfDate" class="texthastooltip">{{holdingDetail.quantity}}</span>
+                </td>
+                <td><span pTooltip="{{holdingDetail.latestPriceTimestamp | date:'y-MM-dd HH:mm:ss'}}"
+                        class="texthastooltip">{{holdingDetail.latestPrice | currency}}</span></td>
+                <td>{{holdingDetail.quantity * holdingDetail.latestPrice | currency}}</td>
             </tr>
         </ng-template>
         <ng-template pTemplate="summary">
