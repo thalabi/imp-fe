@@ -10,7 +10,7 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', async () => {
     await page.navigateTo();
-    expect(await page.getTitleText()).toEqual('springsecurityjwt app is running!');
+    expect(await page.getTitleText()).toEqual('ipm app is running!');
   });
 
   afterEach(async () => {
