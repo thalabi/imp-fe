@@ -36,10 +36,12 @@ export class MenuComponent implements OnInit {
                         ]
                     },
                     {
-                        label: 'Price Holdings', routerLink: ['/priceHoldings']
-                    },
-                    {
-                        label: 'Portfolio Management', routerLink: ['/portfolioManagement']
+                        label: 'Portfolio',
+                        items: [
+                            { label: 'Price Holdings', routerLink: ['/priceHoldings'] },
+                            { label: 'Portfolio Management', routerLink: ['/portfolioManagement'] },
+                            { label: 'Purge Position Snapshot', routerLink: ['/purgePositionSnapshot'] }
+                        ]
                     },
                     {
                         //label: 'Logout', icon: 'pi pi-user', routerLink: ['']

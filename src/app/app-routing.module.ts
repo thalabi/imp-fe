@@ -10,6 +10,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { AuthGuard } from './security/auth.guard';
 import { PriceHoldingsComponent } from './price-holdings/price-holdings.component';
 import { PortfolioManagementComponent } from './portfolio-management/portfolio-management.component';
+import { PurgePositionSnapshotComponent } from './purge-position-snapshot/purge-position-snapshot.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
     { path: 'fileTransfer', component: FileTransferComponent, canActivate: [AuthGuard] },
     { path: 'fileTransferPrimeNg', component: FileTransferPrimeNgComponent, canActivate: [AuthGuard] },
     { path: 'priceHoldings', component: PriceHoldingsComponent, canActivate: [AuthGuard] },
+    { path: 'purgePositionSnapshot', component: PurgePositionSnapshotComponent, canActivate: [AuthGuard] },
     { path: 'portfolioManagement', component: PortfolioManagementComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: '**', component: Httpstatus404Component }

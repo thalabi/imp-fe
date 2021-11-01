@@ -29,7 +29,14 @@
         </ng-template>
         <ng-template pTemplate="body" let-tableRow let-columns="columns">
             <tr>
-                <td *ngFor="let column of columns">{{tableRow[column.name]}}</td>
+                <td *ngFor="let column of columns">
+                    <span [ngSwitch]="column.format">
+                        <span *ngSwitchCase="'timestamp'">{{tableRow[column.name] | date:'yyyy-MM-dd
+                            HH:mm:ss'}}</span>
+                        <span *ngSwitchCase="'currency'">{{tableRow[column.name] | currency}}</span>
+                        <span *ngSwitchDefault>{{tableRow[column.name]}}</span>
+                    </span>
+                </td>
             </tr>
         </ng-template>
     </p-table>

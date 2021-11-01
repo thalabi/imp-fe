@@ -34,6 +34,7 @@ import { ByteFormatPipe } from './byte-format.pipe';
 import { PriceHoldingsComponent } from './price-holdings/price-holdings.component';
 import { PortfolioManagementComponent } from './portfolio-management/portfolio-management.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { PurgePositionSnapshotComponent } from './purge-position-snapshot/purge-position-snapshot.component';
 
 @NgModule({
     declarations: [
@@ -49,6 +50,7 @@ import { TooltipModule } from 'primeng/tooltip';
         ByteFormatPipe,
         PriceHoldingsComponent,
         PortfolioManagementComponent,
+        PurgePositionSnapshotComponent,
     ],
     imports: [
         BrowserModule,

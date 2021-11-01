@@ -1,0 +1,16 @@
+<p-dropdown [options]="positionSnapshotList" [(ngModel)]="selectedPositionSnapshot" placeholder="Select a snapshot date"
+    (onChange)="onChangePortfolio($event)" [showClear]="true">
+    <ng-template pTemplate="item" let-positionSnapshot>
+        <div>
+            {{positionSnapshot.positionSnapshot | date:"yyyy-MM-dd HH:mm:ss" }}
+        </div>
+    </ng-template>
+    <ng-template pTemplate="selectedItem">
+        <div>
+            {{selectedPositionSnapshot.positionSnapshot | date:"yyyy-MM-dd HH:mm:ss" }}
+        </div>
+    </ng-template>
+</p-dropdown>
+
+<button type="button" pButton icon="pi pi-minus" (click)="purgePositionSnapshot($event)" label="Purge"
+    [disabled]="! selectedPositionSnapshot?.positionSnapshot" style="margin-left:0.5rem;"></button>

@@ -28,7 +28,7 @@ export class FileTransferPrimeNgComponent implements OnInit {
     tableRows = [{}]
     totalRowCount: number = 0
     loadingStatus: boolean = false;
-    columns!: { name: string; header: string; order: number }[];
+    columns: { name: string; header: string; order: number; format: string }[] = [];
 
     constructor(
         private restService: RestService,
@@ -244,15 +244,19 @@ export class FileTransferPrimeNgComponent implements OnInit {
                                     columnAttributesMap.set(tuple[0], tuple[1])
                                 })
                             }
+                            console.log('columnAttributesMap', columnAttributesMap)
+                            // 1) title attribute
                             let header: string = columnAttributesMap.get('title')
                             if (! /* not */ header) {
                                 // use column name to generate a header. eq firstName => First Name
                                 header = columnName[0].toUpperCase() + columnName.slice(1)
                                 header = header.replace(/([A-Z])/g, ' $1').trim()
                             }
+                            // 2) columnDisplayOrder attribute
                             let columnOrder: number = columnAttributesMap.get('columnDisplayOrder')
-                            console.log('columnAttributesMap', columnAttributesMap)
-                            this.columns.push({ name: columnName, header: header, order: columnOrder ?? 1 })
+                            // 3) columnDisplayOrder attribute
+                            let format: string = columnAttributesMap.get('format')
+                            this.columns.push({ name: columnName, header: header, order: columnOrder ?? 1, format: format })
                         });
                         console.log('this.columns', this.columns)
                         this.columns.sort((a, b) => a.order > b.order ? 1 : -1)

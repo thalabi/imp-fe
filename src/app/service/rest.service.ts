@@ -7,6 +7,9 @@ import { ForgotPasswordRequest } from '../forgot-password/ForgotPasswordRequest'
 import { ResetPasswordRequest } from '../reset-password/ResetPasswordRequest';
 import { TableListResponse } from '../file-transfer-prime-ng/TableListResponse';
 import { SaveHoldingRequest } from '../portfolio-management/SaveHoldingRequest';
+import { map } from 'rxjs/operators';
+import { PositionSnapshot } from '../purge-position-snapshot/PositionSnapshot';
+import { HoldingDetail } from '../portfolio-management/HoldingDetail';
 
 @Injectable({
     providedIn: 'root'
@@ -77,26 +80,54 @@ export class RestService {
 
 
     getPriceHoldings() {
-        return this.http.get(this.serviceUrl + '/investmentPortfolioConroller/priceHoldings');
+        return this.http.get(`${this.serviceUrl}/investmentPortfolioConroller/priceHoldings`);
     }
 
     getHoldingDetails(portfolioId: number): Observable<any> {
-        return this.http.get(this.serviceUrl + '/investmentPortfolioConroller/getHoldingDetails?portfolioId=' + portfolioId);
+        return this.http.get(`${this.serviceUrl}/investmentPortfolioConroller/getHoldingDetails?portfolioId=${portfolioId}`)
+            .pipe(
+                map((data: any): Array<HoldingDetail> => {
+                    const holdingDetailList: Array<HoldingDetail> = data.holdingDetails
+                    holdingDetailList.forEach(holdingDetail => {
+                        const asOfDate = holdingDetail.asOfDate
+                        console.log('asOfDate', asOfDate)
+                        // convert ISO8601 date to Date object
+                        holdingDetail.asOfDate = new Date(holdingDetail.asOfDate)
+                        holdingDetail.latestPriceTimestamp = new Date(holdingDetail.latestPriceTimestamp)
+                    })
+                    return data;
+                }))
     }
 
     findByPortfolioIdAndInstrumentIdAndAsOfDate(holding: SaveHoldingRequest): Observable<HttpResponse<Array<SaveHoldingRequest>>> {
         return this.http.get<HttpResponse<Array<SaveHoldingRequest>>>(this.serviceUrl + '/data-rest/holdings/search/findByPortfolioIdAndInstrumentIdAndAsOfDate?portfolioId=10&instrumentId=21&asOfDate=2021-09-23');
     }
     addHolding(saveHoldingRequest: SaveHoldingRequest): Observable<HttpResponse<any>> {
-        return this.http.post<HttpResponse<any>>(this.serviceUrl + '/investmentPortfolioConroller/addHolding/', saveHoldingRequest);
+        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/investmentPortfolioConroller/addHolding/`, saveHoldingRequest);
     }
     updateHolding(saveHoldingRequest: SaveHoldingRequest): Observable<HttpResponse<any>> {
-        return this.http.post<HttpResponse<any>>(this.serviceUrl + '/investmentPortfolioConroller/updateHolding/', saveHoldingRequest);
+        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/investmentPortfolioConroller/updateHolding/`, saveHoldingRequest);
     }
     deleteHolding(holdingId: number): Observable<HttpResponse<void>> {
-        return this.http.delete<HttpResponse<void>>(this.serviceUrl + '/data-rest/holdings/' + holdingId);
+        return this.http.delete<HttpResponse<void>>(`${this.serviceUrl}/data-rest/holdings/` + holdingId);
     }
 
+    getDistinctPositionSnapshots(): Observable<Array<PositionSnapshot>> {
+        return this.http.get<Array<PositionSnapshot>>(`${this.serviceUrl}/investmentPortfolioConroller/getDistinctPositionSnapshots`)
+            .pipe(
+                map((positionSnapshotList): Array<PositionSnapshot> => {
+                    positionSnapshotList.forEach((element: { positionSnapshot: any }): void => {
+                        const d = element.positionSnapshot
+                        console.log('d', d)
+                        // convert ISO8601 date to Date object
+                        element.positionSnapshot = new Date(element.positionSnapshot)
+                    });
+                    return positionSnapshotList;
+                }))
+    }
+    purgePositionSnapshot(positionSnapshot: PositionSnapshot): Observable<HttpResponse<any>> {
+        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/investmentPortfolioConroller/purgePositionSnapshot/`, positionSnapshot);
+    }
 
     public static toCamelCase(tableName: string): string {
         return tableName.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase()); // convert to camel case
