@@ -23,7 +23,9 @@ export class ForgotPasswordComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.baseUrl = location.origin
+        const url = location.href
+        console.log('url', url)
+        this.baseUrl = url.substring(0, url.lastIndexOf('/'))
         console.log('baseUrl', this.baseUrl)
     }
 
