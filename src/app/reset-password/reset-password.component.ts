@@ -41,7 +41,8 @@ export class ResetPasswordComponent implements OnInit {
         console.log('newPassword', newPassword)
         const confirmPassword: string = this.form.confirmPassword;
         console.log('confirmPassword', confirmPassword)
-        this.baseUrl = location.origin
+        const url = location.origin
+        this.baseUrl = url.substring(0, url.lastIndexOf('/'))
         console.log('baseUrl', this.baseUrl)
 
         this.passworValidationMessage = ''
