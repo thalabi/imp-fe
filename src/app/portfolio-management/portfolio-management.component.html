@@ -43,8 +43,9 @@
                 <td><span [pTooltip]="holdingDetail.asOfDate" class="texthastooltip">{{holdingDetail.quantity}}</span>
                 </td>
                 <td><span pTooltip="{{holdingDetail.latestPriceTimestamp | date:'y-MM-dd HH:mm:ss'}}"
-                        class="texthastooltip">{{holdingDetail.latestPrice | currency}}</span></td>
-                <td>{{holdingDetail.quantity * holdingDetail.latestPrice | currency}}</td>
+                        class="texthastooltip">{{holdingDetail.latestPrice | currency:'CAD':'symbol-narrow':'1.2-4'
+                        }}</span></td>
+                <td>{{holdingDetail.quantity * holdingDetail.latestPrice | currency:'CAD':'symbol-narrow':'1.2-4'}}</td>
             </tr>
         </ng-template>
         <ng-template pTemplate="summary">
@@ -97,7 +98,7 @@
                 <label for="quantity">Quantity</label>
             </div>
             <div class="p-col-8">
-                <p-inputNumber id="quantity" formControlName="quantity" mode="decimal" [minFractionDigits]="2"
+                <p-inputNumber id="quantity" formControlName="quantity" mode="decimal" [minFractionDigits]="4"
                     [maxFractionDigits]="4" (onInput)="onInputQuantity($event)" appendTo="body">
                 </p-inputNumber>
                 <div *ngIf="holdingDetailForm.controls.quantity.invalid && holdingDetailForm.controls.quantity.touched"
