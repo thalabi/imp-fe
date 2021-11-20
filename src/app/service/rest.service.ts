@@ -79,8 +79,8 @@ export class RestService {
     }
 
 
-    getPriceHoldings() {
-        return this.http.get(`${this.serviceUrl}/investmentPortfolioConroller/priceHoldings`);
+    getPriceHoldings(sendEmail: boolean) {
+        return this.http.get(`${this.serviceUrl}/investmentPortfolioConroller/priceHoldings?sendEmail=${sendEmail}`);
     }
 
     getHoldingDetails(portfolioId: number): Observable<any> {

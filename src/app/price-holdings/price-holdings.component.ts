@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { RestService } from '../service/rest.service';
 import { SessionService } from '../service/session.service';
 import { PriceHoldingsResponse } from './PriceHoldingsResponse';
@@ -11,17 +12,29 @@ import { PriceHoldingsResponse } from './PriceHoldingsResponse';
 export class PriceHoldingsComponent implements OnInit {
 
     priceHoldingsResponse: PriceHoldingsResponse = {} as PriceHoldingsResponse;
+    processingMessage: string = ''
+    sendEmail: boolean = false;
 
     constructor(
         private restService: RestService,
-        private sessionService: SessionService,
+        private messageService: MessageService
+
     ) { }
 
     ngOnInit(): void {
     }
 
     onSubmit(event: any) {
-        this.restService.getPriceHoldings()
-            .subscribe((data: any) => this.priceHoldingsResponse = data);
+        this.processingMessage = 'Pricing holdings ...'
+        this.restService.getPriceHoldings(this.sendEmail)
+            .subscribe((data: any) => {
+                this.processingMessage = ''
+                this.priceHoldingsResponse = data
+                if (this.priceHoldingsResponse.message) {
+                    this.messageService.add({ severity: 'error', summary: 'Server error. Please contact support.', detail: this.priceHoldingsResponse.message })
+                } else {
+                    this.messageService.add({ severity: 'info', summary: '200', detail: `Pricing holdings completed at ${this.priceHoldingsResponse.timestamp}` })
+                }
+            });
     }
 }
