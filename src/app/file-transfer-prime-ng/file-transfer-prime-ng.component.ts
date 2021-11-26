@@ -29,6 +29,7 @@ export class FileTransferPrimeNgComponent implements OnInit {
     totalRowCount: number = 0
     loadingStatus: boolean = false;
     columns: { name: string; header: string; order: number; format: string }[] = [];
+    tableFileName: string = ''
 
     constructor(
         private restService: RestService,
@@ -180,7 +181,7 @@ export class FileTransferPrimeNgComponent implements OnInit {
                         switch (httpEvent.type) {
                             case HttpEventType.Sent:
                                 console.log('HttpEventType.Sent')
-                                this.tableFileDownloadProgressMessage = `Preparing ${this.selectedTable} table for download ...`
+                                this.tableFileDownloadProgressMessage = `Preparing ${this.selectedTable} table for download:`
                                 break
                             case HttpEventType.DownloadProgress:
                                 console.log('HttpEventType.DownloadProgress')
@@ -192,8 +193,8 @@ export class FileTransferPrimeNgComponent implements OnInit {
                             case HttpEventType.Response:
                                 console.log('HttpEventType.Response')
                                 console.log('httpEvent.headers', httpEvent.headers)
-                                const tableFileName = this.downloadFile(httpEvent)
-                                this.tableFileDownloadProgressMessage = `File "${tableFileName}" is downloaded.`
+                                this.tableFileName = this.downloadFile(httpEvent)
+                                this.tableFileDownloadProgressMessage = ''
                                 break;
                         }
 
@@ -202,7 +203,7 @@ export class FileTransferPrimeNgComponent implements OnInit {
                         this.messageService.clear()
                         this.uploadProgressMessage = '';
                         this.uploadResponse = {} as UploadResponse;
-                        this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
+                        this.messageService.add({ severity: 'info', summary: '200', detail: `File "${this.tableFileName}" is downloaded.` })
                     },
                     error: (httpErrorResponse: HttpErrorResponse) => {
                         console.error('httpErrorResponse', httpErrorResponse)

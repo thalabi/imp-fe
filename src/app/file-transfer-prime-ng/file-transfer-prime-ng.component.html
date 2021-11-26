@@ -14,7 +14,11 @@
                 [disabled]="!selectedTable"></button>
         </div>
         <div class="p-field" style="margin-top: 0.5rem;">
-            {{ tableFileDownloadProgressMessage }}
+            <span *ngIf="tableFileDownloadProgressMessage">
+                <!-- <span> -->
+                <label for="tableFileDownloadProgressMessage">{{tableFileDownloadProgressMessage}}</label>
+                <progress id="tableFileDownloadProgressMessage" style="margin-left: 0.5rem;"></progress>
+            </span>
         </div>
     </div>
 </div>

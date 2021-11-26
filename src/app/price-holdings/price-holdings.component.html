@@ -7,6 +7,9 @@
         <button pButton type="button" label="Submit" (click)="onSubmit($event)"></button>
     </div>
     <div class="p-field" style="margin-top: 0.5rem;">
-        <span *ngIf="processingMessage">{{processingMessage}}</span>
+        <span *ngIf="processingMessage">
+            <label for="processingMessage">{{processingMessage}}</label>
+            <progress id="processingMessage" style="margin-left: 0.5rem;"></progress>
+        </span>
     </div>
 </div>

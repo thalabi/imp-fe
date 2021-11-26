@@ -25,7 +25,7 @@ export class PriceHoldingsComponent implements OnInit {
     }
 
     onSubmit(event: any) {
-        this.processingMessage = 'Pricing holdings ...'
+        this.processingMessage = 'Pricing holdings:'
         this.restService.getPriceHoldings(this.sendEmail)
             .subscribe((data: any) => {
                 this.processingMessage = ''
