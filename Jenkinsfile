@@ -1,8 +1,8 @@
 pipeline {
     agent any
      tools { 
-    //     maven 'Maven 3.5.2' 
-         jdk 'jdk-17' 
+        maven 'Maven-3.8.4' 
+        jdk 'jdk-17' 
     }
     stages {
         stage ('Initialize') {
@@ -13,10 +13,6 @@ pipeline {
                 echo "BRANCH_NAME = ${BRANCH_NAME}"
                 java -version
                 '''
-                // withNPM(npmrcConfig:'my-custom-npmrc') {
-                //     echo "Performing npm build..."
-                //     sh 'npm install'
-                // }
             }
         }
 
@@ -38,9 +34,9 @@ pipeline {
                 pwd
                 cd ../..
                 pwd
-                #npm install && ng build --prod --base-href=/ipm/
-                npm install && ng build --prod
-                #jar -cvf FlightLogClient.jar dist
+
+                export PATH=/usr/local/node-v16.13.1-linux-x64/bin/:$PATH
+                npm install && node_modules/.bin/ng build --prod
                 '''
             }
 		}
