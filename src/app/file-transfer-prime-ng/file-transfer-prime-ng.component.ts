@@ -30,6 +30,7 @@ export class FileTransferPrimeNgComponent implements OnInit {
     loadingStatus: boolean = false;
     columns: { name: string; header: string; order: number; format: string }[] = [];
     tableFileName: string = ''
+    sortColumns: Array<string> = []
 
     constructor(
         private restService: RestService,
@@ -215,8 +216,9 @@ export class FileTransferPrimeNgComponent implements OnInit {
     onBrowseTable(event: any): void {
         console.log('onBrowseTable')
         this.messageService.clear()
-        this.showTable = true
+        //this.showTable = true
         //this.fetchPage({});
+        this.sortColumns = []
 
         console.log('before getTableMetaDataAlps')
         this.restService.getTableMetaDataAlps(this.selectedTable)
@@ -255,16 +257,27 @@ export class FileTransferPrimeNgComponent implements OnInit {
                             }
                             // 2) columnDisplayOrder attribute
                             let columnOrder: number = columnAttributesMap.get('columnDisplayOrder')
-                            // 3) columnDisplayOrder attribute
+                            // 3) format attribute
                             let format: string = columnAttributesMap.get('format')
                             this.columns.push({ name: columnName, header: header, order: columnOrder ?? 1, format: format })
+                            // 4) sortOrder and sortDirection attributes
+                            if (columnAttributesMap.get('sortOrder')) {
+                                const sortOrder: number = columnAttributesMap.get('sortOrder')
+                                console.log('sortOrder', sortOrder)
+                                this.sortColumns[sortOrder] = columnName
+                                if (columnAttributesMap.get('sortDirection')) {
+                                    const sortDirection: string = columnAttributesMap.get('sortDirection')
+                                    console.log('sortDirection', sortDirection)
+                                    this.sortColumns[sortOrder] = this.sortColumns[sortOrder] + "," + sortDirection
+                                }
+                            }
                         });
                         console.log('this.columns', this.columns)
                         this.columns.sort((a, b) => a.order > b.order ? 1 : -1)
                         console.log('this.columns sorted', this.columns)
                     },
                     complete: () => {
-
+                        this.showTable = true
                     },
                     error: (httpErrorResponse: HttpErrorResponse) => {
                         this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support.' })
@@ -282,7 +295,7 @@ export class FileTransferPrimeNgComponent implements OnInit {
         console.log(pageNumber, pageSize)
         const entityNameResource = RestService.toPlural(RestService.toCamelCase(this.selectedTable))
         console.log('entityNameResource 2', entityNameResource)
-        this.restService.getTableData(this.selectedTable, pageNumber, pageSize)
+        this.restService.getTableData(this.selectedTable, pageNumber, pageSize, this.sortColumns)
             .subscribe(
                 {
                     next: (data: any) => {

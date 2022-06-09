@@ -59,10 +59,18 @@ export class RestService {
         })
     }
 
-    getTableData(tableName: string, pageNumber: number, pageSize: number): Observable<any> {
+    getTableData(tableName: string, pageNumber: number, pageSize: number, sortColumns?: Array<string>): Observable<any> {
+        let sortQueryParams: string = ''
+        if (sortColumns) {
+            console.log('sortColumns', sortColumns)
+            sortColumns.forEach(sortColumnAndDirection => {
+                sortQueryParams = sortQueryParams + "&sort=" + sortColumnAndDirection
+            })
+            console.log('sortQueryParams', sortQueryParams)
+        }
         const entityNameResource = RestService.toPlural(RestService.toCamelCase(tableName))
         console.log('entityNameResource', entityNameResource)
-        return this.http.get(this.serviceUrl + '/data-rest/' + entityNameResource + '?page=' + pageNumber + '&size=' + pageSize)
+        return this.http.get(this.serviceUrl + '/data-rest/' + entityNameResource + '?page=' + pageNumber + '&size=' + pageSize + sortQueryParams)
     }
 
     getTableMetaDataAlps(tableName: string): Observable<any> {

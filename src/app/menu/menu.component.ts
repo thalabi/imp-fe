@@ -9,7 +9,6 @@ import { SessionService } from '../service/session.service';
     styleUrls: ['./menu.component.css']
 })
 export class MenuComponent implements OnInit {
-    title = 'ipm'
     items: any //Array<MenuItem> = {} as Array<MenuItem>
     //customUserDetails: CustomUserDetails = {} as CustomUserDetails;
 
