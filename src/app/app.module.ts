@@ -22,6 +22,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MenuComponent } from './menu/menu.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel'
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -58,7 +59,7 @@ import { PurgePositionSnapshotComponent } from './purge-position-snapshot/purge-
         HttpClientModule,
         AppRoutingModule,
         FormsModule, ReactiveFormsModule, DialogModule, InputNumberModule, CalendarModule,
-        ButtonModule, PasswordModule, FileUploadModule, MenubarModule, BrowserAnimationsModule, MessageModule, DropdownModule, CheckboxModule, TableModule, TooltipModule
+        ButtonModule, PasswordModule, FileUploadModule, MenubarModule, OverlayPanelModule, BrowserAnimationsModule, MessageModule, DropdownModule, CheckboxModule, TableModule, TooltipModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },

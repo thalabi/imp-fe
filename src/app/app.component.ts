@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { SessionService } from './service/session.service';
+import { environment } from '../environments/environment';
+import { AppInfoService } from './service/appInfo.service';
 
 
 @Component({
@@ -10,11 +11,21 @@ import { SessionService } from './service/session.service';
     providers: [MessageService]
 })
 export class AppComponent {
+    clientBuildInfo: string = ''
+    serverBuildInfo: string = ''
 
     constructor(
-        private sessionService: SessionService,
+        private versionService: AppInfoService
     ) { }
 
     ngOnInit() {
+        this.clientBuildInfo = environment.buildVersion + '_' + environment.buildTimestamp;
+
+        this.versionService.getBuildInfo().subscribe({
+            next: data => {
+                this.serverBuildInfo = data;
+                console.log('this.serverBuildInfo: ', this.serverBuildInfo);
+            }
+        });
     }
 }

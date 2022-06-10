@@ -1,3 +1,7 @@
 export const environment = {
-  production: true
+    production: true,
+
+    buildVersion: "@buildVersion@",
+    buildTimestamp: "@buildTimestamp@",
+    serviceUrl: "http://@backendHostname@:@backendPort@"
 };
