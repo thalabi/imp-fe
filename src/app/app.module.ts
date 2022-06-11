@@ -10,7 +10,6 @@ import { LoginComponent } from './login/login.component';
 import { PingComponent } from './ping/ping.component';
 import { Httpstatus404Component } from './httpstatus404/httpstatus404.component';
 import { JwtInterceptorService } from './service/jwt-interceptor.service';
-import { ConfigService } from './service/config.service';
 import { FileTransferComponent } from './file-transfer/file-transfer.component';
 
 
@@ -63,7 +62,6 @@ import { PurgePositionSnapshotComponent } from './purge-position-snapshot/purge-
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },
-        { provide: APP_INITIALIZER, deps: [ConfigService], useFactory: (configService: ConfigService) => () => configService.loadConfig(), multi: true },
     ],
     bootstrap: [AppComponent]
 })

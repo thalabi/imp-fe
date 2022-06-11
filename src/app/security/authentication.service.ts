@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ConfigService } from '../service/config.service';
+import { environment } from '../../environments/environment';
 import { LoginRequest } from './LoginRequest';
 import { LoginResponse } from './LoginResponse';
 
@@ -14,10 +14,8 @@ export class AuthenticationService {
 
     constructor(
         private http: HttpClient,
-        private configService: ConfigService,
     ) {
-        const applicationProperties = this.configService.getApplicationProperties();
-        this.serviceUrl = applicationProperties.serviceUrl;
+        this.serviceUrl = environment.serviceUrl
     }
 
     authenticate(loginRequest: LoginRequest): Observable<LoginResponse> {

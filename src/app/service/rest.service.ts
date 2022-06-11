@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpEvent, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { ConfigService } from './config.service';
+import { environment } from '../../environments/environment';
 import { UploadResponse } from '../file-transfer-prime-ng/UploadResponse';
 import { ForgotPasswordRequest } from '../forgot-password/ForgotPasswordRequest';
 import { ResetPasswordRequest } from '../reset-password/ResetPasswordRequest';
@@ -21,11 +21,11 @@ export class RestService {
     readonly multipartHeader = new HttpHeaders().set("Content-Type", "multipart/form-data");
 
     constructor(
-        private http: HttpClient,
-        private configService: ConfigService,
+        private http: HttpClient
     ) {
-        const applicationProperties = this.configService.getApplicationProperties();
-        this.serviceUrl = applicationProperties.serviceUrl;
+        console.log('environment.production', environment.production); // Logs false for default environment
+        console.log('environment', environment)
+        this.serviceUrl = environment.serviceUrl
     }
 
     getPing() {
