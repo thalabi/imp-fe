@@ -3,7 +3,7 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-        "ipm": {
+        "ipm-fe": {
             "projectType": "application",
             "schematics": {
                 "@schematics/angular:application": {
@@ -17,7 +17,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "outputPath": "dist/ipm",
+                        "outputPath": "dist/ipm-fe",
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
@@ -69,18 +69,18 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "browserTarget": "ipm:build"
+                        "browserTarget": "ipm-fe:build"
                     },
                     "configurations": {
                         "production": {
-                            "browserTarget": "ipm:build:production"
+                            "browserTarget": "ipm-fe:build:production"
                         }
                     }
                 },
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "ipm:build"
+                        "browserTarget": "ipm-fe:build"
                     }
                 },
                 "test": {
@@ -117,16 +117,16 @@
                     "builder": "@angular-devkit/build-angular:protractor",
                     "options": {
                         "protractorConfig": "e2e/protractor.conf.js",
-                        "devServerTarget": "ipm:serve"
+                        "devServerTarget": "ipm-fe:serve"
                     },
                     "configurations": {
                         "production": {
-                            "devServerTarget": "ipm:serve:production"
+                            "devServerTarget": "ipm-fe:serve:production"
                         }
                     }
                 }
             }
         }
     },
-    "defaultProject": "ipm"
+    "defaultProject": "ipm-fe"
 }
