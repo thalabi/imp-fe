@@ -1,5 +1,5 @@
 export interface UploadResponse {
-    transformerExceptionMessage: string
+    //transformerExceptionMessage: string
     numberOfLinesInFile: number
     numberOfExceptions: number
     elapsedTime: string

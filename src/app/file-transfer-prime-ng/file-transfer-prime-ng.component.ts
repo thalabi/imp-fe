@@ -74,6 +74,8 @@ export class FileTransferPrimeNgComponent implements OnInit {
         const file: File = event.files[0]
         this.fileHasExceptions = false;
 
+        this.showTable = false
+
         console.log('file', file)
         if (file) {
             this.fileName = file.name
@@ -102,7 +104,9 @@ export class FileTransferPrimeNgComponent implements OnInit {
                                     this.uploadResponse = httpEvent.body as UploadResponse;
                                     this.uploadProgressMessage = `File "${this.fileName}" is uploaded.`
                                     console.log('uploadResponse', this.uploadResponse)
-                                    if (this.uploadResponse.exceptionsFileName) {
+                                    //if (this.uploadResponse.exceptionsFileName) {
+                                    if (/*this.uploadResponse.transformerExceptionMessage || */
+                                        this.uploadResponse.exceptionsFileName) {
                                         this.fileHasExceptions = true;
                                         this.uploadProgressMessage = this.uploadProgressMessage = `File "${this.fileName}" is uploaded, with errors.`
                                     }
@@ -113,6 +117,8 @@ export class FileTransferPrimeNgComponent implements OnInit {
                             uploadComponent.clear() // clear the selected file in component
                             this.messageService.clear()
                             this.messageService.add({ severity: this.fileHasExceptions ? 'warn' : 'info', summary: '200', detail: this.uploadProgressMessage })
+
+                            this.showTable = true
                         },
                         error: (httpErrorResponse: HttpErrorResponse) => {
                             console.error('httpErrorResponse', httpErrorResponse)
@@ -327,7 +333,7 @@ export class FileTransferPrimeNgComponent implements OnInit {
     private downloadFile(httpEvent: HttpResponse<Blob>): string {
         const contentDisposition = httpEvent.headers.get('content-disposition')
         console.log('contentDisposition', contentDisposition)
-        const data: Blob | null = httpEvent.body
+        const data: Blob = httpEvent.body as Blob
         console.log(data)
         const tableFileUrl = URL.createObjectURL(data)
         let fileName = '<not provided>'

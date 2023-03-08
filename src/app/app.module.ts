@@ -11,8 +11,7 @@ import { PingComponent } from './ping/ping.component';
 import { Httpstatus404Component } from './httpstatus404/httpstatus404.component';
 import { JwtInterceptorService } from './service/jwt-interceptor.service';
 import { FileTransferComponent } from './file-transfer/file-transfer.component';
-
-
+import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -57,7 +56,7 @@ import { PurgePositionSnapshotComponent } from './purge-position-snapshot/purge-
         // import HttpClientModule after BrowserModule.
         HttpClientModule,
         AppRoutingModule,
-        FormsModule, ReactiveFormsModule, DialogModule, InputNumberModule, CalendarModule,
+        FormsModule, InputTextModule, ReactiveFormsModule, DialogModule, InputNumberModule, CalendarModule,
         ButtonModule, PasswordModule, FileUploadModule, MenubarModule, OverlayPanelModule, BrowserAnimationsModule, MessageModule, DropdownModule, CheckboxModule, TableModule, TooltipModule
     ],
     providers: [
