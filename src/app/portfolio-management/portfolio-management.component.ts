@@ -82,7 +82,7 @@ export class PortfolioManagementComponent implements OnInit {
     getInstrumentTable() {
         const tableName: string = 'instrument'
         const entityNameResource = RestService.toPlural(RestService.toCamelCase(tableName))
-        this.restService.getTableData(tableName, 0, 999)
+        this.restService.getTableData(tableName, 0, 999, ['name'])
             .subscribe(
                 {
                     next: (data: any) => {
