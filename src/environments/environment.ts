@@ -7,7 +7,7 @@ export const environment = {
 
     buildVersion: "@buildVersion@",
     buildTimestamp: "@buildTimestamp@",
-    serviceUrl: "http://localhost:6003"
+    serviceUrl: "https://localhost:8443"
 };
 
 /*
