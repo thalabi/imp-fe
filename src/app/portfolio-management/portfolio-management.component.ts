@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpEvent, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { CrudEnum } from '../crud-enum';
 import { RestService } from '../service/rest.service';
@@ -37,11 +37,11 @@ export class PortfolioManagementComponent implements OnInit {
     crudEnum = CrudEnum; // Used in html to refer to enum
     displayDialog: boolean = false
 
-    holdingDetailForm: FormGroup = {} as FormGroup
+    holdingDetailForm: UntypedFormGroup = {} as UntypedFormGroup
 
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private restService: RestService,
         private messageService: MessageService
     ) { }
