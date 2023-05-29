@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { RestService } from '../service/rest.service';
-import { SessionService } from '../service/session.service';
 import { PriceHoldingsResponse } from './PriceHoldingsResponse';
 
 @Component({

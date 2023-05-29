@@ -26,15 +26,15 @@ export class LoginComponent implements OnInit {
 
     constructor(
         private messageService: MessageService,
-        private authenticationService: AuthenticationService,
-        private sessionService: SessionService,
+        /*private authenticationService: AuthenticationService,*/
+        /*private sessionService: SessionService,*/
         private router: Router,
     ) { }
 
     ngOnInit(): void {
         console.log('ngOnInit()')
-        this.sessionService.setToken('');
-        this.sessionService.setCustomUserDetails({} as CustomUserDetails);
+        // this.sessionService.setToken('');
+        // this.sessionService.setCustomUserDetails({} as CustomUserDetails);
 
         this.messageService.clear()
     }
@@ -43,23 +43,23 @@ export class LoginComponent implements OnInit {
         const loginRequest: LoginRequest = this.form;
         console.log('form:', this.form);
 
-        this.authenticationService.authenticate(loginRequest)
-            .subscribe(
-                {
-                    next: (data: LoginResponse) => {
-                        this.loginResponse = data;
-                        console.log(data);
-                        this.sessionService.setToken(this.loginResponse.token);
-                        this.sessionService.setCustomUserDetails(this.loginResponse.customUserDetails);
-                        this.sessionService.setIsAuthenticated(true);
-                        this.router.navigate(['/fileTransferPrimeNg']);
-                    },
-                    error: (err: string) => {
-                        console.error(err)
-                        this.isLoginFailed = true;
-                        this.errorMessage = err;
-                    }
-                });
+        // this.authenticationService.authenticate(loginRequest)
+        //     .subscribe(
+        //         {
+        //             next: (data: LoginResponse) => {
+        //                 this.loginResponse = data;
+        //                 console.log(data);
+        //                 this.sessionService.setToken(this.loginResponse.token);
+        //                 this.sessionService.setCustomUserDetails(this.loginResponse.customUserDetails);
+        //                 this.sessionService.setIsAuthenticated(true);
+        //                 this.router.navigate(['/fileTransferPrimeNg']);
+        //             },
+        //             error: (err: string) => {
+        //                 console.error(err)
+        //                 this.isLoginFailed = true;
+        //                 this.errorMessage = err;
+        //             }
+        //         });
         // this.authService.register(username, email, password).subscribe(
         //   data => {
         //     console.log(data);

@@ -7,7 +7,22 @@ export const environment = {
 
     buildVersion: "@buildVersion@",
     buildTimestamp: "@buildTimestamp@",
-    serviceUrl: "https://localhost:8443"
+    beRestServiceUrl: "https://localhost:8443",
+    // when adding or changing keycloak json, update auth-config.ts and auth-module-config.ts as well
+    keycloak: {
+        issuer: 'https://localhost:8083/realms/ipm',
+        clientId: 'ipm',
+        requireHttps: true,
+
+        // prefixes of urls to send with Bearer token
+        // prefixes have to be in lowerr case
+        urlPrefixesWithBearerToken: ['https://localhost:8443/protected']
+    },
+    idle: {
+        // times are in seconds
+        inactivityTimer: '299',
+        timeoutTimer: '1'
+    }
 };
 
 /*

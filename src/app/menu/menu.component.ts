@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { CustomUserDetails } from '../login/CustomUserDetails';
-import { SessionService } from '../service/session.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
     selector: 'app-menu',
@@ -13,15 +11,17 @@ export class MenuComponent implements OnInit {
     //customUserDetails: CustomUserDetails = {} as CustomUserDetails;
 
     constructor(
-        private sessionService: SessionService,
+        private authService: AuthService//, private sessionService: SessionService,
     ) { }
 
     ngOnInit(): void {
         console.log('ngOnInit()')
-        this.sessionService.customUserDetailsObservable.subscribe(message => {
-            let customUserDetails: CustomUserDetails = message;
-            if (customUserDetails?.id) {
-                console.log('this.customUserDetails?.id is true')
+        // this.sessionService.customUserDetailsObservable.subscribe(message => {
+        //     let customUserDetails: CustomUserDetails = message;
+        //     if (customUserDetails?.id) {
+        //         console.log('this.customUserDetails?.id is true')
+        this.authService.isAuthenticated$.subscribe(authenticated => {
+            if (authenticated) {
                 this.items = [
                     {
                         label: 'Ping', routerLink: ['/ping']
@@ -47,15 +47,25 @@ export class MenuComponent implements OnInit {
                         icon: 'pi pi-user',
                         items: [
                             { label: 'Password', routerLink: [''] },
-                            { label: 'Logout', routerLink: [''] },
+                            { label: 'Logout', command: () => this.logout() },
 
                         ]
                     },
-                ];
+                ]
             } else {
-                this.items = [];
+                this.items = [
+                    { label: 'Login', command: () => this.login() }
+                ];
             }
-        });
+        })
+    }
+
+    login() {
+        this.authService.login()
+    }
+
+    logout() {
+        this.authService.logout();
     }
 
 }

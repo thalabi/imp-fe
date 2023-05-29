@@ -25,7 +25,7 @@ export class RestService {
     ) {
         console.log('environment.production', environment.production); // Logs false for default environment
         console.log('environment', environment)
-        this.serviceUrl = environment.serviceUrl
+        this.serviceUrl = environment.beRestServiceUrl
     }
 
     getPing() {

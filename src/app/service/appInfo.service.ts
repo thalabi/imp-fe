@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
     providedIn: 'root'
 })
 export class AppInfoService {
-    readonly serviceUrl: string = environment.serviceUrl;
+    readonly serviceUrl: string = environment.beRestServiceUrl;
 
     constructor(
         private http: HttpClient

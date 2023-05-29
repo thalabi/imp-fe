@@ -34,6 +34,9 @@ import { PriceHoldingsComponent } from './price-holdings/price-holdings.componen
 import { PortfolioManagementComponent } from './portfolio-management/portfolio-management.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { PurgePositionSnapshotComponent } from './purge-position-snapshot/purge-position-snapshot.component';
+import { NgIdleModule } from '@ng-idle/core';
+import { AuthModule } from './auth/auth.module';
+import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
     declarations: [
@@ -50,17 +53,21 @@ import { PurgePositionSnapshotComponent } from './purge-position-snapshot/purge-
         PriceHoldingsComponent,
         PortfolioManagementComponent,
         PurgePositionSnapshotComponent,
+        WelcomeComponent,
     ],
     imports: [
         BrowserModule,
         // import HttpClientModule after BrowserModule.
         HttpClientModule,
+        AuthModule.forRoot(),
+        NgIdleModule.forRoot(),
         AppRoutingModule,
         FormsModule, InputTextModule, ReactiveFormsModule, DialogModule, InputNumberModule, CalendarModule,
-        ButtonModule, PasswordModule, FileUploadModule, MenubarModule, OverlayPanelModule, BrowserAnimationsModule, MessageModule, DropdownModule, CheckboxModule, TableModule, TooltipModule
+        ButtonModule, PasswordModule, FileUploadModule, MenubarModule, OverlayPanelModule, BrowserAnimationsModule, MessageModule, DropdownModule, CheckboxModule, TableModule, TooltipModule,
     ],
     providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },
+        //{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },
+
     ],
     bootstrap: [AppComponent]
 })

@@ -15,7 +15,7 @@ export class AuthenticationService {
     constructor(
         private http: HttpClient,
     ) {
-        this.serviceUrl = environment.serviceUrl
+        this.serviceUrl = environment.beRestServiceUrl
     }
 
     authenticate(loginRequest: LoginRequest): Observable<LoginResponse> {

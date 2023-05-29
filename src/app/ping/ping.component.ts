@@ -20,7 +20,7 @@ export class PingComponent implements OnInit {
     constructor(
         // private route: ActivatedRoute,
         private restService: RestService,
-        private sessionService: SessionService,
+        //private sessionService: SessionService,
     ) { }
 
     ngOnInit(): void {
@@ -30,8 +30,8 @@ export class PingComponent implements OnInit {
 
         console.log('======================================');
 
-        this.sessionService.tokenObservable.subscribe(message => this.token = message);
-        this.sessionService.customUserDetailsObservable.subscribe(message => this.customUserDetails = message);
+        // this.sessionService.tokenObservable.subscribe(message => this.token = message);
+        // this.sessionService.customUserDetailsObservable.subscribe(message => this.customUserDetails = message);
 
 
         let pingResponse: any;
