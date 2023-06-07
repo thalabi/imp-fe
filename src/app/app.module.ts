@@ -21,8 +21,6 @@ import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MenuComponent } from './menu/menu.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel'
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MessageModule } from 'primeng/message';
 import { DropdownModule } from 'primeng/dropdown';
@@ -47,8 +45,6 @@ import { WelcomeComponent } from './welcome/welcome.component';
         FileTransferComponent,
         FileTransferPrimeNgComponent,
         MenuComponent,
-        ForgotPasswordComponent,
-        ResetPasswordComponent,
         ByteFormatPipe,
         PriceHoldingsComponent,
         PortfolioManagementComponent,

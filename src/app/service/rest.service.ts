@@ -3,8 +3,6 @@ import { HttpClient, HttpHeaders, HttpEvent, HttpResponse } from '@angular/commo
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UploadResponse } from '../file-transfer-prime-ng/UploadResponse';
-import { ForgotPasswordRequest } from '../forgot-password/ForgotPasswordRequest';
-import { ResetPasswordRequest } from '../reset-password/ResetPasswordRequest';
 import { TableListResponse } from '../file-transfer-prime-ng/TableListResponse';
 import { SaveHoldingRequest } from '../portfolio-management/SaveHoldingRequest';
 import { map } from 'rxjs/operators';
@@ -29,22 +27,22 @@ export class RestService {
     }
 
     getPing() {
-        return this.http.get(this.serviceUrl + '/securityController/ping'/*, { headers: this.jsonHeader }*/);
+        return this.http.get(this.serviceUrl + '/protected/securityController/ping'/*, { headers: this.jsonHeader }*/);
     }
 
     getTableList(): Observable<TableListResponse> {
-        return this.http.get<TableListResponse>(this.serviceUrl + '/fileTransferController/getTableList');
+        return this.http.get<TableListResponse>(this.serviceUrl + '/protected/fileTransferController/getTableList');
     }
 
     uploadFile(formData: FormData): Observable<HttpEvent<UploadResponse>> {
-        return this.http.post<UploadResponse>(this.serviceUrl + '/fileTransferController/uploadFile', formData, {
+        return this.http.post<UploadResponse>(this.serviceUrl + '/protected/fileTransferController/uploadFile', formData, {
             reportProgress: true,
             observe: 'events'
         })
     }
 
     downloadExceptionsFile(exceptionsFile: string): Observable<HttpEvent<Blob>> {
-        return this.http.get(this.serviceUrl + '/fileTransferController/downloadExceptionsFile?exceptionsFile=' + exceptionsFile, {
+        return this.http.get(this.serviceUrl + '/protected/fileTransferController/downloadExceptionsFile?exceptionsFile=' + exceptionsFile, {
             reportProgress: true,
             observe: 'events',
             responseType: 'blob'
@@ -52,7 +50,7 @@ export class RestService {
     }
 
     downloadTable(tableName: string): Observable<HttpEvent<Blob>> {
-        return this.http.get(this.serviceUrl + '/fileTransferController/downloadFile?tableName=' + tableName, {
+        return this.http.get(this.serviceUrl + '/protected/fileTransferController/downloadFile?tableName=' + tableName, {
             reportProgress: true,
             observe: 'events',
             responseType: 'blob'
@@ -70,29 +68,21 @@ export class RestService {
         }
         const entityNameResource = RestService.toPlural(RestService.toCamelCase(tableName))
         console.log('entityNameResource', entityNameResource)
-        return this.http.get(this.serviceUrl + '/data-rest/' + entityNameResource + '?page=' + pageNumber + '&size=' + pageSize + sortQueryParams)
+        return this.http.get(this.serviceUrl + '/protected/data-rest/' + entityNameResource + '?page=' + pageNumber + '&size=' + pageSize + sortQueryParams)
     }
 
     getTableMetaDataAlps(tableName: string): Observable<any> {
         const entityNameResource = RestService.toPlural(RestService.toCamelCase(tableName))
-        return this.http.get(this.serviceUrl + '/data-rest/profile/' + entityNameResource)
-    }
-
-    forgotPassword(forgotPasswordRequest: ForgotPasswordRequest): Observable<void> {
-        return this.http.post<void>(this.serviceUrl + '/securityController/forgotPassword', forgotPasswordRequest)
-    }
-
-    resetPassword(resetPassword: ResetPasswordRequest): Observable<void> {
-        return this.http.post<void>(this.serviceUrl + '/securityController/resetPassword', resetPassword)
+        return this.http.get(this.serviceUrl + '/protected/data-rest/profile/' + entityNameResource)
     }
 
 
     getPriceHoldings(sendEmail: boolean) {
-        return this.http.get(`${this.serviceUrl}/investmentPortfolioConroller/priceHoldings?sendEmail=${sendEmail}`);
+        return this.http.get(`${this.serviceUrl}/protected/investmentPortfolioConroller/priceHoldings?sendEmail=${sendEmail}`);
     }
 
     getHoldingDetails(portfolioId: number): Observable<any> {
-        return this.http.get(`${this.serviceUrl}/investmentPortfolioConroller/getHoldingDetails?portfolioId=${portfolioId}`)
+        return this.http.get(`${this.serviceUrl}/protected/investmentPortfolioConroller/getHoldingDetails?portfolioId=${portfolioId}`)
             .pipe(
                 map((data: any): Array<HoldingDetail> => {
                     const holdingDetailList: Array<HoldingDetail> = data.holdingDetails
@@ -108,20 +98,20 @@ export class RestService {
     }
 
     findByPortfolioIdAndInstrumentIdAndAsOfDate(holding: SaveHoldingRequest): Observable<HttpResponse<Array<SaveHoldingRequest>>> {
-        return this.http.get<HttpResponse<Array<SaveHoldingRequest>>>(this.serviceUrl + '/data-rest/holdings/search/findByPortfolioIdAndInstrumentIdAndAsOfDate?portfolioId=10&instrumentId=21&asOfDate=2021-09-23');
+        return this.http.get<HttpResponse<Array<SaveHoldingRequest>>>(this.serviceUrl + '/protected/data-rest/holdings/search/findByPortfolioIdAndInstrumentIdAndAsOfDate?portfolioId=10&instrumentId=21&asOfDate=2021-09-23');
     }
     addHolding(saveHoldingRequest: SaveHoldingRequest): Observable<HttpResponse<any>> {
-        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/investmentPortfolioConroller/addHolding/`, saveHoldingRequest);
+        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioConroller/addHolding/`, saveHoldingRequest);
     }
     updateHolding(saveHoldingRequest: SaveHoldingRequest): Observable<HttpResponse<any>> {
-        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/investmentPortfolioConroller/updateHolding/`, saveHoldingRequest);
+        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioConroller/updateHolding/`, saveHoldingRequest);
     }
     deleteHolding(holdingId: number): Observable<HttpResponse<void>> {
-        return this.http.delete<HttpResponse<void>>(`${this.serviceUrl}/data-rest/holdings/` + holdingId);
+        return this.http.delete<HttpResponse<void>>(`${this.serviceUrl}/protected/data-rest/holdings/` + holdingId);
     }
 
     getDistinctPositionSnapshots(): Observable<Array<PositionSnapshot>> {
-        return this.http.get<Array<PositionSnapshot>>(`${this.serviceUrl}/investmentPortfolioConroller/getDistinctPositionSnapshots`)
+        return this.http.get<Array<PositionSnapshot>>(`${this.serviceUrl}/protected/investmentPortfolioConroller/getDistinctPositionSnapshots`)
             .pipe(
                 map((positionSnapshotList): Array<PositionSnapshot> => {
                     positionSnapshotList.forEach((element: { positionSnapshot: any }): void => {
@@ -134,7 +124,7 @@ export class RestService {
                 }))
     }
     purgePositionSnapshot(positionSnapshot: PositionSnapshot): Observable<HttpResponse<any>> {
-        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/investmentPortfolioConroller/purgePositionSnapshot/`, positionSnapshot);
+        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioConroller/purgePositionSnapshot/`, positionSnapshot);
     }
 
     public static toCamelCase(tableName: string): string {

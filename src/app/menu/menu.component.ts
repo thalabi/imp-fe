@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-menu',
@@ -8,18 +9,13 @@ import { AuthService } from '../auth/auth.service';
 })
 export class MenuComponent implements OnInit {
     items: any //Array<MenuItem> = {} as Array<MenuItem>
-    //customUserDetails: CustomUserDetails = {} as CustomUserDetails;
 
     constructor(
-        private authService: AuthService//, private sessionService: SessionService,
+        private authService: AuthService
     ) { }
 
     ngOnInit(): void {
         console.log('ngOnInit()')
-        // this.sessionService.customUserDetailsObservable.subscribe(message => {
-        //     let customUserDetails: CustomUserDetails = message;
-        //     if (customUserDetails?.id) {
-        //         console.log('this.customUserDetails?.id is true')
         this.authService.isAuthenticated$.subscribe(authenticated => {
             if (authenticated) {
                 this.items = [
@@ -46,7 +42,7 @@ export class MenuComponent implements OnInit {
                         //label: 'Logout', icon: 'pi pi-user', routerLink: ['']
                         icon: 'pi pi-user',
                         items: [
-                            { label: 'Password', routerLink: [''] },
+                            { label: 'Password', url: environment.keycloak.issuer + '/account/#/security/signingin' },
                             { label: 'Logout', command: () => this.logout() },
 
                         ]
