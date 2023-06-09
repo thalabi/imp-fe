@@ -3,7 +3,7 @@ export const environment = {
 
     buildVersion: "@buildVersion@",
     buildTimestamp: "@buildTimestamp@",
-    beRestServiceUrl: "http://@backendHostname@:@backendPort@",
+    beRestServiceUrl: "@beRestServiceUrl@",
     // when adding or changing keycloak json, update auth-config.ts and auth-module-config.ts as well
     keycloak: {
         issuer: '@keycloak_issuer@',
