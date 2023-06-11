@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { environment } from '../../environments/environment';
+import { MenuItem } from 'primeng/api';
 
 @Component({
     selector: 'app-menu',
@@ -8,7 +9,7 @@ import { environment } from '../../environments/environment';
     styleUrls: ['./menu.component.css']
 })
 export class MenuComponent implements OnInit {
-    items: any //Array<MenuItem> = {} as Array<MenuItem>
+    items: Array<MenuItem> = {} as Array<MenuItem>
 
     constructor(
         private authService: AuthService
