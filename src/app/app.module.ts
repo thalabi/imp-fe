@@ -9,7 +9,6 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { PingComponent } from './ping/ping.component';
 import { Httpstatus404Component } from './httpstatus404/httpstatus404.component';
-import { JwtInterceptorService } from './service/jwt-interceptor.service';
 import { FileTransferComponent } from './file-transfer/file-transfer.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
