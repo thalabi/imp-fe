@@ -9,12 +9,11 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { PingComponent } from './ping/ping.component';
 import { Httpstatus404Component } from './httpstatus404/httpstatus404.component';
-import { FileTransferComponent } from './file-transfer/file-transfer.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
 import { FileUploadModule } from 'primeng/fileupload';
-import { FileTransferPrimeNgComponent } from './file-transfer-prime-ng/file-transfer-prime-ng.component';
+import { FileTransferComponent } from './file-transfer/file-transfer.component';
 import { MenubarModule } from 'primeng/menubar';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -42,7 +41,6 @@ import { WelcomeComponent } from './welcome/welcome.component';
         PingComponent,
         Httpstatus404Component,
         FileTransferComponent,
-        FileTransferPrimeNgComponent,
         MenuComponent,
         ByteFormatPipe,
         PriceHoldingsComponent,

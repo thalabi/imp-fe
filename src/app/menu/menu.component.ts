@@ -24,12 +24,7 @@ export class MenuComponent implements OnInit {
                         label: 'Ping', routerLink: ['/ping']
                     },
                     {
-                        label: 'File Transfer',
-                        items: [
-                            { label: 'Plain', routerLink: ['/fileTransfer'] },
-                            { label: 'PrimeNG', routerLink: ['/fileTransferPrimeNg'] },
-
-                        ]
+                        label: 'File Transfer', routerLink: ['/fileTransferPrimeNg']
                     },
                     {
                         label: 'Portfolio',
