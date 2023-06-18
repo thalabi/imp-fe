@@ -3,6 +3,7 @@ import { AuthService } from '../auth/auth.service';
 import { environment } from '../../environments/environment';
 import { MenuItem } from 'primeng/api';
 import { SessionService } from '../service/session.service';
+import { distinctUntilChanged } from 'rxjs';
 
 @Component({
     selector: 'app-menu',
@@ -20,9 +21,6 @@ export class MenuComponent implements OnInit {
     ngOnInit(): void {
         console.log('ngOnInit()')
         const userMenuItems = [
-            // {
-            //     label: 'Ping', routerLink: ['/ping']
-            // },
             {
                 label: 'File Transfer', routerLink: ['/fileTransferPrimeNg']
             },
@@ -48,20 +46,25 @@ export class MenuComponent implements OnInit {
         const adminMenuItems = [...userMenuItems]
         adminMenuItems.push({ label: 'Ping', routerLink: ['/ping'] })
 
-        this.authService.isAuthenticated$.subscribe(authenticated => {
-            if (authenticated) {
-                this.items = userMenuItems
-                this.sessionService.userInfoObservable.subscribe(userInfo => {
-                    if (userInfo.backEndAuthorities?.includes('ROLE_realm_ipm-admin-role')) {
-                        this.items = adminMenuItems
-                    }
-                })
-            } else {
-                this.items = [
-                    { label: 'Login', command: () => this.login() }
-                ];
-            }
-        })
+        this.authService.isAuthenticated$
+            .pipe(distinctUntilChanged())
+            .subscribe(authenticated => {
+                console.log('authenticated', authenticated)
+                if (authenticated) {
+                    this.items = userMenuItems
+                    this.sessionService.userInfo$.subscribe(userInfo => {
+                        console.log('userInfo', userInfo)
+                        console.log('userInfo.backEndAuthorities', userInfo.backEndAuthorities)
+                        if (userInfo.backEndAuthorities?.includes('ROLE_realm_ipm-admin-role')) {
+                            this.items = adminMenuItems
+                        }
+                    })
+                } else {
+                    this.items = [
+                        { label: 'Login', command: () => this.login() }
+                    ];
+                }
+            })
     }
 
     login() {
