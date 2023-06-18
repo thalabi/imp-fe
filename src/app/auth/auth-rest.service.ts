@@ -13,7 +13,7 @@ export class AuthRestService {
 
     getUserInfo(): Observable<UserInfo> {
         console.log('getUserInfo')
-        return this.http.get<UserInfo>(environment.beRestServiceUrl + '/protected/sandboxController/getUserInfo');
+        return this.http.get<UserInfo>(environment.beRestServiceUrl + '/protected/securityController/getUserInfo');
     }
 
 }

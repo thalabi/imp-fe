@@ -27,7 +27,7 @@ export class RestService {
     }
 
     getPing() {
-        return this.http.get(this.serviceUrl + '/protected/securityController/ping'/*, { headers: this.jsonHeader }*/);
+        return this.http.get(this.serviceUrl + '/pingController/ping');
     }
 
     getTableList(): Observable<TableListResponse> {
