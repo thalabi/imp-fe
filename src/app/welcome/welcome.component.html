@@ -3,7 +3,7 @@
         <div *ngIf="logoutMessage" class="lead" style="color: blueviolet;">
             <h3>{{logoutMessage}}</h3>
         </div>
-        <h1>Welcome to IPM application</h1>
+        <h1>Welcome {{userInfo.firstName}} to IPM application</h1>
         <div *ngIf="! authenticated">Login to see the protected pages</div>
     </div>
 </div>

@@ -1,31 +1,19 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CustomUserDetails } from '../login/CustomUserDetails';
+import { UserInfo } from '../auth/auth.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SessionService {
 
-    private tokenSource = new BehaviorSubject<string>('');
-    private customUserDetailsSource = new BehaviorSubject<CustomUserDetails>({} as CustomUserDetails);
-    private isAuthenticatedSource = new BehaviorSubject<boolean>(false);
-    tokenObservable = this.tokenSource.asObservable();
-    customUserDetailsObservable = this.customUserDetailsSource.asObservable();
-    isAuthenticatedSourceObservable = this.isAuthenticatedSource.asObservable();
+    private userInfoSource = new BehaviorSubject<UserInfo>({} as UserInfo);
+    public userInfoObservable = this.userInfoSource.asObservable();
 
     constructor() { }
 
-    setToken(token: string) {
-        console.log('setToken()')
-        this.tokenSource.next(token);
-    }
-    setCustomUserDetails(customUserDetails: CustomUserDetails) {
-        console.log('setCustomUserDetails(), customUserDetails:', customUserDetails)
-        this.customUserDetailsSource.next(customUserDetails);
-    }
-    setIsAuthenticated(isAuthenticated: boolean) {
-        console.log('setIsAuthenticated()')
-        this.isAuthenticatedSource.next(isAuthenticated);
+    setUserInfo(userInfo: UserInfo) {
+        this.userInfoSource.next(userInfo)
     }
 }
