@@ -4,10 +4,10 @@ import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UploadResponse } from '../file-transfer/UploadResponse';
 import { TableListResponse } from '../file-transfer/TableListResponse';
-import { SaveHoldingRequest } from '../portfolio-management/SaveHoldingRequest';
+import { SaveHoldingRequest } from '../portfolio/portfolio-management/SaveHoldingRequest';
 import { map } from 'rxjs/operators';
-import { PositionSnapshot } from '../purge-position-snapshot/PositionSnapshot';
-import { HoldingDetail } from '../portfolio-management/HoldingDetail';
+import { PositionSnapshot } from '../portfolio/purge-position-snapshot/PositionSnapshot';
+import { HoldingDetail } from '../portfolio/portfolio-management/HoldingDetail';
 
 @Injectable({
     providedIn: 'root'

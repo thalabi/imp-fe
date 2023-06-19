@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-
-import { CustomUserDetails } from '../login/CustomUserDetails';
 import { RestService } from '../service/rest.service';
 import { PingResponse } from './PingResponse';
 import { AuthService, UserInfo } from '../auth/auth.service';

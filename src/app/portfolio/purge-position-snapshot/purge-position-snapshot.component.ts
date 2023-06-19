@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { RestService } from '../service/rest.service';
 import { PositionSnapshot } from './PositionSnapshot';
+import { RestService } from '../../service/rest.service';
 
 @Component({
     selector: 'app-purge-position-snapshot',

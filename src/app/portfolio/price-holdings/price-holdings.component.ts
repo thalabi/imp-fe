@@ -1,6 +1,6 @@
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { RestService } from '../service/rest.service';
+import { RestService } from '../../service/rest.service';
 import { PriceHoldingsResponse } from './PriceHoldingsResponse';
 import { formatDate } from '@angular/common';
 

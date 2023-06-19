@@ -27,13 +27,15 @@ export class MenuComponent implements OnInit {
             {
                 label: 'Portfolio',
                 items: [
-                    { label: 'Price Holdings', routerLink: ['/priceHoldings'] },
-                    { label: 'Portfolio Management', routerLink: ['/portfolioManagement'] },
-                    { label: 'Purge Position Snapshot', routerLink: ['/purgePositionSnapshot'] }
+                    { label: 'Price Holdings', routerLink: ['/portfolio/priceHoldings'] },
+                    { label: 'Portfolio Management', routerLink: ['/portfolio/portfolioManagement'] },
+                    { label: 'Purge Position Snapshot', routerLink: ['/portfolio/purgePositionSnapshot'] }
                 ]
             },
+            // {
+            //     label: 'Portfolio Management', routerLink: ['/portfolio/portfolioManagement']
+            // },
             {
-                //label: 'Logout', icon: 'pi pi-user', routerLink: ['']
                 icon: 'pi pi-user',
                 items: [
                     { label: 'Password', url: environment.keycloak.issuer + '/account/#/security/signingin' },

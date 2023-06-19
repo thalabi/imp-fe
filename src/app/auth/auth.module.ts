@@ -3,10 +3,8 @@ import { APP_INITIALIZER, ModuleWithProviders, NgModule, Optional, SkipSelf } fr
 import { AuthConfig, OAuthModule, OAuthModuleConfig, OAuthStorage } from 'angular-oauth2-oidc';
 import { authAppInitializerFactory } from './auth-app-initializer.factory';
 import { authCodeFlowConfig } from './auth-config';
-//import { AuthGuardWithForcedLogin } from './auth-guard-with-forced-login.service';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth-guard.service';
-import { NgIdleModule } from '@ng-idle/core';
 import { authModuleConfig } from './auth-module-config';
 import { AuthRestService } from './auth-rest.service';
 import { AuthGuardWithForcedLogin } from './auth-guard-with-forced-login.service';

@@ -1,9 +1,9 @@
-import { HttpErrorResponse, HttpEvent, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { CrudEnum } from '../crud-enum';
-import { RestService } from '../service/rest.service';
+import { CrudEnum } from '../../crud-enum';
+import { RestService } from '../../service/rest.service';
 import { SaveHoldingRequest } from './SaveHoldingRequest';
 import { HoldingDetail } from './HoldingDetail';
 import { Instrument } from './Instrument';
@@ -20,10 +20,8 @@ export class PortfolioManagementComponent implements OnInit {
     portfolioCount: number = 0
     selectedPortfolio: Portfolio = {} as Portfolio
     portfolioValue: number = 0
-    //allInstrumentRows: Array<Instrument> = []
     instrumentRowsByCurrency: Map<string, Array<Instrument>> = new Map()
     instrumentArrayForCurrency: Array<Instrument> = []
-    //instrumentCount: number = 0
     selectedInstrument: Instrument = {} as Instrument
     loadingStatus: boolean = false;
 
