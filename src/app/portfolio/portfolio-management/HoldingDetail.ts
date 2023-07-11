@@ -3,7 +3,7 @@ export interface HoldingDetail {
     asOfDate: Date;
     instrumentId: number;
     ticker: string;
-    exchange: string;
+    //exchange: string;
     currency: string;
     name: string;
     quantity: number;

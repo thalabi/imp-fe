@@ -38,7 +38,8 @@
         </ng-template>
         <ng-template pTemplate="body" let-holdingDetail>
             <tr [pSelectableRow]="holdingDetail">
-                <td>{{holdingDetail.ticker}}:{{holdingDetail.exchange}}</td>
+                <!-- <td>{{holdingDetail.ticker}}:{{holdingDetail.exchange}}</td> -->
+                <td>{{holdingDetail.ticker}}</td>
                 <td>{{holdingDetail.name}}</td>
                 <td><span pTooltip="{{holdingDetail.asOfDate | date:'y-MM-dd'}}"
                         class="texthastooltip">{{holdingDetail.quantity}}</span>
@@ -80,8 +81,11 @@
                     placeholder="Select an instrument" (onChange)="onChangeInstrument($event)" [showClear]="true"
                     appendTo="body">
                     <ng-template pTemplate="item" let-instrument>
-                        <div>
+                        <!-- <div>
                             {{instrument.ticker}}:{{instrument.exchange}} - {{instrument.name}}
+                        </div> -->
+                        <div>
+                            {{instrument.ticker}}} - {{instrument.name}}
                         </div>
                     </ng-template>
                     <ng-template pTemplate="selectedItem">

@@ -1,6 +1,6 @@
 export interface Instrument {
     ticker: string;
-    exchange: string;
+    //exchange: string;
     currency: string;
     name: string;
     _links: {
