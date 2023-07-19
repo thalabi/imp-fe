@@ -78,11 +78,11 @@ export class RestService {
 
 
     getPriceHoldings(sendEmail: boolean) {
-        return this.http.get(`${this.serviceUrl}/protected/investmentPortfolioConroller/priceHoldings?sendEmail=${sendEmail}`);
+        return this.http.get(`${this.serviceUrl}/protected/investmentPortfolioController/priceHoldings?sendEmail=${sendEmail}`);
     }
 
     getHoldingDetails(portfolioId: number): Observable<any> {
-        return this.http.get(`${this.serviceUrl}/protected/investmentPortfolioConroller/getHoldingDetails?portfolioId=${portfolioId}`)
+        return this.http.get(`${this.serviceUrl}/protected/investmentPortfolioController/getHoldingDetails?portfolioId=${portfolioId}`)
             .pipe(
                 map((data: any): Array<HoldingDetail> => {
                     const holdingDetailList: Array<HoldingDetail> = data.holdingDetails
@@ -101,17 +101,17 @@ export class RestService {
         return this.http.get<HttpResponse<Array<SaveHoldingRequest>>>(this.serviceUrl + '/protected/data-rest/holdings/search/findByPortfolioIdAndInstrumentIdAndAsOfDate?portfolioId=10&instrumentId=21&asOfDate=2021-09-23');
     }
     addHolding(saveHoldingRequest: SaveHoldingRequest): Observable<HttpResponse<any>> {
-        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioConroller/addHolding/`, saveHoldingRequest);
+        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioController/addHolding/`, saveHoldingRequest);
     }
     updateHolding(saveHoldingRequest: SaveHoldingRequest): Observable<HttpResponse<any>> {
-        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioConroller/updateHolding/`, saveHoldingRequest);
+        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioController/updateHolding/`, saveHoldingRequest);
     }
     deleteHolding(holdingId: number): Observable<HttpResponse<void>> {
         return this.http.delete<HttpResponse<void>>(`${this.serviceUrl}/protected/data-rest/holdings/` + holdingId);
     }
 
     getDistinctPositionSnapshots(): Observable<Array<PositionSnapshot>> {
-        return this.http.get<Array<PositionSnapshot>>(`${this.serviceUrl}/protected/investmentPortfolioConroller/getDistinctPositionSnapshots`)
+        return this.http.get<Array<PositionSnapshot>>(`${this.serviceUrl}/protected/investmentPortfolioController/getDistinctPositionSnapshots`)
             .pipe(
                 map((positionSnapshotList): Array<PositionSnapshot> => {
                     positionSnapshotList.forEach((element: { positionSnapshot: any }): void => {
@@ -124,7 +124,7 @@ export class RestService {
                 }))
     }
     purgePositionSnapshot(positionSnapshot: PositionSnapshot): Observable<HttpResponse<any>> {
-        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioConroller/purgePositionSnapshot/`, positionSnapshot);
+        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioController/purgePositionSnapshot/`, positionSnapshot);
     }
 
     public static toCamelCase(tableName: string): string {
