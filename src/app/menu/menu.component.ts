@@ -29,7 +29,8 @@ export class MenuComponent implements OnInit {
                 items: [
                     { label: 'Price Holdings', routerLink: ['/portfolio/priceHoldings'] },
                     { label: 'Portfolio Management', routerLink: ['/portfolio/portfolioManagement'] },
-                    { label: 'Purge Position Snapshot', routerLink: ['/portfolio/purgePositionSnapshot'] }
+                    { label: 'Purge Position Snapshot', routerLink: ['/portfolio/purgePositionSnapshot'] },
+                    { label: 'Instrument Management', routerLink: ['/portfolio/instrumentManagement'] }
                 ]
             },
             // {

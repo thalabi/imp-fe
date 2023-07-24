@@ -8,6 +8,7 @@ import { SaveHoldingRequest } from '../portfolio/portfolio-management/SaveHoldin
 import { map } from 'rxjs/operators';
 import { PositionSnapshot } from '../portfolio/purge-position-snapshot/PositionSnapshot';
 import { HoldingDetail } from '../portfolio/portfolio-management/HoldingDetail';
+import { InstrumentInterestBearing } from '../portfolio/portfolio-management/InstrumentInterestBearing';
 
 @Injectable({
     providedIn: 'root'
@@ -57,7 +58,7 @@ export class RestService {
         })
     }
 
-    getTableData(tableName: string, pageNumber: number, pageSize: number, sortColumns?: Array<string>): Observable<any> {
+    getTableData(tableName: string, pageNumber: number, pageSize: number, sortColumns?: Array<string>, projection?: string): Observable<any> {
         let sortQueryParams: string = ''
         if (sortColumns) {
             console.log('sortColumns', sortColumns)
@@ -66,9 +67,11 @@ export class RestService {
             })
             console.log('sortQueryParams', sortQueryParams)
         }
+        const projectionParam: string = projection ? `&projection=${projection}` : ''
+
         const entityNameResource = RestService.toPlural(RestService.toCamelCase(tableName))
         console.log('entityNameResource', entityNameResource)
-        return this.http.get(this.serviceUrl + '/protected/data-rest/' + entityNameResource + '?page=' + pageNumber + '&size=' + pageSize + sortQueryParams)
+        return this.http.get(this.serviceUrl + '/protected/data-rest/' + entityNameResource + '?page=' + pageNumber + '&size=' + pageSize + sortQueryParams + projectionParam)
     }
 
     getTableMetaDataAlps(tableName: string): Observable<any> {
@@ -127,6 +130,33 @@ export class RestService {
         return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioController/purgePositionSnapshot/`, positionSnapshot);
     }
 
+    getCurrencies(): Observable<Array<string>> {
+        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/instrumentController/getCurrencies`);
+    }
+    getFinancialInstitutions(): Observable<Array<string>> {
+        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/instrumentController/getFinancialInstitutions`);
+    }
+    getInstrumentTypes(): Observable<Array<string>> {
+        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/instrumentController/getInstrumentTypes`);
+    }
+    getInterestBearingTypes(): Observable<Array<string>> {
+        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/instrumentController/getInterestBearingTypes`);
+    }
+    getTerms(): Observable<Array<string>> {
+        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/instrumentController/getTerms`);
+    }
+
+    addInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
+        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/addInstrumentInterestBearing/`, instrumentInterestBearing);
+    }
+    deleteInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
+        const id = RestService.idFromUrl(instrumentInterestBearing._links.self.href);
+        return this.http.delete<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/deleteInstrumentInterestBearing/${id}`);
+    }
+    updateInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
+        const id = RestService.idFromUrl(instrumentInterestBearing._links.self.href);
+        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/updateInstrumentInterestBearing/${id}`, instrumentInterestBearing);
+    }
     public static toCamelCase(tableName: string): string {
         return tableName.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase()); // convert to camel case
     }

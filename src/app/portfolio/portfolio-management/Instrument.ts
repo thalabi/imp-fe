@@ -1,8 +1,10 @@
 export interface Instrument {
-    ticker: string;
-    //exchange: string;
-    currency: string;
-    name: string;
+    // id: number | null;
+    // version: number | null;
+    type: string | null;
+    ticker: string | null;
+    currency: string | null;
+    name: string | null;
     _links: {
         self: {
             href: URL

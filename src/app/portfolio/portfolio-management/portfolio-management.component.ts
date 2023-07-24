@@ -20,7 +20,7 @@ export class PortfolioManagementComponent implements OnInit {
     portfolioCount: number = 0
     selectedPortfolio: Portfolio = {} as Portfolio
     portfolioValue: number = 0
-    instrumentRowsByCurrency: Map<string, Array<Instrument>> = new Map()
+    instrumentRowsByCurrency: Map<string | null, Array<Instrument>> = new Map()
     instrumentArrayForCurrency: Array<Instrument> = []
     selectedInstrument: Instrument = {} as Instrument
     loadingStatus: boolean = false;
@@ -192,15 +192,15 @@ export class PortfolioManagementComponent implements OnInit {
         switch (this.crudMode) {
             case CrudEnum.ADD:
                 this.holdingDetailForm.controls.asOfDate.patchValue(new Date(new Date().setHours(0, 0, 0, 0))); // new date with only date portion
-                this.enableDisableFormFields(true);
+                this.holdingDetailForm.enable();
                 break;
             case CrudEnum.UPDATE:
                 this.fillInFormWithInstrumentAndQuantity();
-                this.enableDisableFormFields(true);
+                this.holdingDetailForm.enable();
                 break;
             case CrudEnum.DELETE:
                 this.fillInFormWithInstrumentAndQuantity();
-                this.enableDisableFormFields(false);
+                this.holdingDetailForm.disable();
                 break;
             default:
                 console.error('this.crudMode is invalid. this.crudMode: ' + this.crudMode);
@@ -216,18 +216,6 @@ export class PortfolioManagementComponent implements OnInit {
 
         this.holdingDetailForm.controls.quantity.patchValue(this.holdingDetailSelectedRow.quantity);
 
-    }
-
-    private enableDisableFormFields(enableFields: boolean): void {
-        if (enableFields) {
-            this.holdingDetailForm.controls.asOfDate.enable();
-            this.holdingDetailForm.controls.instrument.enable();
-            this.holdingDetailForm.controls.quantity.enable();
-        } else {
-            this.holdingDetailForm.controls.asOfDate.disable();
-            this.holdingDetailForm.controls.instrument.disable();
-            this.holdingDetailForm.controls.quantity.disable();
-        }
     }
 
     private lookupInstrumentById(instrumentId: number): Instrument | undefined {
