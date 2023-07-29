@@ -89,10 +89,10 @@ export class InstrumentManagementComponent implements OnInit {
                         //this.portfolioList = this.buildPortfolioList(this.portfolioRows)
                     },
                     complete: () => {
-                        // this.messageService.clear()
-                        // this.uploadProgressMessage = '';
-                        // this.uploadResponse = {} as UploadResponse;
-                        // this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
+                        console.log('http request completed')
+                        // sort by instrument name
+                        // this cannot be done by jpa data rest becuase does ot support sort by assosiation columns
+                        this.instrumentInterestBearings!.sort((a, b) => (a.instrument.name! < b.instrument.name!) ? -1 : (a.instrument.name! > b.instrument.name!) ? 1 : 0)
                     }
                     ,
                     error: (httpErrorResponse: HttpErrorResponse) => {
