@@ -12,7 +12,7 @@ export interface HoldingDetail {
 
     instrumentType: string;
     // Interest bearing instrument details
-    financialInstitution: string;
+    financialInstitutionString: string;
     type: string;
     term: string;
     interestRate: number;
