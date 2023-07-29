@@ -43,7 +43,7 @@
                     *ngIf="holdingDetail.instrumentType == 'INTEREST_BEARING'; then interestBearing; else nonInterestBearing"></ng-container>
                 <ng-template #interestBearing>
                     <td><span
-                            pTooltip="{{holdingDetail.financialInstitutionString}} {{holdingDetail.type}} {{holdingDetail.term}} {{holdingDetail.interestRate / 100 | percent :'0.1' }} {{holdingDetail.maturityDate | date:'y-MM-dd'}} {{holdingDetail.promotionalInterestRate / 100 | percent :'0.1' }} {{holdingDetail.promotionEndDate | date:'y-MM-dd'}}"
+                            pTooltip="{{holdingDetail.financialInstitutionString}} {{holdingDetail.type}} {{holdingDetail.term}} {{holdingDetail.interestRate ? (holdingDetail.interestRate / 100 | percent :'0.1') : ''}} {{holdingDetail.maturityDate | date:'y-MM-dd'}} {{holdingDetail.promotionalInterestRate ? (holdingDetail.promotionalInterestRate  / 100 | percent :'0.1') : '' }} {{holdingDetail.promotionEndDate | date:'y-MM-dd'}}"
                             class="texthastooltip">{{holdingDetail.ticker}}</span>
                     </td>
                 </ng-template>
