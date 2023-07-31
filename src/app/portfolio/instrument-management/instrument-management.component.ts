@@ -132,6 +132,7 @@ export class InstrumentManagementComponent implements OnInit {
         console.log('this.crudMode', this.crudMode);
         switch (this.crudMode) {
             case CrudEnum.ADD:
+                this.instrumentInterestBearingForm.controls.emailNotification.patchValue(true);
                 this.instrumentInterestBearingForm.enable();
                 break;
             case CrudEnum.UPDATE:
