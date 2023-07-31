@@ -228,8 +228,9 @@
                 <label for="emailNotification">Email</label>
             </div>
             <div class="col-8">
-                <p-checkbox id="emailNotification" formControlName="emailNotification" [binary]="true"
-                    inputId="emailNotification"></p-checkbox>
+                <p-checkbox inputId="emailNotification"
+                    [formControl]="instrumentInterestBearingForm.controls['emailNotification']"
+                    [binary]="true"></p-checkbox>
             </div>
 
             <p-footer>

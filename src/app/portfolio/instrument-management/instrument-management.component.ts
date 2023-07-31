@@ -43,7 +43,7 @@ export class InstrumentManagementComponent implements OnInit {
         maturityDate: this.formBuilder.control<Date | null>(null),
         promotionalInterestRate: this.formBuilder.control<number | null>(null),
         promotionEndDate: this.formBuilder.control<Date | null>(null),
-        emailNotification: this.formBuilder.control<boolean | boolean>(true, Validators.required)
+        emailNotification: this.formBuilder.control<boolean | null>(true, Validators.required)
     })
 
     constructor(
