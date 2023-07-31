@@ -38,6 +38,7 @@
                 <th>Maturity Date</th>
                 <th>Promo Rate</th>
                 <th>Promo End Date</th>
+                <th>Email</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-instrumentInterestBearing>
@@ -54,6 +55,7 @@
                 <td>{{instrumentInterestBearing.maturityDate | date:'y-MM-dd'}}</td>
                 <td>{{instrumentInterestBearing.promotionalInterestRate}}</td>
                 <td>{{instrumentInterestBearing.promotionEndDate | date:'y-MM-dd'}}</td>
+                <td>{{instrumentInterestBearing.emailNotification ? 'Y' : 'N'}}</td>
 
                 <!-- <td><span pTooltip="{{instrumentInterestBearing.asOfDate | date:'y-MM-dd'}}"
                         class="texthastooltip">{{instrumentInterestBearing.quantity}}</span>
@@ -220,12 +222,15 @@
                     [showIcon]="true" [readonlyInput]="true" [showOnFocus]="false" [inputStyle]="{'width':'8rem'}"
                     appendTo="body">
                 </p-calendar>
-
-                <!-- <div *ngIf="instrumentInterestBearingForm.controls.maturityDate.invalid && instrumentInterestBearingForm.controls.maturityDate.touched"
-                    class="red-font">
-                    Field is required</div> -->
             </div>
 
+            <div class="col-4">
+                <label for="emailNotification">Email</label>
+            </div>
+            <div class="col-8">
+                <p-checkbox id="emailNotification" formControlName="emailNotification" [binary]="true"
+                    inputId="emailNotification"></p-checkbox>
+            </div>
 
             <p-footer>
                 <div class="formgroup-inline">

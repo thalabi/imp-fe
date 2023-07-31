@@ -12,6 +12,7 @@ export interface InstrumentInterestBearing {
     maturityDate: Date | null;
     promotionalInterestRate: number | null;
     promotionEndDate: Date | null;
+    emailNotification: boolean | null;
     _links: {
         self: {
             href: URL

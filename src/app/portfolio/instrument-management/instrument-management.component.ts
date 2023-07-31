@@ -42,7 +42,8 @@ export class InstrumentManagementComponent implements OnInit {
         term: this.formBuilder.control<string | null>(null),
         maturityDate: this.formBuilder.control<Date | null>(null),
         promotionalInterestRate: this.formBuilder.control<number | null>(null),
-        promotionEndDate: this.formBuilder.control<Date | null>(null)
+        promotionEndDate: this.formBuilder.control<Date | null>(null),
+        emailNotification: this.formBuilder.control<boolean | boolean>(true, Validators.required)
     })
 
     constructor(
@@ -161,6 +162,7 @@ export class InstrumentManagementComponent implements OnInit {
         this.instrumentInterestBearingForm.controls.maturityDate.patchValue(this.instrumentInterestBearingSelectedRow.maturityDate);
         this.instrumentInterestBearingForm.controls.promotionalInterestRate.patchValue(this.instrumentInterestBearingSelectedRow.promotionalInterestRate);
         this.instrumentInterestBearingForm.controls.promotionEndDate.patchValue(this.instrumentInterestBearingSelectedRow.promotionEndDate);
+        this.instrumentInterestBearingForm.controls.emailNotification.patchValue(this.instrumentInterestBearingSelectedRow.emailNotification);
         console.log('this.instrumentInterestBearingForm.value', this.instrumentInterestBearingForm.value)
     }
     onSubmit() {
@@ -181,6 +183,7 @@ export class InstrumentManagementComponent implements OnInit {
                 saveInstrumentInterestBearing.maturityDate = this.instrumentInterestBearingForm.controls.maturityDate.value
                 saveInstrumentInterestBearing.promotionalInterestRate = this.instrumentInterestBearingForm.controls.promotionalInterestRate.value
                 saveInstrumentInterestBearing.promotionEndDate = this.instrumentInterestBearingForm.controls.promotionEndDate.value
+                saveInstrumentInterestBearing.emailNotification = this.instrumentInterestBearingForm.controls.emailNotification.value
                 console.log('saveInstrumentInterestBearing', saveInstrumentInterestBearing)
                 this.restService.addInstrumentInterestBearing(saveInstrumentInterestBearing)
                     .subscribe(
@@ -217,6 +220,7 @@ export class InstrumentManagementComponent implements OnInit {
                 saveInstrumentInterestBearing.maturityDate = this.instrumentInterestBearingForm.controls.maturityDate.value
                 saveInstrumentInterestBearing.promotionalInterestRate = this.instrumentInterestBearingForm.controls.promotionalInterestRate.value
                 saveInstrumentInterestBearing.promotionEndDate = this.instrumentInterestBearingForm.controls.promotionEndDate.value
+                saveInstrumentInterestBearing.emailNotification = this.instrumentInterestBearingForm.controls.emailNotification.value
 
                 saveInstrumentInterestBearing._links = this.instrumentInterestBearingSelectedRow._links
 
