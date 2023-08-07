@@ -1,7 +1,7 @@
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { RestService } from '../../service/rest.service';
-import { BatchJobResponse } from './BatchJobResponse';
+import { BatchJobResponse } from '../BatchJobResponse';
 import { formatDate } from '@angular/common';
 
 @Component({

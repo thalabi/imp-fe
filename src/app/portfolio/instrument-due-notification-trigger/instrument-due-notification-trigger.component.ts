@@ -1,5 +1,5 @@
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { BatchJobResponse } from '../price-holdings/BatchJobResponse';
+import { BatchJobResponse } from '../BatchJobResponse';
 import { RestService } from '../../service/rest.service';
 import { MessageService } from 'primeng/api';
 import { formatDate } from '@angular/common';
@@ -41,7 +41,7 @@ export class InstrumentDueNotificationTriggerComponent implements OnInit {
     }
 
     onSubmit(event: any) {
-        this.processingMessage = 'Pricing holdings:'
+        this.processingMessage = 'Processing instruments due notification:'
         this.restService.triggerInstrumetDueNotification(this.daysToNotify)
             .subscribe((data: any) => {
                 this.processingMessage = ''
