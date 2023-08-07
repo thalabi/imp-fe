@@ -157,6 +157,13 @@ export class RestService {
         const id = RestService.idFromUrl(instrumentInterestBearing._links.self.href);
         return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/updateInstrumentInterestBearing/${id}`, instrumentInterestBearing);
     }
+    getDefaultDaysToNotify(): Observable<number> {
+        return this.http.get<number>(`${this.serviceUrl}/protected/instrumentController/getDefaultDaysToNotify`);
+    }
+    triggerInstrumetDueNotification(daysToNotify: number) {
+        return this.http.get(`${this.serviceUrl}/protected/instrumentController/triggerInstrumetDueNotification?daysToNotify=${daysToNotify}`);
+    }
+
     public static toCamelCase(tableName: string): string {
         return tableName.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase()); // convert to camel case
     }

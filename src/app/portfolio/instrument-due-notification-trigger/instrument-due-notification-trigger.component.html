@@ -1,0 +1,16 @@
+<div class="p-formgroup-inline" style="margin-top: 1rem;">
+    <div class="p-field">
+        <label for="daysToNotify">Send email notification of instruments due within the next days:</label>
+        <p-inputNumber [(ngModel)]="daysToNotify" inputId="daysToNotify"></p-inputNumber>
+
+    </div>
+    <div class="p-field">
+        <button pButton type="button" label="Submit" (click)="onSubmit($event)"></button>
+    </div>
+    <div class="p-field" style="margin-top: 0.5rem;">
+        <span *ngIf="processingMessage">
+            <label for="processingMessage">{{processingMessage}}</label>
+            <progress id="processingMessage" style="margin-left: 0.5rem;"></progress>
+        </span>
+    </div>
+</div>

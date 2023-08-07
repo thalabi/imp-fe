@@ -16,6 +16,7 @@ import { PurgePositionSnapshotComponent } from './purge-position-snapshot/purge-
 import { PriceHoldingsComponent } from './price-holdings/price-holdings.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InstrumentManagementComponent } from './instrument-management/instrument-management.component';
+import { InstrumentDueNotificationTriggerComponent } from './instrument-due-notification-trigger/instrument-due-notification-trigger.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { InstrumentManagementComponent } from './instrument-management/instrumen
         PortfolioManagementComponent,
         PurgePositionSnapshotComponent,
         PriceHoldingsComponent,
-        InstrumentManagementComponent
+        InstrumentManagementComponent,
+        InstrumentDueNotificationTriggerComponent
     ],
     imports: [
         CommonModule,

@@ -1,7 +1,7 @@
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { RestService } from '../../service/rest.service';
-import { PriceHoldingsResponse } from './PriceHoldingsResponse';
+import { BatchJobResponse } from './BatchJobResponse';
 import { formatDate } from '@angular/common';
 
 @Component({
@@ -11,7 +11,7 @@ import { formatDate } from '@angular/common';
 })
 export class PriceHoldingsComponent implements OnInit {
 
-    priceHoldingsResponse: PriceHoldingsResponse = {} as PriceHoldingsResponse;
+    priceHoldingsResponse: BatchJobResponse = {} as BatchJobResponse;
     processingMessage: string = ''
     sendEmail: boolean = false;
 

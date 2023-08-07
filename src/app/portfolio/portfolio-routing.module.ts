@@ -6,6 +6,7 @@ import { AuthGuard } from '../auth/auth-guard.service';
 import { PurgePositionSnapshotComponent } from './purge-position-snapshot/purge-position-snapshot.component';
 import { PriceHoldingsComponent } from './price-holdings/price-holdings.component';
 import { InstrumentManagementComponent } from './instrument-management/instrument-management.component';
+import { InstrumentDueNotificationTriggerComponent } from './instrument-due-notification-trigger/instrument-due-notification-trigger.component';
 
 const routes: Routes = [
     { path: '', component: PortfolioComponent },
@@ -13,6 +14,7 @@ const routes: Routes = [
     { path: 'purgePositionSnapshot', component: PurgePositionSnapshotComponent, canActivate: [AuthGuard] },
     { path: 'priceHoldings', component: PriceHoldingsComponent, canActivate: [AuthGuard] },
     { path: 'instrumentManagement', component: InstrumentManagementComponent, canActivate: [AuthGuard] },
+    { path: 'instrumentDueNotificationTrigger', component: InstrumentDueNotificationTriggerComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

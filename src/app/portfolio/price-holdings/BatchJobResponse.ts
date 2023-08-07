@@ -1,4 +1,4 @@
-export interface PriceHoldingsResponse {
+export interface BatchJobResponse {
     message: string
     timestamp: Date
 }
