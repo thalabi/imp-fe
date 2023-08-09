@@ -308,6 +308,10 @@ export class InstrumentManagementComponent implements OnInit {
         this.instrumentInterestBearingForm.controls.interestRate.patchValue(event.value)
         console.log('this.instrumentInterestBearingForm.valid', this.instrumentInterestBearingForm.valid)
     }
+    onPromotionalInputInterestRate(event: any) {
+        this.instrumentInterestBearingForm.controls.promotionalInterestRate.patchValue(event.value)
+        console.log('this.instrumentInterestBearingForm.valid', this.instrumentInterestBearingForm.valid)
+    }
 
     private getCurrencies() {
         this.restService.getCurrencies()
