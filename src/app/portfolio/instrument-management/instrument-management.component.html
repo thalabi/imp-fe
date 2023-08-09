@@ -81,7 +81,7 @@
 </div>
 
 <p-dialog header="Instrument - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
-    [modal]="true">
+    [modal]="true" [style]="{width: '45vw'}">
 
     <form [formGroup]="instrumentInterestBearingForm" (ngSubmit)="onSubmit()" novalidate>
 
@@ -93,7 +93,8 @@
                 <label for="name">Name</label>
             </div>
             <div class="col-8">
-                <input id="name" type="text" pInputText formControlName="name" class="p-inputtext" />
+                <input id="name" type="text" pInputText formControlName="name" class="p-inputtext" maxlength="64"
+                    size="64" />
             </div>
 
             <div class="col-4">
