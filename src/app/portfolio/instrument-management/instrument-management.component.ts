@@ -37,7 +37,7 @@ export class InstrumentManagementComponent implements OnInit {
         ticker: ['', Validators.required],
         type: ['', Validators.required],
         financialInstitution: [''],
-        price: this.formBuilder.control<number | null>(null, Validators.required),
+        price: this.formBuilder.control<number | null>(null),
         interestRate: this.formBuilder.control<number | null>(null, Validators.required),
         term: this.formBuilder.control<string | null>(null),
         maturityDate: this.formBuilder.control<Date | null>(null),
@@ -178,7 +178,7 @@ export class InstrumentManagementComponent implements OnInit {
                 saveInstrumentInterestBearing.instrument.type = 'INTEREST_BEARING'
                 saveInstrumentInterestBearing.type = this.instrumentInterestBearingForm.controls.type.value
                 saveInstrumentInterestBearing.financialInstitution = this.instrumentInterestBearingForm.controls.financialInstitution.value
-                saveInstrumentInterestBearing.price = this.instrumentInterestBearingForm.controls.price.value
+                saveInstrumentInterestBearing.price = this.instrumentInterestBearingForm.controls.price.value ? this.instrumentInterestBearingForm.controls.price.value : 1
                 saveInstrumentInterestBearing.interestRate = this.instrumentInterestBearingForm.controls.interestRate.value
                 saveInstrumentInterestBearing.term = this.instrumentInterestBearingForm.controls.term.value
                 saveInstrumentInterestBearing.maturityDate = this.instrumentInterestBearingForm.controls.maturityDate.value

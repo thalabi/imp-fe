@@ -89,6 +89,7 @@
 
         <div class="grid" style="width: 30em;">
 
+            <!-- name-->
             <div class="col-4">
                 <label for="name">Name</label>
             </div>
@@ -97,6 +98,7 @@
                     size="64" />
             </div>
 
+            <!-- currency-->
             <div class="col-4">
                 <label for="currency">Currency</label>
             </div>
@@ -110,7 +112,7 @@
                     Field is required</div>
             </div>
 
-
+            <!-- ticker -->
             <div class="col-4">
                 <label for="ticker">Ticker</label>
             </div>
@@ -122,18 +124,7 @@
                     Field must be between 1 and 16 characters</div>
             </div>
 
-            <div class="col-4">
-                <label for="type">Type</label>
-            </div>
-            <div class="col-8">
-                <p-dropdown id="type" [options]="interestBearingTypes" formControlName="type" placeholder="Select type"
-                    (onChange)="onChangeType($event)" [showClear]="true">
-                </p-dropdown>
-                <div *ngIf="instrumentInterestBearingForm.controls.type.invalid && instrumentInterestBearingForm.controls.type.touched"
-                    class="red-font">
-                    Field is required</div>
-            </div>
-
+            <!-- financial institution -->
             <div class="col-4">
                 <label for="financialInstitution">FI</label>
             </div>
@@ -147,20 +138,22 @@
                     Field is required</div> -->
             </div>
 
+            <!-- type -->
             <div class="col-4">
-                <label for="price">Price</label>
+                <label for="type">Type</label>
             </div>
             <div class="col-8">
-                <p-inputNumber id="price" formControlName="price" mode="decimal" [minFractionDigits]="4"
-                    [maxFractionDigits]="4" (onInput)="onInputPrice($event)" appendTo="body">
-                </p-inputNumber>
-                <div *ngIf="instrumentInterestBearingForm.controls.price.invalid && instrumentInterestBearingForm.controls.price.touched"
+                <p-dropdown id="type" [options]="interestBearingTypes" formControlName="type" placeholder="Select type"
+                    (onChange)="onChangeType($event)" [showClear]="true">
+                </p-dropdown>
+                <div *ngIf="instrumentInterestBearingForm.controls.type.invalid && instrumentInterestBearingForm.controls.type.touched"
                     class="red-font">
                     Field is required</div>
             </div>
 
+            <!-- interest rate -->
             <div class="col-4">
-                <label for="interestRate">Interest Rate</label>
+                <label for="interestRate">Interest rate</label>
             </div>
             <div class="col-8">
                 <p-inputNumber id="interestRate" formControlName="interestRate" mode="decimal" [minFractionDigits]="2"
@@ -171,60 +164,84 @@
                     Field is required</div>
             </div>
 
-            <div class="col-4">
-                <label for="term">Term</label>
-            </div>
-            <div class="col-8">
-                <p-dropdown id="term" [options]="terms" formControlName="term" placeholder="Select term"
-                    (onChange)="onChangeTerm($event)" [showClear]="true">
-                </p-dropdown>
-                <!-- <div *ngIf="instrumentInterestBearingForm.controls.financialInstitution.invalid && instrumentInterestBearingForm.controls.financialInstitution.touched"
+            <!-- price -->
+            <ng-container
+                *ngIf="['MONEY_MARKET', 'INVESTMENT_SAVINGS'].includes(instrumentInterestBearingForm.controls.type.value!)">
+                <div class="col-4">
+                    <label for="price">Price</label>
+                </div>
+                <div class="col-8">
+                    <p-inputNumber id="price" formControlName="price" mode="decimal" [minFractionDigits]="4"
+                        [maxFractionDigits]="4" (onInput)="onInputPrice($event)" appendTo="body">
+                    </p-inputNumber>
+                    <div *ngIf="instrumentInterestBearingForm.controls.price.invalid && instrumentInterestBearingForm.controls.price.touched"
+                        class="red-font">
+                        Field is required</div>
+                </div>
+            </ng-container>
+
+            <!-- term -->
+            <ng-container *ngIf="['GIC', 'TERM_DEPOSIT'].includes(instrumentInterestBearingForm.controls.type.value!)">
+                <div class="col-4">
+                    <label for="term">Term</label>
+                </div>
+                <div class="col-8">
+                    <p-dropdown id="term" [options]="terms" formControlName="term" placeholder="Select term"
+                        (onChange)="onChangeTerm($event)" [showClear]="true">
+                    </p-dropdown>
+                    <!-- <div *ngIf="instrumentInterestBearingForm.controls.financialInstitution.invalid && instrumentInterestBearingForm.controls.financialInstitution.touched"
                     class="red-font">
                     Field is required</div> -->
-            </div>
+                </div>
 
+                <!-- maturity date -->
+                <div class="col-4">
+                    <label for="maturityDate">Maturity date</label>
+                </div>
+                <div class="col-8">
 
-            <div class="col-4">
-                <label for="maturityDate">Maturity Date</label>
-            </div>
-            <div class="col-8">
+                    <p-calendar id="maturityDate" formControlName="maturityDate" [monthNavigator]="true"
+                        [showButtonBar]="true" [yearNavigator]="true" yearRange="2023:2050" [dateFormat]="'yy-mm-dd'"
+                        [showIcon]="true" [readonlyInput]="true" [showOnFocus]="false" [inputStyle]="{'width':'8rem'}"
+                        appendTo="body">
+                    </p-calendar>
 
-                <p-calendar id="maturityDate" formControlName="maturityDate" [monthNavigator]="true"
-                    [showButtonBar]="true" [yearNavigator]="true" yearRange="2023:2050" [dateFormat]="'yy-mm-dd'"
-                    [showIcon]="true" [readonlyInput]="true" [showOnFocus]="false" [inputStyle]="{'width':'8rem'}"
-                    appendTo="body">
-                </p-calendar>
+                    <div *ngIf="instrumentInterestBearingForm.controls.maturityDate.invalid && instrumentInterestBearingForm.controls.maturityDate.touched"
+                        class="red-font">
+                        Field is required</div>
+                </div>
+            </ng-container>
 
-                <div *ngIf="instrumentInterestBearingForm.controls.maturityDate.invalid && instrumentInterestBearingForm.controls.maturityDate.touched"
-                    class="red-font">
-                    Field is required</div>
-            </div>
-
-            <div class="col-4">
-                <label for="promotionalInterestRate">Promo Rate</label>
-            </div>
-            <div class="col-8">
-                <p-inputNumber id="promotionalInterestRate" formControlName="promotionalInterestRate" mode="decimal"
-                    [minFractionDigits]="2" [maxFractionDigits]="2" (onInput)="onPromotionalInputInterestRate($event)"
-                    appendTo="body">
-                </p-inputNumber>
-                <!-- <div *ngIf="instrumentInterestBearingForm.controls.interestRate.invalid && instrumentInterestBearingForm.controls.interestRate.touched"
+            <!-- promo rate -->
+            <ng-container *ngIf="['SAVINGS'].includes(instrumentInterestBearingForm.controls.type.value!)">
+                <div class="col-4">
+                    <label for="promotionalInterestRate">Promo rate</label>
+                </div>
+                <div class="col-8">
+                    <p-inputNumber id="promotionalInterestRate" formControlName="promotionalInterestRate" mode="decimal"
+                        [minFractionDigits]="2" [maxFractionDigits]="2"
+                        (onInput)="onPromotionalInputInterestRate($event)" appendTo="body">
+                    </p-inputNumber>
+                    <!-- <div *ngIf="instrumentInterestBearingForm.controls.interestRate.invalid && instrumentInterestBearingForm.controls.interestRate.touched"
                     class="red-font">
                     Field is required</div> -->
-            </div>
+                </div>
 
-            <div class="col-4">
-                <label for="promotionEndDate">Promo End Date</label>
-            </div>
-            <div class="col-8">
+                <!-- promo end date -->
+                <div class="col-4">
+                    <label for="promotionEndDate">Promo end date</label>
+                </div>
+                <div class="col-8">
 
-                <p-calendar id="promotionEndDate" formControlName="promotionEndDate" [monthNavigator]="true"
-                    [showButtonBar]="true" [yearNavigator]="true" yearRange="2023:2050" [dateFormat]="'yy-mm-dd'"
-                    [showIcon]="true" [readonlyInput]="true" [showOnFocus]="false" [inputStyle]="{'width':'8rem'}"
-                    appendTo="body">
-                </p-calendar>
-            </div>
+                    <p-calendar id="promotionEndDate" formControlName="promotionEndDate" [monthNavigator]="true"
+                        [showButtonBar]="true" [yearNavigator]="true" yearRange="2023:2050" [dateFormat]="'yy-mm-dd'"
+                        [showIcon]="true" [readonlyInput]="true" [showOnFocus]="false" [inputStyle]="{'width':'8rem'}"
+                        appendTo="body">
+                    </p-calendar>
+                </div>
+            </ng-container>
 
+            <!-- email -->
             <div class="col-4">
                 <label for="emailNotification">Email</label>
             </div>
