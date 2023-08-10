@@ -1,4 +1,4 @@
-<div>
+<div style="margin-bottom: 0.5rem;">
     Portfolio count: {{portfolioCount}}
 </div>
 <div>
@@ -30,7 +30,7 @@
         <ng-template pTemplate="header">
             <tr>
                 <th>Instrument</th>
-                <th>Name</th>
+                <!-- <th>Name</th> -->
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Mkt Value</th>
@@ -44,14 +44,14 @@
                 <ng-template #interestBearing>
                     <td><span
                             pTooltip="{{holdingDetail.financialInstitutionString}} {{holdingDetail.type}} {{holdingDetail.term}} {{holdingDetail.interestRate ? (holdingDetail.interestRate / 100 | percent :'0.1') : ''}} {{holdingDetail.maturityDate | date:'y-MM-dd'}} {{holdingDetail.promotionalInterestRate ? (holdingDetail.promotionalInterestRate  / 100 | percent :'0.1') : '' }} {{holdingDetail.promotionEndDate | date:'y-MM-dd'}}"
-                            class="texthastooltip">{{holdingDetail.ticker}}</span>
+                            class="texthastooltip">{{holdingDetail.name}}</span>
                     </td>
                 </ng-template>
                 <ng-template #nonInterestBearing>
-                    <td>{{holdingDetail.ticker}}</td>
+                    <td>{{holdingDetail.ticker}} - {{holdingDetail.name}}</td>
                 </ng-template>
 
-                <td>{{holdingDetail.name}}</td>
+                <!-- <td>{{holdingDetail.name}}</td> -->
                 <td><span pTooltip="{{holdingDetail.asOfDate | date:'y-MM-dd'}}"
                         class="texthastooltip">{{holdingDetail.quantity}}</span>
                 </td>
@@ -96,7 +96,10 @@
                             {{instrument.ticker}}:{{instrument.exchange}} - {{instrument.name}}
                         </div> -->
                         <div>
-                            {{instrument.ticker}} - {{instrument.name}}
+                            <ng-container *ngIf="instrument.type !== 'INTEREST_BEARING'">
+                                {{instrument.ticker}} -
+                            </ng-container>
+                            {{instrument.name}}
                         </div>
                     </ng-template>
                     <ng-template pTemplate="selectedItem">

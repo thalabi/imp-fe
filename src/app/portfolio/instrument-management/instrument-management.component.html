@@ -27,9 +27,9 @@
         dataKey="_links.instrumentInterestBearing.href">
         <ng-template pTemplate="header">
             <tr>
-                <th>Name</th>
+                <th>Instrument name</th>
                 <th>Currency</th>
-                <th>Ticker</th>
+                <!-- <th>Ticker</th> -->
                 <th>Type</th>
                 <th>FI</th>
                 <th>Price</th>
@@ -46,7 +46,7 @@
                 <!-- <td>{{holdingDetail.ticker}}:{{holdingDetail.exchange}}</td> -->
                 <td>{{instrumentInterestBearing.instrument.name}}</td>
                 <td>{{instrumentInterestBearing.instrument.currency}}</td>
-                <td>{{instrumentInterestBearing.instrument.ticker}}</td>
+                <!-- <td>{{instrumentInterestBearing.instrument.ticker}}</td> -->
                 <td>{{instrumentInterestBearing.type}}</td>
                 <td>{{instrumentInterestBearing.financialInstitution}}</td>
                 <td>{{instrumentInterestBearing.price}}</td>
@@ -113,7 +113,7 @@
             </div>
 
             <!-- ticker -->
-            <div class="col-4">
+            <!-- <div class="col-4">
                 <label for="ticker">Ticker</label>
             </div>
             <div class="col-8">
@@ -122,7 +122,7 @@
                 <div *ngIf="instrumentInterestBearingForm.controls.ticker.invalid && instrumentInterestBearingForm.controls.ticker.touched"
                     class="red-font">
                     Field must be between 1 and 16 characters</div>
-            </div>
+            </div> -->
 
             <!-- financial institution -->
             <div class="col-4">
