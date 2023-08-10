@@ -10,6 +10,7 @@ export interface HoldingDetail {
     latestPrice: number;
     latestPriceTimestamp: Date;
 
+    /*
     instrumentType: string;
     // Interest bearing instrument details
     financialInstitutionString: string;
@@ -19,6 +20,6 @@ export interface HoldingDetail {
     maturityDate: Date;
     promotionalInterestRate: number;
     promotionEndDate: Date;
-
+*/
     version: number;
 }
