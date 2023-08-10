@@ -76,7 +76,7 @@
 </div>
 
 <p-dialog header="Holdings - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
-    [modal]="true">
+    [modal]="true" [style]="{width: '45vw'}">
 
     <form [formGroup]="holdingDetailForm" (ngSubmit)="onSubmit()" novalidate>
 
@@ -104,7 +104,11 @@
                     </ng-template>
                     <ng-template pTemplate="selectedItem">
                         <div>
-                            {{holdingDetailForm.controls['instrument'].value.ticker}}
+                            <ng-container
+                                *ngIf="holdingDetailForm.controls['instrument'].value.type !== 'INTEREST_BEARING'">
+                                {{holdingDetailForm.controls['instrument'].value.ticker}} -
+                            </ng-container>
+                            {{holdingDetailForm.controls['instrument'].value.name}}
                         </div>
                     </ng-template>
                 </p-dropdown>
