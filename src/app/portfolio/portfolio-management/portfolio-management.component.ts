@@ -53,7 +53,7 @@ export class PortfolioManagementComponent implements OnInit {
     getPortfolioTable() {
         const tableName: string = 'portfolio'
         const entityNameResource = RestService.toPlural(RestService.toCamelCase(tableName))
-        this.restService.getTableData(tableName, 0, 999)
+        this.restService.getTableData(tableName, 0, 999, ['institution', 'name'])
             .subscribe(
                 {
                     next: (data: any) => {
