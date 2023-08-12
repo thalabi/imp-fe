@@ -34,7 +34,7 @@ export class InstrumentManagementComponent implements OnInit {
     instrumentInterestBearingForm = this.formBuilder.group({
         name: ['', Validators.required],
         currency: ['', Validators.required],
-        //ticker: ['', Validators.required],
+        ticker: [''],
         type: ['', Validators.required],
         financialInstitution: [''],
         price: this.formBuilder.control<number | null>(null),
@@ -153,7 +153,7 @@ export class InstrumentManagementComponent implements OnInit {
         this.instrumentInterestBearingForm.controls.name.patchValue(this.instrumentInterestBearingSelectedRow.instrument.name);
         // lookup instrument object from instrumentRows (table)
         this.instrumentInterestBearingForm.controls.currency.patchValue(this.instrumentInterestBearingSelectedRow.instrument.currency);
-        //this.instrumentInterestBearingForm.controls.ticker.patchValue(this.instrumentInterestBearingSelectedRow.instrument.ticker);
+        this.instrumentInterestBearingForm.controls.ticker.patchValue(this.instrumentInterestBearingSelectedRow.instrument.ticker);
 
         this.instrumentInterestBearingForm.controls.type.patchValue(this.instrumentInterestBearingSelectedRow.type);
         this.instrumentInterestBearingForm.controls.financialInstitution.patchValue(this.instrumentInterestBearingSelectedRow.financialInstitution);
@@ -174,7 +174,7 @@ export class InstrumentManagementComponent implements OnInit {
             case CrudEnum.ADD:
                 saveInstrumentInterestBearing.instrument.name = this.instrumentInterestBearingForm.controls.name.value
                 saveInstrumentInterestBearing.instrument.currency = this.instrumentInterestBearingForm.controls.currency.value
-                //saveInstrumentInterestBearing.instrument.ticker = this.instrumentInterestBearingForm.controls.ticker.value
+                saveInstrumentInterestBearing.instrument.ticker = this.instrumentInterestBearingForm.controls.ticker.value
                 saveInstrumentInterestBearing.instrument.type = 'INTEREST_BEARING'
                 saveInstrumentInterestBearing.type = this.instrumentInterestBearingForm.controls.type.value
                 saveInstrumentInterestBearing.financialInstitution = this.instrumentInterestBearingForm.controls.financialInstitution.value
@@ -211,7 +211,7 @@ export class InstrumentManagementComponent implements OnInit {
             case CrudEnum.UPDATE:
                 saveInstrumentInterestBearing.instrument.name = this.instrumentInterestBearingForm.controls.name.value
                 saveInstrumentInterestBearing.instrument.currency = this.instrumentInterestBearingForm.controls.currency.value
-                //saveInstrumentInterestBearing.instrument.ticker = this.instrumentInterestBearingForm.controls.ticker.value
+                saveInstrumentInterestBearing.instrument.ticker = this.instrumentInterestBearingForm.controls.ticker.value
                 saveInstrumentInterestBearing.instrument.type = 'INTEREST_BEARING'
                 saveInstrumentInterestBearing.financialInstitution = this.instrumentInterestBearingForm.controls.financialInstitution.value
                 saveInstrumentInterestBearing.type = this.instrumentInterestBearingForm.controls.type.value

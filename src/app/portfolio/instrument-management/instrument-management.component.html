@@ -44,7 +44,16 @@
         <ng-template pTemplate="body" let-instrumentInterestBearing>
             <tr [pSelectableRow]="instrumentInterestBearing">
                 <!-- <td>{{holdingDetail.ticker}}:{{holdingDetail.exchange}}</td> -->
-                <td>{{instrumentInterestBearing.instrument.name}}</td>
+                <ng-container
+                    *ngIf="['MONEY_MARKET', 'INVESTMENT_SAVINGS'].includes(instrumentInterestBearing.type); then displayTicker; else doNotDisplayTicker">
+                </ng-container>
+                <ng-template #displayTicker>
+                    <td>{{instrumentInterestBearing.instrument.ticker}} - {{instrumentInterestBearing.instrument.name}}
+                    </td>
+                </ng-template>
+                <ng-template #doNotDisplayTicker>
+                    <td>{{instrumentInterestBearing.instrument.name}}</td>
+                </ng-template>
                 <td>{{instrumentInterestBearing.instrument.currency}}</td>
                 <!-- <td>{{instrumentInterestBearing.instrument.ticker}}</td> -->
                 <td>{{instrumentInterestBearing.type}}</td>
@@ -112,18 +121,6 @@
                     Field is required</div>
             </div>
 
-            <!-- ticker -->
-            <!-- <div class="col-4">
-                <label for="ticker">Ticker</label>
-            </div>
-            <div class="col-8">
-                <input id="ticker" type="text" pInputText formControlName="ticker" class="p-inputtext" minlength=""
-                    maxlength="16" />
-                <div *ngIf="instrumentInterestBearingForm.controls.ticker.invalid && instrumentInterestBearingForm.controls.ticker.touched"
-                    class="red-font">
-                    Field must be between 1 and 16 characters</div>
-            </div> -->
-
             <!-- financial institution -->
             <div class="col-4">
                 <label for="financialInstitution">FI</label>
@@ -150,6 +147,20 @@
                     class="red-font">
                     Field is required</div>
             </div>
+            <!-- ticker -->
+            <ng-container
+                *ngIf="['MONEY_MARKET', 'INVESTMENT_SAVINGS'].includes(instrumentInterestBearingForm.controls.type.value!)">
+                <div class="col-4">
+                    <label for="ticker">Ticker</label>
+                </div>
+                <div class="col-8">
+                    <input id="ticker" type="text" pInputText formControlName="ticker" class="p-inputtext" minlength=""
+                        maxlength="16" />
+                    <div *ngIf="instrumentInterestBearingForm.controls.ticker.invalid && instrumentInterestBearingForm.controls.ticker.touched"
+                        class="red-font">
+                        Field must be between 1 and 16 characters</div>
+                </div>
+            </ng-container>
 
             <!-- interest rate -->
             <div class="col-4">
