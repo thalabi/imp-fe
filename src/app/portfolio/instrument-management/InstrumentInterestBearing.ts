@@ -1,4 +1,4 @@
-import { Instrument } from "./Instrument";
+import { Instrument } from "../portfolio-management/Instrument";
 
 export interface InstrumentInterestBearing {
     // id: number;
@@ -10,6 +10,7 @@ export interface InstrumentInterestBearing {
     interestRate: number | null;
     term: string | null;
     maturityDate: Date | null;
+    nextPaymentDate: Date | null;
     promotionalInterestRate: number | null;
     promotionEndDate: Date | null;
     emailNotification: boolean | null;

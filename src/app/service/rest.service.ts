@@ -8,7 +8,7 @@ import { SaveHoldingRequest } from '../portfolio/portfolio-management/SaveHoldin
 import { map } from 'rxjs/operators';
 import { PositionSnapshot } from '../portfolio/purge-position-snapshot/PositionSnapshot';
 import { HoldingDetail } from '../portfolio/portfolio-management/HoldingDetail';
-import { InstrumentInterestBearing } from '../portfolio/portfolio-management/InstrumentInterestBearing';
+import { InstrumentInterestBearing } from '../portfolio/instrument-management/InstrumentInterestBearing';
 
 @Injectable({
     providedIn: 'root'
