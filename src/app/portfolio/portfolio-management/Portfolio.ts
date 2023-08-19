@@ -1,5 +1,5 @@
 export interface Portfolio {
-    institution: string;
+    financialInstitution: string;
     accountNumber: number;
     name: string;
     currency: string;

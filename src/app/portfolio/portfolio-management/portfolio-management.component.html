@@ -7,12 +7,13 @@
         (onChange)="onChangePortfolio($event)" [showClear]="true">
         <ng-template pTemplate="item" let-portfolio>
             <div>
-                {{portfolio.institution}}-{{portfolio.accountNumber}}-{{portfolio.name}}-{{portfolio.currency}}
+                {{portfolio.financialInstitution}}-{{portfolio.accountNumber}}-{{portfolio.name}}-{{portfolio.currency}}
             </div>
         </ng-template>
         <ng-template pTemplate="selectedItem">
             <div>
-                {{selectedPortfolio.institution}} - {{selectedPortfolio.accountNumber}} - {{selectedPortfolio.name}} -
+                {{selectedPortfolio.financialInstitution}} - {{selectedPortfolio.accountNumber}} -
+                {{selectedPortfolio.name}} -
                 {{selectedPortfolio.currency}}
             </div>
         </ng-template>

@@ -336,11 +336,4 @@ export class PortfolioManagementComponent implements OnInit {
         this.holdingDetailSelectedRow = {} as HoldingDetail
     }
 
-    private buildPortfolioList(portfolioRows: Array<Portfolio>): Array<string> {
-        let portfolioList: Array<string> = []
-        console.log('portfolioRows', portfolioRows)
-        portfolioRows.forEach(portfolio => portfolioList.push(portfolio.institution + '-' + portfolio.accountNumber))
-        console.log('portfolioList', portfolioList)
-        return portfolioList
-    }
 }
