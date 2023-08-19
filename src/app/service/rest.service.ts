@@ -100,9 +100,9 @@ export class RestService {
                 }))
     }
 
-    findByPortfolioIdAndInstrumentIdAndAsOfDate(holding: SaveHoldingRequest): Observable<HttpResponse<Array<SaveHoldingRequest>>> {
-        return this.http.get<HttpResponse<Array<SaveHoldingRequest>>>(this.serviceUrl + '/protected/data-rest/holdings/search/findByPortfolioIdAndInstrumentIdAndAsOfDate?portfolioId=10&instrumentId=21&asOfDate=2021-09-23');
-    }
+    // findByPortfolioIdAndInstrumentIdAndAsOfDate(holding: SaveHoldingRequest): Observable<HttpResponse<Array<SaveHoldingRequest>>> {
+    //     return this.http.get<HttpResponse<Array<SaveHoldingRequest>>>(this.serviceUrl + '/protected/data-rest/holdings/search/findByPortfolioIdAndInstrumentIdAndAsOfDate?portfolioId=10&instrumentId=21&asOfDate=2021-09-23');
+    // }
     addHolding(saveHoldingRequest: SaveHoldingRequest): Observable<HttpResponse<any>> {
         return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioController/addHolding/`, saveHoldingRequest);
     }
