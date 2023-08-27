@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { PortfolioRoutingModule } from './portfolio-routing.module';
 import { PortfolioComponent } from './portfolio.component';
-import { PortfolioManagementComponent } from './portfolio-management/portfolio-management.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
@@ -15,24 +14,28 @@ import { MessagesModule } from 'primeng/messages';
 import { PurgePositionSnapshotComponent } from './purge-position-snapshot/purge-position-snapshot.component';
 import { PriceHoldingsComponent } from './price-holdings/price-holdings.component';
 import { CheckboxModule } from 'primeng/checkbox';
-import { InstrumentManagementComponent } from './instrument-management/instrument-management.component';
 import { InstrumentDueNotificationTriggerComponent } from './instrument-due-notification-trigger/instrument-due-notification-trigger.component';
+import { PortfolioHoldingManagementComponent } from './portfolio-holding-management/portfolio-holding-management.component';
+import { InstrumentMaintenanceComponent } from './instrument-maintenance/instrument-maintenance.component';
+import { PortfolioMaintenanceComponent } from './portfolio-maintenance/portfolio-maintenance.component';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 
 @NgModule({
     declarations: [
         PortfolioComponent,
-        PortfolioManagementComponent,
         PurgePositionSnapshotComponent,
         PriceHoldingsComponent,
-        InstrumentManagementComponent,
-        InstrumentDueNotificationTriggerComponent
+        InstrumentDueNotificationTriggerComponent,
+        PortfolioHoldingManagementComponent,
+        InstrumentMaintenanceComponent,
+        PortfolioMaintenanceComponent
     ],
     imports: [
         CommonModule,
         PortfolioRoutingModule,
         FormsModule, ReactiveFormsModule,
-        DropdownModule, TableModule, TooltipModule, DialogModule, InputNumberModule, CalendarModule, MessagesModule, CheckboxModule
+        DropdownModule, TableModule, TooltipModule, DialogModule, InputNumberModule, CalendarModule, MessagesModule, CheckboxModule, SelectButtonModule
     ]
 })
 export class PortfolioModule { }

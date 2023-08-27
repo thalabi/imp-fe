@@ -25,9 +25,12 @@
         [loading]="loadingStatus" selectionMode="single" [(selection)]="instrumentInterestBearingSelectedRow"
         (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
         dataKey="_links.instrumentInterestBearing.href">
+        <ng-template pTemplate="caption">
+            Instrument - {{selectedInstrumentType}}
+        </ng-template>
         <ng-template pTemplate="header">
             <tr>
-                <th>Instrument name</th>
+                <th>Name</th>
                 <th>Currency</th>
                 <!-- <th>Ticker</th> -->
                 <th>Type</th>
@@ -43,7 +46,7 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-instrumentInterestBearing>
-            <tr [pSelectableRow]="instrumentInterestBearing">
+            <tr [pSelectableRow]="instrumentInterestBearing" style="line-height: 1rem;">
                 <!-- <td>{{holdingDetail.ticker}}:{{holdingDetail.exchange}}</td> -->
                 <ng-container
                     *ngIf="['MONEY_MARKET', 'INVESTMENT_SAVINGS'].includes(instrumentInterestBearing.type); then displayTicker; else doNotDisplayTicker">
@@ -61,7 +64,7 @@
                 <td>{{instrumentInterestBearing.financialInstitution}}</td>
                 <td>{{instrumentInterestBearing.price}}</td>
                 <td>{{instrumentInterestBearing.interestRate}}</td>
-                <td>{{instrumentInterestBearing.term}}</td>
+                <td>{{instrumentInterestBearing.term | slice : 5}}</td>
                 <td>{{instrumentInterestBearing.maturityDate | date:'y-MM-dd'}}</td>
                 <td>{{instrumentInterestBearing.nextPaymentDate | date:'y-MM-dd'}}</td>
                 <td>{{instrumentInterestBearing.promotionalInterestRate}}</td>
@@ -199,8 +202,9 @@
                     <label for="term">Term</label>
                 </div>
                 <div class="col-8">
-                    <p-dropdown id="term" [options]="terms" formControlName="term" placeholder="Select term"
-                        (onChange)="onChangeTerm($event)" [showClear]="true">
+                    <p-dropdown id="term" [options]="termOptions" optionLabel="name" optionValue="value"
+                        formControlName="term" placeholder="Select term" (onChange)="onChangeTerm($event)"
+                        [showClear]="true">
                     </p-dropdown>
                     <!-- <div *ngIf="instrumentInterestBearingForm.controls.financialInstitution.invalid && instrumentInterestBearingForm.controls.financialInstitution.touched"
                     class="red-font">

@@ -1,4 +1,4 @@
-export interface HoldingDetail {
+export interface IHoldingDetail {
     id: number;
     asOfDate: Date;
     instrumentId: number;

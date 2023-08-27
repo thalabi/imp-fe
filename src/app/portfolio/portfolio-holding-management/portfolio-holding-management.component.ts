@@ -1,20 +1,20 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Portfolio } from './Portfolio';
+import { Instrument } from './Instrument';
+import { IHoldingDetail } from './IHoldingDetail';
+import { CrudEnum } from '../../crud-enum';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { CrudEnum } from '../../crud-enum';
 import { RestService } from '../../service/rest.service';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { SaveHoldingRequest } from './SaveHoldingRequest';
-import { HoldingDetail } from './HoldingDetail';
-import { Instrument } from './Instrument';
-import { Portfolio } from './Portfolio';
 
 @Component({
-    selector: 'app-portfolio-management',
-    templateUrl: './portfolio-management.component.html',
-    styleUrls: ['./portfolio-management.component.css']
+    selector: 'app-portfolio-holding-management',
+    templateUrl: './portfolio-holding-management.component.html',
+    styleUrls: ['./portfolio-holding-management.component.css']
 })
-export class PortfolioManagementComponent implements OnInit {
+export class PortfolioHoldingManagementComponent implements OnInit {
 
     portfolioRows: Array<Portfolio> = []
     portfolioCount: number = 0
@@ -25,11 +25,11 @@ export class PortfolioManagementComponent implements OnInit {
     selectedInstrument: Instrument = {} as Instrument
     loadingStatus: boolean = false;
 
-    holdingDetailList: Array<HoldingDetail> = []
+    holdingDetailList: Array<IHoldingDetail> = []
     holdingDetailListCount: number = 0;
 
-    holdingDetailSelectedRow: HoldingDetail = {} as HoldingDetail
-    crudRow: HoldingDetail = {} as HoldingDetail
+    holdingDetailSelectedRow: IHoldingDetail = {} as IHoldingDetail
+    crudRow: IHoldingDetail = {} as IHoldingDetail
     modifyAndDeleteButtonsDisable: boolean = true;
     crudMode: CrudEnum = {} as CrudEnum
     crudEnum = CrudEnum; // Used in html to refer to enum
@@ -53,7 +53,7 @@ export class PortfolioManagementComponent implements OnInit {
     getPortfolioTable() {
         const tableName: string = 'portfolio'
         const entityNameResource = RestService.toPlural(RestService.toCamelCase(tableName))
-        this.restService.getTableData(tableName, 0, 999, ['institution', 'name'])
+        this.restService.getTableData(tableName, 0, 999, ['financialInstitution', 'name'])
             .subscribe(
                 {
                     next: (data: any) => {
@@ -248,7 +248,7 @@ export class PortfolioManagementComponent implements OnInit {
                                 } else {
                                     this.retrieveSelectedPortfolioHoldings()
                                     this.displayDialog = false;
-                                    this.holdingDetailSelectedRow = {} as HoldingDetail
+                                    this.holdingDetailSelectedRow = {} as IHoldingDetail
                                 }
                             },
                             complete: () => {
@@ -281,7 +281,7 @@ export class PortfolioManagementComponent implements OnInit {
                                 } else {
                                     this.retrieveSelectedPortfolioHoldings()
                                     this.displayDialog = false;
-                                    this.holdingDetailSelectedRow = {} as HoldingDetail
+                                    this.holdingDetailSelectedRow = {} as IHoldingDetail
                                 }
                             },
                             complete: () => {
@@ -306,7 +306,7 @@ export class PortfolioManagementComponent implements OnInit {
 
                                 this.retrieveSelectedPortfolioHoldings()
                                 this.displayDialog = false;
-                                this.holdingDetailSelectedRow = {} as HoldingDetail
+                                this.holdingDetailSelectedRow = {} as IHoldingDetail
                             },
                             complete: () => {
                                 // this.messageService.clear()
@@ -333,7 +333,7 @@ export class PortfolioManagementComponent implements OnInit {
     }
     private resetDialoForm() {
         this.holdingDetailForm.reset()
-        this.holdingDetailSelectedRow = {} as HoldingDetail
+        this.holdingDetailSelectedRow = {} as IHoldingDetail
     }
 
 }

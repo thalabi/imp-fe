@@ -1,0 +1,53 @@
+<div style="margin-top: 1rem;" *ngIf="displayPortfoliosCount !== 0">
+    <p-table [value]="displayPortfolios" [paginator]="displayPortfoliosCount != 0" [rowsPerPageOptions]="[10,20,30]"
+        [rows]=" 20" [totalRecords]="displayPortfoliosCount" [loading]="loadingStatus" selectionMode="single"
+        [(selection)]="portfolioSelectedRow" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+        dataKey="id">
+        <ng-template pTemplate="caption">
+            Portfolio <p-selectButton id="logicallyDeletedOptions" [options]="logicallyDeletedOptions"
+                [(ngModel)]="logicallyDeletedOption" (onChange)="onChangeLogicallyDeleted($event)"></p-selectButton>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>Financial institution</th>
+                <th>Account number</th>
+                <th>Currency</th>
+                <th>Has holdings</th>
+                <th>Has positions</th>
+                <th *ngIf="logicallyDeletedOption === logicallyDeletedOptionEnum.ALL">Logically deleted</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-portfolio>
+            <tr [pSelectableRow]="portfolio" style="line-height: 1rem;">
+                <td>{{portfolio.name}}</td>
+                <td>{{portfolio.financialInstitutionName}}</td>
+                <td>{{portfolio.accountNumber}}</td>
+                <td>{{portfolio.currency}}</td>
+                <td class="text-center">
+                    <i class="pi"
+                        [ngClass]="{'true-icon pi-check-circle': portfolio.hasHoldings, 'false-icon pi-times-circle': !portfolio.hasHoldings}"></i>
+                </td>
+                <td class="text-center">
+                    <i class="pi"
+                        [ngClass]="{'true-icon pi-check-circle': portfolio.hasPositions, 'false-icon pi-times-circle': !portfolio.hasPositions}"></i>
+                </td>
+                <td class="text-center" *ngIf="logicallyDeletedOption === logicallyDeletedOptionEnum.ALL">
+                    <i class="pi"
+                        [ngClass]="{'true-icon pi-check-circle': portfolio.logicallyDeleted, 'false-icon pi-times-circle': !portfolio.logicallyDeleted}"></i>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div>
+                <button type="button" pButton icon="pi pi-plus" (click)="showDialog(crudEnum.ADD)" label="Add"></button>
+                <button type="button" pButton icon="pi pi-pencil" style="margin-left:0.5rem;"
+                    (click)="showDialog(crudEnum.UPDATE)" label="Modify"
+                    [disabled]="modifyAndDeleteButtonsDisable"></button>
+                <button type="button" pButton icon="pi pi-minus" style="margin-left:0.5rem;"
+                    (click)="showDialog(crudEnum.DELETE)" label="Delete"
+                    [disabled]="modifyAndDeleteButtonsDisable"></button>
+            </div>
+        </ng-template>
+    </p-table>
+</div>

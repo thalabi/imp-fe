@@ -1,8 +1,7 @@
-import { Instrument } from "../portfolio-management/Instrument";
+import { Instrument } from "../portfolio-holding-management/Instrument";
 
 export interface InstrumentInterestBearing {
-    // id: number;
-    // version: number;
+    id: number;
     instrument: Instrument;
     type: string | null;
     financialInstitution: string | null;
@@ -14,6 +13,7 @@ export interface InstrumentInterestBearing {
     promotionalInterestRate: number | null;
     promotionEndDate: Date | null;
     emailNotification: boolean | null;
+    rowVersion: number;
     _links: {
         self: {
             href: URL

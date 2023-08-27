@@ -1,24 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { RestService } from '../../service/rest.service';
+import { Validators, FormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { InstrumentInterestBearing } from './InstrumentInterestBearing';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { CrudEnum } from '../../crud-enum';
-import { FormBuilder, FormGroup, UntypedFormGroup, Validators } from '@angular/forms';
-import { Instrument } from '../portfolio-management/Instrument';
+import { RestService } from '../../service/rest.service';
+import { InstrumentInterestBearing } from './InstrumentInterestBearing';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Instrument } from '../portfolio-holding-management/Instrument';
 
 @Component({
-    selector: 'app-instrument-management',
-    templateUrl: './instrument-management.component.html',
-    styleUrls: ['./instrument-management.component.css']
+    selector: 'app-instrument-maintenance',
+    templateUrl: './instrument-maintenance.component.html',
+    styleUrls: ['./instrument-maintenance.component.css']
 })
-export class InstrumentManagementComponent implements OnInit {
+export class InstrumentMaintenanceComponent implements OnInit {
 
     currencies: Array<string> = []
     financialInstitutions: Array<string> = []
     instrumentTypes: Array<string> = []
     interestBearingTypes: Array<string> = []
-    terms: Array<string> = []
+    termOptions: Array<{ value: string, name: string }> = []
 
     selectedInstrumentType: string = ''
     instrumentInterestBearings: InstrumentInterestBearing[] | null = null;
@@ -54,6 +54,7 @@ export class InstrumentManagementComponent implements OnInit {
 
     ) { }
 
+
     ngOnInit(): void {
         this.getCurrencies()
         this.getFinancialInstitutions()
@@ -78,7 +79,7 @@ export class InstrumentManagementComponent implements OnInit {
     private getInstrumentInterestBearings() {
         const tableName: string = 'instrument_interest_bearing'
         const entityNameResource = RestService.toPlural(RestService.toCamelCase(tableName))
-        this.restService.getTableData(tableName, 0, 999, [], 'interestBearingWithAssociations')
+        this.restService.getTableData(tableName, 0, 999, [], 'instrumentInterestBearingInlineInstrument')
             .subscribe(
                 {
                     next: (data: any) => {
@@ -93,12 +94,12 @@ export class InstrumentManagementComponent implements OnInit {
                     complete: () => {
                         console.log('http request completed')
                         // sort by instrument name
-                        // this cannot be done by jpa data rest becuase does ot support sort by assosiation columns
+                        // this cannot be done by jpa data rest becuase does not support sort by assosiation columns
                         this.instrumentInterestBearings!.sort((a, b) => (a.instrument.name! < b.instrument.name!) ? -1 : (a.instrument.name! > b.instrument.name!) ? 1 : 0)
                     }
                     ,
                     error: (httpErrorResponse: HttpErrorResponse) => {
-                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support.' })
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
                 });
     }
@@ -180,7 +181,7 @@ export class InstrumentManagementComponent implements OnInit {
                 saveInstrumentInterestBearing.instrument.type = 'INTEREST_BEARING'
                 saveInstrumentInterestBearing.type = this.instrumentInterestBearingForm.controls.type.value
                 saveInstrumentInterestBearing.financialInstitution = this.instrumentInterestBearingForm.controls.financialInstitution.value
-                saveInstrumentInterestBearing.price = this.instrumentInterestBearingForm.controls.price.value ? this.instrumentInterestBearingForm.controls.price.value : 1
+                saveInstrumentInterestBearing.price = this.instrumentInterestBearingForm.controls.price.value
                 saveInstrumentInterestBearing.interestRate = this.instrumentInterestBearingForm.controls.interestRate.value
                 saveInstrumentInterestBearing.term = this.instrumentInterestBearingForm.controls.term.value
                 saveInstrumentInterestBearing.maturityDate = this.instrumentInterestBearingForm.controls.maturityDate.value
@@ -207,7 +208,7 @@ export class InstrumentManagementComponent implements OnInit {
                             }
                             ,
                             error: (httpErrorResponse: HttpErrorResponse) => {
-                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support. ' })
+                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                             }
                         });
                 break;
@@ -227,7 +228,11 @@ export class InstrumentManagementComponent implements OnInit {
                 saveInstrumentInterestBearing.promotionEndDate = this.instrumentInterestBearingForm.controls.promotionEndDate.value
                 saveInstrumentInterestBearing.emailNotification = this.instrumentInterestBearingForm.controls.emailNotification.value
 
-                saveInstrumentInterestBearing._links = this.instrumentInterestBearingSelectedRow._links
+                //saveInstrumentInterestBearing._links = this.instrumentInterestBearingSelectedRow._links
+                saveInstrumentInterestBearing.id = this.instrumentInterestBearingSelectedRow.id;
+                saveInstrumentInterestBearing.rowVersion = this.instrumentInterestBearingSelectedRow.rowVersion;
+                saveInstrumentInterestBearing.instrument.id = this.instrumentInterestBearingSelectedRow.instrument.id;
+                saveInstrumentInterestBearing.instrument.rowVersion = this.instrumentInterestBearingSelectedRow.instrument.rowVersion;
 
                 console.log('saveInstrumentInterestBearing', saveInstrumentInterestBearing)
                 this.restService.updateInstrumentInterestBearing(saveInstrumentInterestBearing)
@@ -252,7 +257,7 @@ export class InstrumentManagementComponent implements OnInit {
                             }
                             ,
                             error: (httpErrorResponse: HttpErrorResponse) => {
-                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support. ' })
+                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                             }
                         });
                 break;
@@ -276,7 +281,7 @@ export class InstrumentManagementComponent implements OnInit {
                             }
                             ,
                             error: (httpErrorResponse: HttpErrorResponse) => {
-                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support.' })
+                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                             }
                         });
                 break;
@@ -297,6 +302,15 @@ export class InstrumentManagementComponent implements OnInit {
 
     onChangeType(event: any) {
         console.log('onChangeType: event', event)
+        this.instrumentInterestBearingForm.controls.ticker.reset();
+        this.instrumentInterestBearingForm.controls.price.reset();
+        this.instrumentInterestBearingForm.controls.interestRate.reset();
+        this.instrumentInterestBearingForm.controls.term.reset();
+        this.instrumentInterestBearingForm.controls.maturityDate.reset();
+        this.instrumentInterestBearingForm.controls.nextPaymentDate.reset();
+        this.instrumentInterestBearingForm.controls.promotionalInterestRate.reset();
+        this.instrumentInterestBearingForm.controls.promotionEndDate.reset();
+        this.instrumentInterestBearingForm.controls.emailNotification.patchValue(true);
     }
     onChangeFinancialInstitution(event: any) {
         console.log('onChangeFinancialInstitution: event', event)
@@ -335,8 +349,8 @@ export class InstrumentManagementComponent implements OnInit {
                     complete: () => {
                         console.log('http request completed')
                     },
-                    error: (response: any) => {
-                        this.messageService.add({ severity: 'error', summary: response, detail: response })
+                    error: (httpErrorResponse: HttpErrorResponse) => {
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
                 });
     }
@@ -351,8 +365,8 @@ export class InstrumentManagementComponent implements OnInit {
                     complete: () => {
                         console.log('http request completed')
                     },
-                    error: (response: any) => {
-                        this.messageService.add({ severity: 'error', summary: response, detail: response })
+                    error: (httpErrorResponse: HttpErrorResponse) => {
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
                 });
     }
@@ -367,8 +381,8 @@ export class InstrumentManagementComponent implements OnInit {
                     complete: () => {
                         console.log('http request completed')
                     },
-                    error: (response: any) => {
-                        this.messageService.add({ severity: 'error', summary: response, detail: response })
+                    error: (httpErrorResponse: HttpErrorResponse) => {
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
                 });
     }
@@ -383,8 +397,8 @@ export class InstrumentManagementComponent implements OnInit {
                     complete: () => {
                         console.log('http request completed')
                     },
-                    error: (response: any) => {
-                        this.messageService.add({ severity: 'error', summary: response, detail: response })
+                    error: (httpErrorResponse: HttpErrorResponse) => {
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
                 });
     }
@@ -394,14 +408,25 @@ export class InstrumentManagementComponent implements OnInit {
                 {
                     next: (data: Array<string>) => {
                         console.log('data', data)
-                        this.terms = data
+                        data.forEach(term => this.termOptions.push({ value: term, name: term.substring(5) }))
+                        console.log('this.termOptions', this.termOptions)
                     },
                     complete: () => {
                         console.log('http request completed')
                     },
-                    error: (response: any) => {
-                        this.messageService.add({ severity: 'error', summary: response, detail: response })
+                    error: (httpErrorResponse: HttpErrorResponse) => {
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
                 });
+    }
+
+    private extractMessage(httpErrorResponse: HttpErrorResponse): string {
+        let message: string = ''
+        if (typeof httpErrorResponse.error === 'string') {
+            message = httpErrorResponse.error
+        } else {
+            message = httpErrorResponse.error.message
+        }
+        return message;
     }
 }

@@ -38,7 +38,7 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-holdingDetail>
-            <tr [pSelectableRow]="holdingDetail">
+            <tr [pSelectableRow]="holdingDetail" style="line-height: 1rem;">
 
                 <ng-container
                     *ngIf="holdingDetail.instrumentType == 'INTEREST_BEARING'; then interestBearing; else nonInterestBearing"></ng-container>

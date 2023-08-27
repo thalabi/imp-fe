@@ -4,11 +4,12 @@ import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UploadResponse } from '../file-transfer/UploadResponse';
 import { TableListResponse } from '../file-transfer/TableListResponse';
-import { SaveHoldingRequest } from '../portfolio/portfolio-management/SaveHoldingRequest';
+import { SaveHoldingRequest } from '../portfolio/portfolio-holding-management/SaveHoldingRequest';
 import { map } from 'rxjs/operators';
 import { PositionSnapshot } from '../portfolio/purge-position-snapshot/PositionSnapshot';
-import { HoldingDetail } from '../portfolio/portfolio-management/HoldingDetail';
-import { InstrumentInterestBearing } from '../portfolio/instrument-management/InstrumentInterestBearing';
+import { IHoldingDetail } from '../portfolio/portfolio-holding-management/IHoldingDetail';
+import { InstrumentInterestBearing } from '../portfolio/instrument-maintenance/InstrumentInterestBearing';
+import { IPortfolioWithDependentFlags } from '../portfolio/portfolio-maintenance/IPortfolioWithDependentFlags';
 
 @Injectable({
     providedIn: 'root'
@@ -87,8 +88,8 @@ export class RestService {
     getHoldingDetails(portfolioId: number): Observable<any> {
         return this.http.get(`${this.serviceUrl}/protected/investmentPortfolioController/getHoldingDetails?portfolioId=${portfolioId}`)
             .pipe(
-                map((data: any): Array<HoldingDetail> => {
-                    const holdingDetailList: Array<HoldingDetail> = data.holdingDetails
+                map((data: any): Array<IHoldingDetail> => {
+                    const holdingDetailList: Array<IHoldingDetail> = data.holdingDetails
                     holdingDetailList.forEach(holdingDetail => {
                         const asOfDate = holdingDetail.asOfDate
                         console.log('asOfDate', asOfDate)
@@ -154,14 +155,18 @@ export class RestService {
         return this.http.delete<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/deleteInstrumentInterestBearing/${id}`);
     }
     updateInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
-        const id = RestService.idFromUrl(instrumentInterestBearing._links.self.href);
-        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/updateInstrumentInterestBearing/${id}`, instrumentInterestBearing);
+        //instrumentInterestBearing.id = RestService.idFromUrl(instrumentInterestBearing._links.self.href);
+        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/updateInstrumentInterestBearing`, instrumentInterestBearing);
     }
     getDefaultDaysToNotify(): Observable<number> {
         return this.http.get<number>(`${this.serviceUrl}/protected/instrumentController/getDefaultDaysToNotify`);
     }
     triggerInstrumetDueNotification(daysToNotify: number) {
         return this.http.get(`${this.serviceUrl}/protected/instrumentController/triggerInstrumetDueNotification?daysToNotify=${daysToNotify}`);
+    }
+
+    getPortfoliosWithDependentFlags(): Observable<Array<IPortfolioWithDependentFlags>> {
+        return this.http.get<Array<IPortfolioWithDependentFlags>>(`${this.serviceUrl}/protected/portfolioController/getPortfoliosWithDependentFlags`);
     }
 
     public static toCamelCase(tableName: string): string {
