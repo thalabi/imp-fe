@@ -8,6 +8,7 @@ import { MessageService } from 'primeng/api';
 import { RestService } from '../../service/rest.service';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { SaveHoldingRequest } from './SaveHoldingRequest';
+import { SessionService } from '../../service/session.service';
 
 @Component({
     selector: 'app-portfolio-holding-management',
@@ -41,7 +42,8 @@ export class PortfolioHoldingManagementComponent implements OnInit {
     constructor(
         private formBuilder: UntypedFormBuilder,
         private restService: RestService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private sessionService: SessionService
     ) { }
 
     ngOnInit(): void {
@@ -72,7 +74,7 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                     }
                     ,
                     error: (httpErrorResponse: HttpErrorResponse) => {
-                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support.' })
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
                 });
     }
@@ -105,7 +107,7 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                     }
                     ,
                     error: (httpErrorResponse: HttpErrorResponse) => {
-                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support.' })
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
                 });
     }
@@ -131,7 +133,7 @@ export class PortfolioHoldingManagementComponent implements OnInit {
         // this.truncateTable = false
         // this.showTable = false
         // this.tableRows = []
-        const portfolioId = RestService.idFromUrl(this.selectedPortfolio._links.self.href)
+        const portfolioId = this.selectedPortfolio.id
         console.log(portfolioId)
         this.restService.getHoldingDetails(portfolioId)
             .subscribe(
@@ -152,7 +154,7 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                     }
                     ,
                     error: (httpErrorResponse: HttpErrorResponse) => {
-                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support.' })
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
                 });
     }
@@ -186,6 +188,7 @@ export class PortfolioHoldingManagementComponent implements OnInit {
 
     showDialog(crudMode: CrudEnum) {
         this.displayDialog = true;
+        this.sessionService.setDisableParentMessages(true)
         this.crudMode = crudMode;
         console.log('this.crudMode', this.crudMode);
         this.instrumentArrayForCurrency = this.instrumentRowsByCurrency.get(this.selectedPortfolio.currency) || []
@@ -234,8 +237,8 @@ export class PortfolioHoldingManagementComponent implements OnInit {
         switch (this.crudMode) {
             case CrudEnum.ADD:
                 saveHoldingRequest.asOfDate = this.holdingDetailForm.controls.asOfDate.value
-                saveHoldingRequest.instrumentId = RestService.idFromUrl(this.holdingDetailForm.controls.instrument.value._links.self.href)
-                saveHoldingRequest.portfolioId = RestService.idFromUrl(this.selectedPortfolio._links.self.href)
+                saveHoldingRequest.instrumentId = this.holdingDetailForm.controls.instrument.value.id
+                saveHoldingRequest.portfolioId = this.selectedPortfolio.id
                 saveHoldingRequest.quantity = this.holdingDetailForm.controls.quantity.value
                 console.log('saveHoldingRequest', saveHoldingRequest)
                 this.restService.addHolding(saveHoldingRequest)
@@ -248,6 +251,7 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                                 } else {
                                     this.retrieveSelectedPortfolioHoldings()
                                     this.displayDialog = false;
+                                    this.sessionService.setDisableParentMessages(false)
                                     this.holdingDetailSelectedRow = {} as IHoldingDetail
                                 }
                             },
@@ -259,7 +263,7 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                             }
                             ,
                             error: (httpErrorResponse: HttpErrorResponse) => {
-                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support. ' })
+                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                             }
                         });
                 break;
@@ -281,6 +285,7 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                                 } else {
                                     this.retrieveSelectedPortfolioHoldings()
                                     this.displayDialog = false;
+                                    this.sessionService.setDisableParentMessages(false)
                                     this.holdingDetailSelectedRow = {} as IHoldingDetail
                                 }
                             },
@@ -292,7 +297,7 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                             }
                             ,
                             error: (httpErrorResponse: HttpErrorResponse) => {
-                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support. ' })
+                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                             }
                         });
                 break;
@@ -306,6 +311,7 @@ export class PortfolioHoldingManagementComponent implements OnInit {
 
                                 this.retrieveSelectedPortfolioHoldings()
                                 this.displayDialog = false;
+                                this.sessionService.setDisableParentMessages(false)
                                 this.holdingDetailSelectedRow = {} as IHoldingDetail
                             },
                             complete: () => {
@@ -316,7 +322,7 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                             }
                             ,
                             error: (httpErrorResponse: HttpErrorResponse) => {
-                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: 'Server error. Please contact support.' })
+                                this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                             }
                         });
                 break;
@@ -329,11 +335,22 @@ export class PortfolioHoldingManagementComponent implements OnInit {
     onCancel() {
         this.resetDialoForm();
         this.displayDialog = false;
+        this.sessionService.setDisableParentMessages(false)
         this.modifyAndDeleteButtonsDisable = true
     }
     private resetDialoForm() {
         this.holdingDetailForm.reset()
         this.holdingDetailSelectedRow = {} as IHoldingDetail
+    }
+
+    private extractMessage(httpErrorResponse: HttpErrorResponse): string {
+        let message: string = ''
+        if (typeof httpErrorResponse.error === 'string') {
+            message = httpErrorResponse.error
+        } else {
+            message = httpErrorResponse.error.message
+        }
+        return message;
     }
 
 }

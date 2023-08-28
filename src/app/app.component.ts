@@ -4,6 +4,7 @@ import { environment } from '../environments/environment';
 import { AppInfoService } from './service/appInfo.service';
 import { DEFAULT_INTERRUPTSOURCES, Idle } from '@ng-idle/core';
 import { AuthService } from './auth/auth.service';
+import { SessionService } from './service/session.service';
 
 
 @Component({
@@ -18,9 +19,10 @@ export class AppComponent {
 
     sessionTimeoutMessage = 'Session timed out due to ' + (+environment.idle.inactivityTimer + +environment.idle.timeoutTimer) / 60 + ' minutes of inactivity'
     idleState: string = 'Not started.'
+    disableParentMessages: boolean = false;
 
     constructor(
-        private versionService: AppInfoService, private authService: AuthService, private idle: Idle
+        private versionService: AppInfoService, private authService: AuthService, private idle: Idle, private sessionService: SessionService
     ) { }
 
     ngOnInit() {
@@ -40,6 +42,7 @@ export class AppComponent {
             this.idle.watch()
         }
 
+        this.sessionService.disableParentMessages$.subscribe(data => this.disableParentMessages = data)
     }
 
     private configureIdle() {
@@ -69,6 +72,5 @@ export class AppComponent {
             this.authService.logout(this.sessionTimeoutMessage)
         })
     }
-
 
 }

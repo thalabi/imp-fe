@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { CrudEnum } from '../../crud-enum';
@@ -6,6 +6,7 @@ import { RestService } from '../../service/rest.service';
 import { InstrumentInterestBearing } from './InstrumentInterestBearing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Instrument } from '../portfolio-holding-management/Instrument';
+import { SessionService } from '../../service/session.service';
 
 @Component({
     selector: 'app-instrument-maintenance',
@@ -51,7 +52,7 @@ export class InstrumentMaintenanceComponent implements OnInit {
         private restService: RestService,
         private messageService: MessageService,
         private formBuilder: FormBuilder,
-
+        private sessionService: SessionService
     ) { }
 
 
@@ -130,6 +131,7 @@ export class InstrumentMaintenanceComponent implements OnInit {
 
     showDialog(crudMode: CrudEnum) {
         this.displayDialog = true;
+        this.sessionService.setDisableParentMessages(true)
         this.crudMode = crudMode;
         console.log('this.crudMode', this.crudMode);
         switch (this.crudMode) {
@@ -200,6 +202,7 @@ export class InstrumentMaintenanceComponent implements OnInit {
                                 } else {
                                     this.getInstrumentInterestBearings()
                                     this.displayDialog = false;
+                                    this.sessionService.setDisableParentMessages(false)
                                     this.instrumentInterestBearingSelectedRow = {} as InstrumentInterestBearing
                                 }
                             },
@@ -245,6 +248,7 @@ export class InstrumentMaintenanceComponent implements OnInit {
                                 } else {
                                     this.getInstrumentInterestBearings()
                                     this.displayDialog = false;
+                                    this.sessionService.setDisableParentMessages(false)
                                     this.instrumentInterestBearingSelectedRow = {} as InstrumentInterestBearing
                                 }
                             },
@@ -273,6 +277,7 @@ export class InstrumentMaintenanceComponent implements OnInit {
                                 } else {
                                     this.getInstrumentInterestBearings()
                                     this.displayDialog = false;
+                                    this.sessionService.setDisableParentMessages(false)
                                     this.instrumentInterestBearingSelectedRow = {} as InstrumentInterestBearing
                                 }
                             },
@@ -293,6 +298,7 @@ export class InstrumentMaintenanceComponent implements OnInit {
     onCancel() {
         this.resetDialoForm();
         this.displayDialog = false;
+        this.sessionService.setDisableParentMessages(false)
         this.modifyAndDeleteButtonsDisable = true
     }
     private resetDialoForm() {

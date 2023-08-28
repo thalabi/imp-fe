@@ -10,6 +10,9 @@ export class SessionService {
     private userInfoSource = new BehaviorSubject<UserInfo>({} as UserInfo);
     public userInfo$ = this.userInfoSource.asObservable();
 
+    private disableParentMessagesSource = new BehaviorSubject<boolean>(false)
+    public disableParentMessages$ = this.disableParentMessagesSource.asObservable()
+
     constructor(private authService: AuthService) {
         this.authService.isAuthenticated$
             .pipe(distinctUntilChanged())
@@ -23,4 +26,9 @@ export class SessionService {
                 }
             })
     }
+
+    setDisableParentMessages(disableParentMessages: boolean) {
+        this.disableParentMessagesSource.next(disableParentMessages)
+    }
+
 }

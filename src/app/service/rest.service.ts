@@ -111,7 +111,7 @@ export class RestService {
         return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioController/updateHolding/`, saveHoldingRequest);
     }
     deleteHolding(holdingId: number): Observable<HttpResponse<void>> {
-        return this.http.delete<HttpResponse<void>>(`${this.serviceUrl}/protected/data-rest/holdings/` + holdingId);
+        return this.http.delete<HttpResponse<void>>(`${this.serviceUrl}/protected/investmentPortfolioController/deleteHolding/` + holdingId);
     }
 
     getDistinctPositionSnapshots(): Observable<Array<PositionSnapshot>> {
