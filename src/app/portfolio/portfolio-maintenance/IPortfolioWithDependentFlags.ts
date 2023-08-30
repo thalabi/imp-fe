@@ -1,8 +1,6 @@
 export interface IPortfolioWithDependentFlags {
     id: number;
-    lk: String;
-    financialInstitution: number;
-    financialInstitutionName: string;
+    financialInstitution: string;
     name: string;
     accountNumber: string;
     currency: string;

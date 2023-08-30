@@ -10,6 +10,7 @@ import { PositionSnapshot } from '../portfolio/purge-position-snapshot/PositionS
 import { IHoldingDetail } from '../portfolio/portfolio-holding-management/IHoldingDetail';
 import { InstrumentInterestBearing } from '../portfolio/instrument-maintenance/InstrumentInterestBearing';
 import { IPortfolioWithDependentFlags } from '../portfolio/portfolio-maintenance/IPortfolioWithDependentFlags';
+import { Portfolio } from '../portfolio/portfolio-holding-management/Portfolio';
 
 @Injectable({
     providedIn: 'root'
@@ -101,14 +102,8 @@ export class RestService {
                 }))
     }
 
-    // findByPortfolioIdAndInstrumentIdAndAsOfDate(holding: SaveHoldingRequest): Observable<HttpResponse<Array<SaveHoldingRequest>>> {
-    //     return this.http.get<HttpResponse<Array<SaveHoldingRequest>>>(this.serviceUrl + '/protected/data-rest/holdings/search/findByPortfolioIdAndInstrumentIdAndAsOfDate?portfolioId=10&instrumentId=21&asOfDate=2021-09-23');
-    // }
-    addHolding(saveHoldingRequest: SaveHoldingRequest): Observable<HttpResponse<any>> {
-        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioController/addHolding/`, saveHoldingRequest);
-    }
-    updateHolding(saveHoldingRequest: SaveHoldingRequest): Observable<HttpResponse<any>> {
-        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioController/updateHolding/`, saveHoldingRequest);
+    saveHolding(saveHoldingRequest: SaveHoldingRequest): Observable<HttpResponse<any>> {
+        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioController/saveHolding/`, saveHoldingRequest);
     }
     deleteHolding(holdingId: number): Observable<HttpResponse<void>> {
         return this.http.delete<HttpResponse<void>>(`${this.serviceUrl}/protected/investmentPortfolioController/deleteHolding/` + holdingId);
@@ -132,31 +127,27 @@ export class RestService {
     }
 
     getCurrencies(): Observable<Array<string>> {
-        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/instrumentController/getCurrencies`);
+        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/referenceDataController/getCurrencies`);
     }
     getFinancialInstitutions(): Observable<Array<string>> {
-        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/instrumentController/getFinancialInstitutions`);
+        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/referenceDataController/getFinancialInstitutions`);
     }
     getInstrumentTypes(): Observable<Array<string>> {
-        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/instrumentController/getInstrumentTypes`);
+        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/referenceDataController/getInstrumentTypes`);
     }
     getInterestBearingTypes(): Observable<Array<string>> {
-        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/instrumentController/getInterestBearingTypes`);
+        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/referenceDataController/getInterestBearingTypes`);
     }
     getTerms(): Observable<Array<string>> {
-        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/instrumentController/getTerms`);
+        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/referenceDataController/getTerms`);
     }
 
-    addInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
-        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/addInstrumentInterestBearing/`, instrumentInterestBearing);
+    saveInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
+        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/saveInstrumentInterestBearing/`, instrumentInterestBearing);
     }
     deleteInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
         const id = RestService.idFromUrl(instrumentInterestBearing._links.self.href);
         return this.http.delete<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/deleteInstrumentInterestBearing/${id}`);
-    }
-    updateInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
-        //instrumentInterestBearing.id = RestService.idFromUrl(instrumentInterestBearing._links.self.href);
-        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/updateInstrumentInterestBearing`, instrumentInterestBearing);
     }
     getDefaultDaysToNotify(): Observable<number> {
         return this.http.get<number>(`${this.serviceUrl}/protected/instrumentController/getDefaultDaysToNotify`);
@@ -167,6 +158,13 @@ export class RestService {
 
     getPortfoliosWithDependentFlags(): Observable<Array<IPortfolioWithDependentFlags>> {
         return this.http.get<Array<IPortfolioWithDependentFlags>>(`${this.serviceUrl}/protected/portfolioController/getPortfoliosWithDependentFlags`);
+    }
+
+    savePortfolio(portfolio: Portfolio): Observable<HttpResponse<any>> {
+        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/portfolioController/savePortfolio/`, portfolio);
+    }
+    deletePortfolio(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<HttpResponse<any>>(`${this.serviceUrl}/protected/portfolioController/deletePortfolio/${id}`);
     }
 
     public static toCamelCase(tableName: string): string {

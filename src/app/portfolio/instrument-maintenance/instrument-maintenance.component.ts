@@ -26,7 +26,6 @@ export class InstrumentMaintenanceComponent implements OnInit {
     loadingStatus: boolean = false;
     instrumentInterestBearingCount: number = 0;
     instrumentInterestBearingSelectedRow: InstrumentInterestBearing = {} as InstrumentInterestBearing;
-    crudRow: InstrumentInterestBearing = {} as InstrumentInterestBearing
     modifyAndDeleteButtonsDisable: boolean = true;
     crudMode: CrudEnum = {} as CrudEnum
     crudEnum = CrudEnum; // Used in html to refer to enum
@@ -88,17 +87,14 @@ export class InstrumentMaintenanceComponent implements OnInit {
                         this.transformInstrumentInterestBearingsDateFields()
                         console.log('this.instrumentInterestBearings', this.instrumentInterestBearings)
                         this.instrumentInterestBearingCount = data.page.totalElements
-                        this.loadingStatus = false
-
-                        //this.portfolioList = this.buildPortfolioList(this.portfolioRows)
                     },
                     complete: () => {
                         console.log('http request completed')
                         // sort by instrument name
                         // this cannot be done by jpa data rest becuase does not support sort by assosiation columns
                         this.instrumentInterestBearings!.sort((a, b) => (a.instrument.name! < b.instrument.name!) ? -1 : (a.instrument.name! > b.instrument.name!) ? 1 : 0)
-                    }
-                    ,
+                        this.loadingStatus = false
+                    },
                     error: (httpErrorResponse: HttpErrorResponse) => {
                         this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
@@ -117,16 +113,11 @@ export class InstrumentMaintenanceComponent implements OnInit {
     onRowSelect(event: any) {
         console.log(event);
         console.log('onRowSelect()')
-        this.crudRow = Object.assign({}, this.instrumentInterestBearingSelectedRow);
         this.modifyAndDeleteButtonsDisable = false;
-        // this.formAttributes.associations.forEach(associationAttributes => {
-        //     this.fetchAssosciatedRows(this.crudRow, associationAttributes);
-        // });
     }
     onRowUnselect(event: any) {
         console.log(event);
         this.modifyAndDeleteButtonsDisable = true;
-        //this.selectedRow = new FlightLog(); // This a hack. If don't init selectedFlightLog, dialog will produce exception
     }
 
     showDialog(crudMode: CrudEnum) {
@@ -192,24 +183,19 @@ export class InstrumentMaintenanceComponent implements OnInit {
                 saveInstrumentInterestBearing.promotionEndDate = this.instrumentInterestBearingForm.controls.promotionEndDate.value
                 saveInstrumentInterestBearing.emailNotification = this.instrumentInterestBearingForm.controls.emailNotification.value
                 console.log('saveInstrumentInterestBearing', saveInstrumentInterestBearing)
-                this.restService.addInstrumentInterestBearing(saveInstrumentInterestBearing)
+                this.restService.saveInstrumentInterestBearing(saveInstrumentInterestBearing)
                     .subscribe(
                         {
-                            next: (instrumentInterestBearingResponse: any) => {
-                                console.log('instrumentInterestBearingResponse', instrumentInterestBearingResponse)
-                                if (instrumentInterestBearingResponse.statusMessage) {
-                                    this.messageService.add({ severity: 'error', summary: instrumentInterestBearingResponse.statusMessage })
-                                } else {
-                                    this.getInstrumentInterestBearings()
-                                    this.displayDialog = false;
-                                    this.sessionService.setDisableParentMessages(false)
-                                    this.instrumentInterestBearingSelectedRow = {} as InstrumentInterestBearing
-                                }
+                            next: (response: any) => {
+                                console.log('response', response)
                             },
                             complete: () => {
                                 console.log('http request completed')
-                            }
-                            ,
+                                this.getInstrumentInterestBearings()
+                                this.displayDialog = false;
+                                this.sessionService.setDisableParentMessages(false)
+                                this.instrumentInterestBearingSelectedRow = {} as InstrumentInterestBearing
+                            },
                             error: (httpErrorResponse: HttpErrorResponse) => {
                                 this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                             }
@@ -231,35 +217,25 @@ export class InstrumentMaintenanceComponent implements OnInit {
                 saveInstrumentInterestBearing.promotionEndDate = this.instrumentInterestBearingForm.controls.promotionEndDate.value
                 saveInstrumentInterestBearing.emailNotification = this.instrumentInterestBearingForm.controls.emailNotification.value
 
-                //saveInstrumentInterestBearing._links = this.instrumentInterestBearingSelectedRow._links
                 saveInstrumentInterestBearing.id = this.instrumentInterestBearingSelectedRow.id;
                 saveInstrumentInterestBearing.rowVersion = this.instrumentInterestBearingSelectedRow.rowVersion;
                 saveInstrumentInterestBearing.instrument.id = this.instrumentInterestBearingSelectedRow.instrument.id;
                 saveInstrumentInterestBearing.instrument.rowVersion = this.instrumentInterestBearingSelectedRow.instrument.rowVersion;
 
                 console.log('saveInstrumentInterestBearing', saveInstrumentInterestBearing)
-                this.restService.updateInstrumentInterestBearing(saveInstrumentInterestBearing)
+                this.restService.saveInstrumentInterestBearing(saveInstrumentInterestBearing)
                     .subscribe(
                         {
-                            next: (instrumentInterestBearingResponse: any) => {
-                                console.log('instrumentInterestBearingResponse', instrumentInterestBearingResponse)
-                                if (instrumentInterestBearingResponse.statusMessage) {
-                                    this.messageService.add({ severity: 'error', summary: instrumentInterestBearingResponse.statusMessage })
-                                } else {
-                                    this.getInstrumentInterestBearings()
-                                    this.displayDialog = false;
-                                    this.sessionService.setDisableParentMessages(false)
-                                    this.instrumentInterestBearingSelectedRow = {} as InstrumentInterestBearing
-                                }
+                            next: (response: any) => {
+                                console.log('response', response)
                             },
                             complete: () => {
                                 console.log('http request completed')
-                                // this.messageService.clear()
-                                // this.uploadProgressMessage = '';
-                                // this.uploadResponse = {} as UploadResponse;
-                                // this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
-                            }
-                            ,
+                                this.getInstrumentInterestBearings()
+                                this.displayDialog = false;
+                                this.sessionService.setDisableParentMessages(false)
+                                this.instrumentInterestBearingSelectedRow = {} as InstrumentInterestBearing
+                            },
                             error: (httpErrorResponse: HttpErrorResponse) => {
                                 this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                             }
@@ -270,21 +246,16 @@ export class InstrumentMaintenanceComponent implements OnInit {
                 this.restService.deleteInstrumentInterestBearing(this.instrumentInterestBearingSelectedRow)
                     .subscribe(
                         {
-                            next: (instrumentInterestBearingResponse: any) => {
-                                console.log('instrumentInterestBearingResponse', instrumentInterestBearingResponse)
-                                if (instrumentInterestBearingResponse.statusMessage) {
-                                    this.messageService.add({ severity: 'error', summary: instrumentInterestBearingResponse.statusMessage })
-                                } else {
-                                    this.getInstrumentInterestBearings()
-                                    this.displayDialog = false;
-                                    this.sessionService.setDisableParentMessages(false)
-                                    this.instrumentInterestBearingSelectedRow = {} as InstrumentInterestBearing
-                                }
+                            next: (response: any) => {
+                                console.log('response', response)
                             },
                             complete: () => {
                                 console.log('http request completed')
-                            }
-                            ,
+                                this.getInstrumentInterestBearings()
+                                this.displayDialog = false;
+                                this.sessionService.setDisableParentMessages(false)
+                                this.instrumentInterestBearingSelectedRow = {} as InstrumentInterestBearing
+                            },
                             error: (httpErrorResponse: HttpErrorResponse) => {
                                 this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                             }

@@ -30,7 +30,6 @@ export class PortfolioHoldingManagementComponent implements OnInit {
     holdingDetailListCount: number = 0;
 
     holdingDetailSelectedRow: IHoldingDetail = {} as IHoldingDetail
-    crudRow: IHoldingDetail = {} as IHoldingDetail
     modifyAndDeleteButtonsDisable: boolean = true;
     crudMode: CrudEnum = {} as CrudEnum
     crudEnum = CrudEnum; // Used in html to refer to enum
@@ -62,17 +61,11 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                         this.portfolioRows = data._embedded[entityNameResource]
                         console.log('this.portfolioRows', this.portfolioRows)
                         this.portfolioCount = data.page.totalElements
-                        this.loadingStatus = false
-
-                        //this.portfolioList = this.buildPortfolioList(this.portfolioRows)
                     },
                     complete: () => {
-                        // this.messageService.clear()
-                        // this.uploadProgressMessage = '';
-                        // this.uploadResponse = {} as UploadResponse;
-                        // this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
-                    }
-                    ,
+                        console.log('http request completed')
+                        this.loadingStatus = false
+                    },
                     error: (httpErrorResponse: HttpErrorResponse) => {
                         this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
@@ -88,24 +81,17 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                     next: (data: any) => {
                         const allInstrumentRows: Array<Instrument> = data._embedded[entityNameResource]
                         console.log('this.instrumentRows', allInstrumentRows)
-                        // 
                         allInstrumentRows.forEach(instrumentRow => {
                             let instrumentArrayForCurrency: Array<Instrument> = this.instrumentRowsByCurrency.get(instrumentRow.currency) || []
                             instrumentArrayForCurrency.push(instrumentRow)
                             this.instrumentRowsByCurrency.set(instrumentRow.currency, instrumentArrayForCurrency)
                         })
                         console.log('this.instrumentRowsByCurrency', this.instrumentRowsByCurrency)
-                        this.loadingStatus = false
-
-                        //this.portfolioList = this.buildPortfolioList(this.portfolioRows)
                     },
                     complete: () => {
-                        // this.messageService.clear()
-                        // this.uploadProgressMessage = '';
-                        // this.uploadResponse = {} as UploadResponse;
-                        // this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
-                    }
-                    ,
+                        console.log('http request completed')
+                        this.loadingStatus = false
+                    },
                     error: (httpErrorResponse: HttpErrorResponse) => {
                         this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
@@ -130,9 +116,6 @@ export class PortfolioHoldingManagementComponent implements OnInit {
             this.holdingDetailListCount = 0
             return
         }
-        // this.truncateTable = false
-        // this.showTable = false
-        // this.tableRows = []
         const portfolioId = this.selectedPortfolio.id
         console.log(portfolioId)
         this.restService.getHoldingDetails(portfolioId)
@@ -143,16 +126,12 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                         this.holdingDetailList = data.holdingDetails
                         console.log('this.holdingDetailList', this.holdingDetailList)
                         this.holdingDetailListCount = this.holdingDetailList.length
+                    },
+                    complete: () => {
+                        console.log('http request completed')
                         this.loadingStatus = false
                         this.calculatePortfolioValue()
                     },
-                    complete: () => {
-                        // this.messageService.clear()
-                        // this.uploadProgressMessage = '';
-                        // this.uploadResponse = {} as UploadResponse;
-                        // this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
-                    }
-                    ,
                     error: (httpErrorResponse: HttpErrorResponse) => {
                         this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
@@ -174,16 +153,11 @@ export class PortfolioHoldingManagementComponent implements OnInit {
     onRowSelect(event: any) {
         console.log(event);
         console.log('onRowSelect()')
-        this.crudRow = Object.assign({}, this.holdingDetailSelectedRow);
         this.modifyAndDeleteButtonsDisable = false;
-        // this.formAttributes.associations.forEach(associationAttributes => {
-        //     this.fetchAssosciatedRows(this.crudRow, associationAttributes);
-        // });
     }
     onRowUnselect(event: any) {
         console.log(event);
         this.modifyAndDeleteButtonsDisable = true;
-        //this.selectedRow = new FlightLog(); // This a hack. If don't init selectedFlightLog, dialog will produce exception
     }
 
     showDialog(crudMode: CrudEnum) {
@@ -208,17 +182,12 @@ export class PortfolioHoldingManagementComponent implements OnInit {
             default:
                 console.error('this.crudMode is invalid. this.crudMode: ' + this.crudMode);
         }
-        // console.log('this.crudForm', this.crudForm);
     }
 
     private fillInFormWithInstrumentAndQuantity(): void {
         this.holdingDetailForm.controls.asOfDate.patchValue(this.holdingDetailSelectedRow.asOfDate);
-
-        // lookup instrument object from instrumentRows (table)
         this.holdingDetailForm.controls.instrument.patchValue(this.lookupInstrumentById(this.holdingDetailSelectedRow.instrumentId));
-
         this.holdingDetailForm.controls.quantity.patchValue(this.holdingDetailSelectedRow.quantity);
-
     }
 
     private lookupInstrumentById(instrumentId: number): Instrument | undefined {
@@ -241,27 +210,19 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                 saveHoldingRequest.portfolioId = this.selectedPortfolio.id
                 saveHoldingRequest.quantity = this.holdingDetailForm.controls.quantity.value
                 console.log('saveHoldingRequest', saveHoldingRequest)
-                this.restService.addHolding(saveHoldingRequest)
+                this.restService.saveHolding(saveHoldingRequest)
                     .subscribe(
                         {
-                            next: (saveHoldingResponse: any) => {
-                                console.log('saveHoldingResponse', saveHoldingResponse)
-                                if (saveHoldingResponse.saveHoldingStatusMessage) {
-                                    this.messageService.add({ severity: 'error', summary: saveHoldingResponse.saveHoldingStatusMessage })
-                                } else {
-                                    this.retrieveSelectedPortfolioHoldings()
-                                    this.displayDialog = false;
-                                    this.sessionService.setDisableParentMessages(false)
-                                    this.holdingDetailSelectedRow = {} as IHoldingDetail
-                                }
+                            next: (response: any) => {
+                                console.log('response', response)
                             },
                             complete: () => {
-                                // this.messageService.clear()
-                                // this.uploadProgressMessage = '';
-                                // this.uploadResponse = {} as UploadResponse;
-                                // this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
-                            }
-                            ,
+                                console.log('http request completed')
+                                this.retrieveSelectedPortfolioHoldings()
+                                this.displayDialog = false;
+                                this.sessionService.setDisableParentMessages(false)
+                                this.holdingDetailSelectedRow = {} as IHoldingDetail
+                            },
                             error: (httpErrorResponse: HttpErrorResponse) => {
                                 this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                             }
@@ -275,27 +236,19 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                 saveHoldingRequest.portfolioId = RestService.idFromUrl(this.selectedPortfolio._links.self.href)
                 saveHoldingRequest.quantity = this.holdingDetailForm.controls.quantity.value
                 console.log('saveHoldingRequest', saveHoldingRequest)
-                this.restService.updateHolding(saveHoldingRequest)
+                this.restService.saveHolding(saveHoldingRequest)
                     .subscribe(
                         {
-                            next: (saveHoldingResponse: any) => {
-                                console.log('saveHoldingResponse', saveHoldingResponse)
-                                if (saveHoldingResponse.saveHoldingStatusMessage) {
-                                    this.messageService.add({ severity: 'error', summary: saveHoldingResponse.saveHoldingStatusMessage })
-                                } else {
-                                    this.retrieveSelectedPortfolioHoldings()
-                                    this.displayDialog = false;
-                                    this.sessionService.setDisableParentMessages(false)
-                                    this.holdingDetailSelectedRow = {} as IHoldingDetail
-                                }
+                            next: (response: any) => {
+                                console.log('response', response)
                             },
                             complete: () => {
-                                // this.messageService.clear()
-                                // this.uploadProgressMessage = '';
-                                // this.uploadResponse = {} as UploadResponse;
-                                // this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
-                            }
-                            ,
+                                console.log('http request completed')
+                                this.retrieveSelectedPortfolioHoldings()
+                                this.displayDialog = false;
+                                this.sessionService.setDisableParentMessages(false)
+                                this.holdingDetailSelectedRow = {} as IHoldingDetail
+                            },
                             error: (httpErrorResponse: HttpErrorResponse) => {
                                 this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                             }
@@ -306,21 +259,16 @@ export class PortfolioHoldingManagementComponent implements OnInit {
                 this.restService.deleteHolding(this.holdingDetailSelectedRow.id)
                     .subscribe(
                         {
-                            next: (httpResponse: HttpResponse<void>) => {
-                                console.log('httpResponse', httpResponse)
-
+                            next: (response: any) => {
+                                console.log('response', response)
+                            },
+                            complete: () => {
+                                console.log('http request completed')
                                 this.retrieveSelectedPortfolioHoldings()
                                 this.displayDialog = false;
                                 this.sessionService.setDisableParentMessages(false)
                                 this.holdingDetailSelectedRow = {} as IHoldingDetail
                             },
-                            complete: () => {
-                                // this.messageService.clear()
-                                // this.uploadProgressMessage = '';
-                                // this.uploadResponse = {} as UploadResponse;
-                                // this.messageService.add({ severity: 'info', summary: '200', detail: this.tableFileDownloadProgressMessage })
-                            }
-                            ,
                             error: (httpErrorResponse: HttpErrorResponse) => {
                                 this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                             }

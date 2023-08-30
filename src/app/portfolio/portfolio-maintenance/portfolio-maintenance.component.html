@@ -4,7 +4,7 @@
         [(selection)]="portfolioSelectedRow" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
         dataKey="id">
         <ng-template pTemplate="caption">
-            Portfolio <p-selectButton id="logicallyDeletedOptions" [options]="logicallyDeletedOptions"
+            Show <p-selectButton id="logicallyDeletedOptions" [options]="logicallyDeletedOptions"
                 [(ngModel)]="logicallyDeletedOption" (onChange)="onChangeLogicallyDeleted($event)"></p-selectButton>
         </ng-template>
         <ng-template pTemplate="header">
@@ -21,7 +21,7 @@
         <ng-template pTemplate="body" let-portfolio>
             <tr [pSelectableRow]="portfolio" style="line-height: 1rem;">
                 <td>{{portfolio.name}}</td>
-                <td>{{portfolio.financialInstitutionName}}</td>
+                <td>{{portfolio.financialInstitution}}</td>
                 <td>{{portfolio.accountNumber}}</td>
                 <td>{{portfolio.currency}}</td>
                 <td class="text-center">
@@ -51,3 +51,83 @@
         </ng-template>
     </p-table>
 </div>
+
+<p-dialog header="Instrument - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
+    [modal]="true" [style]="{width: '30vw'}">
+
+    <form [formGroup]="portfolioForm" (ngSubmit)="onSubmit()" novalidate>
+
+        <p-messages></p-messages>
+
+        <div class="grid" style="width: 30em;">
+
+            <!-- name-->
+            <div class="col-4">
+                <label for="name">Name</label>
+            </div>
+            <div class="col-8">
+                <input id="name" type="text" pInputText formControlName="name" class="p-inputtext" maxlength="32"
+                    size="32" />
+            </div>
+
+            <!-- financial institution -->
+            <div class="col-4">
+                <label for="financialInstitution">FI</label>
+            </div>
+            <div class="col-8">
+                <p-dropdown id="financialInstitution" [options]="financialInstitutions"
+                    formControlName="financialInstitution" placeholder="Select FI"
+                    (onChange)="onChangeFinancialInstitution($event)" [showClear]="true">
+                </p-dropdown>
+                <!-- <div *ngIf="portfolioForm.controls.financialInstitution.invalid && portfolioForm.controls.financialInstitution.touched"
+                    class="red-font">
+                    Field is required</div> -->
+            </div>
+
+            <!-- accountNumber -->
+            <div class="col-4">
+                <label for="name">Account number</label>
+            </div>
+            <div class="col-8">
+                <input id="accountNumber" type="text" pInputText formControlName="accountNumber" class="p-inputtext"
+                    maxlength="16" size="16" />
+            </div>
+
+            <!-- currency-->
+            <div class="col-4">
+                <label for="currency">Currency</label>
+            </div>
+            <div class="col-8">
+                <p-dropdown id="currency" [options]="currencies" formControlName="currency"
+                    placeholder="Select currency" [showClear]="true">
+
+                </p-dropdown>
+                <div *ngIf="portfolioForm.controls.currency.invalid && portfolioForm.controls.currency.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <!-- logicallyDeleted -->
+            <div class="col-4">
+                <label for="logicallyDeleted">Logically deleted</label>
+            </div>
+            <div class="col-8">
+                <p-checkbox inputId="logicallyDeleted" [formControl]="portfolioForm.controls['logicallyDeleted']"
+                    [binary]="true"></p-checkbox>
+            </div>
+
+            <p-footer>
+                <div class="formgroup-inline">
+                    <div class="field">
+                        <button pButton type="submit" label="Submit" [disabled]="portfolioForm.invalid"
+                            icon="pi pi-check"></button>
+                    </div>
+                    <div class="field">
+                        <button pButton type="reset" label="Cancel" (click)="onCancel()"></button>
+                    </div>
+                </div>
+            </p-footer>
+
+        </div>
+    </form>
+</p-dialog>
