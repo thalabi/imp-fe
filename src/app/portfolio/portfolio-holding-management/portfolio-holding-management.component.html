@@ -31,7 +31,6 @@
         <ng-template pTemplate="header">
             <tr>
                 <th>Instrument</th>
-                <!-- <th>Name</th> -->
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Mkt Value</th>
@@ -54,7 +53,7 @@
 
                 <!-- <td>{{holdingDetail.name}}</td> -->
                 <td><span pTooltip="{{holdingDetail.asOfDate | date:'y-MM-dd'}}"
-                        class="texthastooltip">{{holdingDetail.quantity}}</span>
+                        class="texthastooltip">{{holdingDetail.quantity | number}}</span>
                 </td>
                 <td><span pTooltip="{{holdingDetail.latestPriceTimestamp | date:'y-MM-dd HH:mm:ss'}}"
                         class="texthastooltip">{{holdingDetail.latestPrice | currency:'CAD':'symbol-narrow':'1.2-4'
