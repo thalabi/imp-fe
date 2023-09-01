@@ -107,7 +107,7 @@
             </div>
             <div class="col-8">
                 <input id="name" type="text" pInputText formControlName="name" class="p-inputtext" maxlength="64"
-                    size="64" />
+                    size="50" />
                 <div *ngIf="instrumentInterestBearingForm.controls.name.invalid && instrumentInterestBearingForm.controls.name.touched"
                     class="red-font">
                     Field is required</div>
@@ -276,6 +276,14 @@
                     </p-calendar>
                 </div>
             </ng-container>
+
+            <!-- notes -->
+            <div class="col-4">
+                <label for="notes">Notes</label>
+            </div>
+            <div class="col-8">
+                <textarea pInputTextarea formControlName="notes" cols="50"></textarea>
+            </div>
 
             <!-- email -->
             <div class="col-4">

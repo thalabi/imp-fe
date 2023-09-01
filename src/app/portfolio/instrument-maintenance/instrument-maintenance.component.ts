@@ -175,6 +175,7 @@ export class InstrumentMaintenanceComponent implements OnInit {
                 saveInstrumentInterestBearing.instrument.currency = this.instrumentInterestBearingForm.controls.currency.value
                 saveInstrumentInterestBearing.instrument.ticker = this.instrumentInterestBearingForm.controls.ticker.value
                 saveInstrumentInterestBearing.instrument.type = 'INTEREST_BEARING'
+                saveInstrumentInterestBearing.instrument.notes = this.instrumentInterestBearingForm.controls.notes.value
                 saveInstrumentInterestBearing.type = this.instrumentInterestBearingForm.controls.type.value
                 saveInstrumentInterestBearing.financialInstitution = this.instrumentInterestBearingForm.controls.financialInstitution.value
                 saveInstrumentInterestBearing.price = this.instrumentInterestBearingForm.controls.price.value
@@ -209,6 +210,7 @@ export class InstrumentMaintenanceComponent implements OnInit {
                 saveInstrumentInterestBearing.instrument.currency = this.instrumentInterestBearingForm.controls.currency.value
                 saveInstrumentInterestBearing.instrument.ticker = this.instrumentInterestBearingForm.controls.ticker.value
                 saveInstrumentInterestBearing.instrument.type = 'INTEREST_BEARING'
+                saveInstrumentInterestBearing.instrument.notes = this.instrumentInterestBearingForm.controls.notes.value
                 saveInstrumentInterestBearing.financialInstitution = this.instrumentInterestBearingForm.controls.financialInstitution.value
                 saveInstrumentInterestBearing.type = this.instrumentInterestBearingForm.controls.type.value
                 saveInstrumentInterestBearing.price = this.instrumentInterestBearingForm.controls.price.value
