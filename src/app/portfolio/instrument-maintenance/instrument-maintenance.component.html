@@ -42,6 +42,7 @@
                 <th>Next pymnt date</th>
                 <th>Promo rate</th>
                 <th>Promo end date</th>
+                <th>Notes</th>
                 <th>Notify email</th>
             </tr>
         </ng-template>
@@ -69,15 +70,12 @@
                 <td>{{instrumentInterestBearing.nextPaymentDate | date:'y-MM-dd'}}</td>
                 <td>{{instrumentInterestBearing.promotionalInterestRate}}</td>
                 <td>{{instrumentInterestBearing.promotionEndDate | date:'y-MM-dd'}}</td>
-                <td>{{instrumentInterestBearing.emailNotification ? 'Y' : 'N'}}</td>
-
-                <!-- <td><span pTooltip="{{instrumentInterestBearing.asOfDate | date:'y-MM-dd'}}"
-                        class="texthastooltip">{{instrumentInterestBearing.quantity}}</span>
+                <td class="text-center"><span pTooltip="{{instrumentInterestBearing.instrument.notes}}"
+                        class="texthastooltip"><i *ngIf="instrumentInterestBearing.instrument.notes"
+                            class="pi pi-comment"></i></span></td>
+                <td class="text-center"><i class="pi"
+                        [ngClass]="{'true-icon pi-check-circle': instrumentInterestBearing.emailNotification, 'false-icon pi-times-circle': !instrumentInterestBearing.emailNotification}"></i>
                 </td>
-                <td><span pTooltip="{{instrumentInterestBearing.latestPriceTimestamp | date:'y-MM-dd HH:mm:ss'}}"
-                        class="texthastooltip">{{instrumentInterestBearing.latestPrice | currency:'CAD':'symbol-narrow':'1.2-4'
-                        }}</span></td>
-                <td>{{instrumentInterestBearing.quantity * instrumentInterestBearing.latestPrice | currency:'CAD':'symbol-narrow':'1.2-4'}}</td> -->
             </tr>
         </ng-template>
         <ng-template pTemplate="summary">
@@ -110,6 +108,9 @@
             <div class="col-8">
                 <input id="name" type="text" pInputText formControlName="name" class="p-inputtext" maxlength="64"
                     size="64" />
+                <div *ngIf="instrumentInterestBearingForm.controls.name.invalid && instrumentInterestBearingForm.controls.name.touched"
+                    class="red-font">
+                    Field is required</div>
             </div>
 
             <!-- currency-->
@@ -135,9 +136,9 @@
                     formControlName="financialInstitution" placeholder="Select FI"
                     (onChange)="onChangeFinancialInstitution($event)" [showClear]="true">
                 </p-dropdown>
-                <!-- <div *ngIf="instrumentInterestBearingForm.controls.financialInstitution.invalid && instrumentInterestBearingForm.controls.financialInstitution.touched"
+                <div *ngIf="instrumentInterestBearingForm.controls.financialInstitution.invalid && instrumentInterestBearingForm.controls.financialInstitution.touched"
                     class="red-font">
-                    Field is required</div> -->
+                    Field is required</div>
             </div>
 
             <!-- type -->
@@ -177,7 +178,7 @@
                 </p-inputNumber>
                 <div *ngIf="instrumentInterestBearingForm.controls.interestRate.invalid && instrumentInterestBearingForm.controls.interestRate.touched"
                     class="red-font">
-                    Field is required</div>
+                    Field must be positive</div>
             </div>
 
             <!-- price -->
@@ -192,7 +193,7 @@
                     </p-inputNumber>
                     <div *ngIf="instrumentInterestBearingForm.controls.price.invalid && instrumentInterestBearingForm.controls.price.touched"
                         class="red-font">
-                        Field is required</div>
+                        Field must be positive</div>
                 </div>
             </ng-container>
 
@@ -206,9 +207,9 @@
                         formControlName="term" placeholder="Select term" (onChange)="onChangeTerm($event)"
                         [showClear]="true">
                     </p-dropdown>
-                    <!-- <div *ngIf="instrumentInterestBearingForm.controls.financialInstitution.invalid && instrumentInterestBearingForm.controls.financialInstitution.touched"
-                    class="red-font">
-                    Field is required</div> -->
+                    <div *ngIf="!instrumentInterestBearingForm.controls.term.value && instrumentInterestBearingForm.controls.term.touched"
+                        class="red-font">
+                        Field is required</div>
                 </div>
 
                 <!-- maturity date -->
@@ -257,9 +258,9 @@
                         [minFractionDigits]="2" [maxFractionDigits]="2"
                         (onInput)="onPromotionalInputInterestRate($event)" appendTo="body">
                     </p-inputNumber>
-                    <!-- <div *ngIf="instrumentInterestBearingForm.controls.interestRate.invalid && instrumentInterestBearingForm.controls.interestRate.touched"
-                    class="red-font">
-                    Field is required</div> -->
+                    <div *ngIf="instrumentInterestBearingForm.controls.promotionalInterestRate.invalid && instrumentInterestBearingForm.controls.promotionalInterestRate.touched"
+                        class="red-font">
+                        Field must be positive</div>
                 </div>
 
                 <!-- promo end date -->

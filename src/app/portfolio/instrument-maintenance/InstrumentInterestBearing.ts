@@ -3,8 +3,8 @@ import { Instrument } from "../portfolio-holding-management/Instrument";
 export interface InstrumentInterestBearing {
     id: number;
     instrument: Instrument;
-    type: string | null;
-    financialInstitution: string | null;
+    type: string;
+    financialInstitution: string;
     price: number | null;
     interestRate: number | null;
     term: string | null;
@@ -12,7 +12,7 @@ export interface InstrumentInterestBearing {
     nextPaymentDate: Date | null;
     promotionalInterestRate: number | null;
     promotionEndDate: Date | null;
-    emailNotification: boolean | null;
+    emailNotification: boolean;
     rowVersion: number;
     _links: {
         self: {

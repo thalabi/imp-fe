@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, FormBuilder, FormControl } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { CrudEnum } from '../../crud-enum';
 import { RestService } from '../../service/rest.service';
@@ -31,20 +31,21 @@ export class InstrumentMaintenanceComponent implements OnInit {
     crudEnum = CrudEnum; // Used in html to refer to enum
     displayDialog: boolean = false
 
-    instrumentInterestBearingForm = this.formBuilder.group({
+    instrumentInterestBearingForm = this.formBuilder.nonNullable.group({
         name: ['', Validators.required],
         currency: ['', Validators.required],
-        ticker: [''],
+        financialInstitution: ['', Validators.required],
         type: ['', Validators.required],
-        financialInstitution: [''],
+        ticker: [''],
         price: this.formBuilder.control<number | null>(null),
-        interestRate: this.formBuilder.control<number | null>(null, Validators.required),
+        interestRate: this.formBuilder.control<number | null>(null),
         term: this.formBuilder.control<string | null>(null),
         maturityDate: this.formBuilder.control<Date | null>(null),
         nextPaymentDate: this.formBuilder.control<Date | null>(null),
         promotionalInterestRate: this.formBuilder.control<number | null>(null),
         promotionEndDate: this.formBuilder.control<Date | null>(null),
-        emailNotification: this.formBuilder.control<boolean | null>(true, Validators.required)
+        notes: this.formBuilder.control<string | null>(null),
+        emailNotification: [true, Validators.required]
     })
 
     constructor(
@@ -133,6 +134,7 @@ export class InstrumentMaintenanceComponent implements OnInit {
             case CrudEnum.UPDATE:
                 this.fillInFormWithValues();
                 this.instrumentInterestBearingForm.enable();
+                this.setValidators(this.instrumentInterestBearingSelectedRow.type);
                 break;
             case CrudEnum.DELETE:
                 this.fillInFormWithValues();
@@ -149,6 +151,7 @@ export class InstrumentMaintenanceComponent implements OnInit {
         // lookup instrument object from instrumentRows (table)
         this.instrumentInterestBearingForm.controls.currency.patchValue(this.instrumentInterestBearingSelectedRow.instrument.currency);
         this.instrumentInterestBearingForm.controls.ticker.patchValue(this.instrumentInterestBearingSelectedRow.instrument.ticker);
+        this.instrumentInterestBearingForm.controls.notes.patchValue(this.instrumentInterestBearingSelectedRow.instrument.notes);
 
         this.instrumentInterestBearingForm.controls.type.patchValue(this.instrumentInterestBearingSelectedRow.type);
         this.instrumentInterestBearingForm.controls.financialInstitution.patchValue(this.instrumentInterestBearingSelectedRow.financialInstitution);
@@ -288,7 +291,57 @@ export class InstrumentMaintenanceComponent implements OnInit {
         this.instrumentInterestBearingForm.controls.promotionalInterestRate.reset();
         this.instrumentInterestBearingForm.controls.promotionEndDate.reset();
         this.instrumentInterestBearingForm.controls.emailNotification.patchValue(true);
+
+        this.setValidators(event.value);
     }
+
+    private setValidators(interestBearingType: string) {
+        console.log('interestBearingType', interestBearingType)
+        switch (interestBearingType) {
+            case 'MONEY_MARKET':
+            case 'INVESTMENT_SAVINGS':
+                this.instrumentInterestBearingForm.controls.ticker.addValidators(Validators.required)
+                this.instrumentInterestBearingForm.controls.price.addValidators(Validators.required)
+                this.instrumentInterestBearingForm.controls.interestRate.addValidators(Validators.required)
+                this.instrumentInterestBearingForm.controls.term.clearValidators()
+                this.instrumentInterestBearingForm.controls.maturityDate.clearValidators()
+                this.instrumentInterestBearingForm.controls.nextPaymentDate.clearValidators()
+                this.instrumentInterestBearingForm.controls.promotionalInterestRate.clearValidators()
+                this.instrumentInterestBearingForm.controls.promotionEndDate.clearValidators()
+                break;
+            case 'CHEQUING':
+            case 'SAVINGS':
+                this.instrumentInterestBearingForm.controls.ticker.clearValidators()
+                this.instrumentInterestBearingForm.controls.price.clearValidators()
+                this.instrumentInterestBearingForm.controls.interestRate.addValidators(Validators.required)
+                this.instrumentInterestBearingForm.controls.term.clearValidators()
+                this.instrumentInterestBearingForm.controls.maturityDate.clearValidators()
+                this.instrumentInterestBearingForm.controls.nextPaymentDate.clearValidators()
+                this.instrumentInterestBearingForm.controls.promotionalInterestRate.clearValidators()
+                this.instrumentInterestBearingForm.controls.promotionEndDate.clearValidators()
+                break;
+            case 'GIC':
+            case 'TERM_DEPOSIT':
+                this.instrumentInterestBearingForm.controls.ticker.clearValidators()
+                this.instrumentInterestBearingForm.controls.price.clearValidators()
+                this.instrumentInterestBearingForm.controls.interestRate.addValidators(Validators.required)
+                this.instrumentInterestBearingForm.controls.term.addValidators(Validators.required)
+                this.instrumentInterestBearingForm.controls.maturityDate.addValidators(Validators.required)
+                this.instrumentInterestBearingForm.controls.nextPaymentDate.addValidators(Validators.required)
+                this.instrumentInterestBearingForm.controls.promotionalInterestRate.clearValidators()
+                this.instrumentInterestBearingForm.controls.promotionEndDate.clearValidators()
+                break;
+        }
+        this.instrumentInterestBearingForm.controls.ticker.updateValueAndValidity()
+        this.instrumentInterestBearingForm.controls.price.updateValueAndValidity()
+        this.instrumentInterestBearingForm.controls.interestRate.updateValueAndValidity()
+        this.instrumentInterestBearingForm.controls.term.updateValueAndValidity()
+        this.instrumentInterestBearingForm.controls.maturityDate.updateValueAndValidity()
+        this.instrumentInterestBearingForm.controls.nextPaymentDate.updateValueAndValidity()
+        this.instrumentInterestBearingForm.controls.promotionalInterestRate.updateValueAndValidity()
+        this.instrumentInterestBearingForm.controls.promotionEndDate.updateValueAndValidity()
+    }
+
     onChangeFinancialInstitution(event: any) {
         console.log('onChangeFinancialInstitution: event', event)
     }
@@ -302,15 +355,21 @@ export class InstrumentMaintenanceComponent implements OnInit {
         }
     }
     onInputPrice(event: any) {
-        this.instrumentInterestBearingForm.controls.price.patchValue(event.value)
+        if (event.value < 0.0001) {
+            this.instrumentInterestBearingForm.controls.price.setErrors({ 'error': true });
+        }
         console.log('this.instrumentInterestBearingForm.valid', this.instrumentInterestBearingForm.valid)
     }
     onInputInterestRate(event: any) {
-        this.instrumentInterestBearingForm.controls.interestRate.patchValue(event.value)
+        if (event.value < 0.01) {
+            this.instrumentInterestBearingForm.controls.interestRate.setErrors({ 'error': true });
+        }
         console.log('this.instrumentInterestBearingForm.valid', this.instrumentInterestBearingForm.valid)
     }
     onPromotionalInputInterestRate(event: any) {
-        this.instrumentInterestBearingForm.controls.promotionalInterestRate.patchValue(event.value)
+        if (event.value < 0.01) {
+            this.instrumentInterestBearingForm.controls.promotionalInterestRate.setErrors({ 'error': true });
+        }
         console.log('this.instrumentInterestBearingForm.valid', this.instrumentInterestBearingForm.valid)
     }
 
