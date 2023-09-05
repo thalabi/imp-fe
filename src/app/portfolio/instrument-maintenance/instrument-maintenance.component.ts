@@ -7,13 +7,14 @@ import { InstrumentInterestBearing } from './InstrumentInterestBearing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Instrument } from '../portfolio-holding-management/Instrument';
 import { SessionService } from '../../service/session.service';
+import { BaseComponent } from '../../base/base.component';
 
 @Component({
     selector: 'app-instrument-maintenance',
     templateUrl: './instrument-maintenance.component.html',
     styleUrls: ['./instrument-maintenance.component.css']
 })
-export class InstrumentMaintenanceComponent implements OnInit {
+export class InstrumentMaintenanceComponent extends BaseComponent implements OnInit {
 
     currencies: Array<string> = []
     financialInstitutions: Array<string> = []
@@ -53,7 +54,9 @@ export class InstrumentMaintenanceComponent implements OnInit {
         private messageService: MessageService,
         private formBuilder: FormBuilder,
         private sessionService: SessionService
-    ) { }
+    ) {
+        super()
+    }
 
 
     ngOnInit(): void {
@@ -201,6 +204,7 @@ export class InstrumentMaintenanceComponent implements OnInit {
                                 this.instrumentInterestBearingSelectedRow = {} as InstrumentInterestBearing
                             },
                             error: (httpErrorResponse: HttpErrorResponse) => {
+                                console.log('httpErrorResponse', httpErrorResponse)
                                 this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                             }
                         });
@@ -458,13 +462,16 @@ export class InstrumentMaintenanceComponent implements OnInit {
                 });
     }
 
-    private extractMessage(httpErrorResponse: HttpErrorResponse): string {
-        let message: string = ''
-        if (typeof httpErrorResponse.error === 'string') {
-            message = httpErrorResponse.error
-        } else {
-            message = httpErrorResponse.error.message
-        }
-        return message;
-    }
+    // private extractMessage(httpErrorResponse: HttpErrorResponse): string {
+    //     let message: string = ''
+    //     if (typeof httpErrorResponse.error === 'string') {
+    //         message = httpErrorResponse.error
+    //     } else {
+    //         message = httpErrorResponse.error.message
+    //         if (httpErrorResponse.error.detailMessage) {
+    //             message += ` (${httpErrorResponse.error.detailMessage})`
+    //         }
+    //     }
+    //     return message;
+    // }
 }

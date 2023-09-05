@@ -9,13 +9,14 @@ import { RestService } from '../../service/rest.service';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { SaveHoldingRequest } from './SaveHoldingRequest';
 import { SessionService } from '../../service/session.service';
+import { BaseComponent } from '../../base/base.component';
 
 @Component({
     selector: 'app-portfolio-holding-management',
     templateUrl: './portfolio-holding-management.component.html',
     styleUrls: ['./portfolio-holding-management.component.css']
 })
-export class PortfolioHoldingManagementComponent implements OnInit {
+export class PortfolioHoldingManagementComponent extends BaseComponent implements OnInit {
 
     portfolioRows: Array<Portfolio> = []
     portfolioCount: number = 0
@@ -43,7 +44,9 @@ export class PortfolioHoldingManagementComponent implements OnInit {
         private restService: RestService,
         private messageService: MessageService,
         private sessionService: SessionService
-    ) { }
+    ) {
+        super()
+    }
 
     ngOnInit(): void {
         this.getPortfolioTable();
@@ -290,15 +293,4 @@ export class PortfolioHoldingManagementComponent implements OnInit {
         this.holdingDetailForm.reset()
         this.holdingDetailSelectedRow = {} as IHoldingDetail
     }
-
-    private extractMessage(httpErrorResponse: HttpErrorResponse): string {
-        let message: string = ''
-        if (typeof httpErrorResponse.error === 'string') {
-            message = httpErrorResponse.error
-        } else {
-            message = httpErrorResponse.error.message
-        }
-        return message;
-    }
-
 }

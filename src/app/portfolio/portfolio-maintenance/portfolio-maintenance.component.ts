@@ -7,6 +7,7 @@ import { IPortfolioWithDependentFlags } from './IPortfolioWithDependentFlags';
 import { CrudEnum } from '../../crud-enum';
 import { SessionService } from '../../service/session.service';
 import { Portfolio } from '../portfolio-holding-management/Portfolio';
+import { BaseComponent } from '../../base/base.component';
 
 export enum LogicallyDeletedOptionEnum {
     AVAILABLE = 'Available', LOGICALLY_DELETED = 'Logically deleted', ALL = 'All'
@@ -18,7 +19,7 @@ export enum LogicallyDeletedOptionEnum {
     styleUrls: ['./portfolio-maintenance.component.css']
 })
 
-export class PortfolioMaintenanceComponent implements OnInit {
+export class PortfolioMaintenanceComponent extends BaseComponent implements OnInit {
     currencies: Array<string> = []
     financialInstitutions: Array<string> = []
 
@@ -56,7 +57,9 @@ export class PortfolioMaintenanceComponent implements OnInit {
         private messageService: MessageService,
         private formBuilder: FormBuilder,
         private sessionService: SessionService
-    ) { }
+    ) {
+        super()
+    }
 
     ngOnInit(): void {
         this.getCurrencies()
@@ -283,15 +286,4 @@ export class PortfolioMaintenanceComponent implements OnInit {
                     }
                 });
     }
-
-    private extractMessage(httpErrorResponse: HttpErrorResponse): string {
-        let message: string = ''
-        if (typeof httpErrorResponse.error === 'string') {
-            message = httpErrorResponse.error
-        } else {
-            message = httpErrorResponse.error.message
-        }
-        return message;
-    }
-
 }
