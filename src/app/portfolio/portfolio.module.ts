@@ -19,6 +19,7 @@ import { PortfolioHoldingManagementComponent } from './portfolio-holding-managem
 import { InstrumentMaintenanceComponent } from './instrument-maintenance/instrument-maintenance.component';
 import { PortfolioMaintenanceComponent } from './portfolio-maintenance/portfolio-maintenance.component';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { FixedIncomeInstrumentReportComponent } from './fixed-income-instrument-report/fixed-income-instrument-report.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { SelectButtonModule } from 'primeng/selectbutton';
         InstrumentDueNotificationTriggerComponent,
         PortfolioHoldingManagementComponent,
         InstrumentMaintenanceComponent,
-        PortfolioMaintenanceComponent
+        PortfolioMaintenanceComponent,
+        FixedIncomeInstrumentReportComponent
     ],
     imports: [
         CommonModule,

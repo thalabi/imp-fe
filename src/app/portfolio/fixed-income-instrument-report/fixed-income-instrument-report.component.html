@@ -1,0 +1,17 @@
+<div class="p-formgroup-inline" style="margin-top: 1rem;">
+    <div class="p-field" style="margin-bottom: 0.5rem;">
+        <label for="reportDisposition">Report disposition: </label>
+
+        <p-selectButton id="reportDisposition" [options]="reportDispositionOptions" [(ngModel)]="reportDisposition"
+            (onChange)="onChangeReportDisposition($event)"></p-selectButton>
+    </div>
+    <div class="p-field">
+        <button pButton type="button" label="Submit" (click)="onSubmit($event)"></button>
+    </div>
+    <div class="p-field" style="margin-top: 0.5rem;">
+        <span *ngIf="processingMessage">
+            <label for="processingMessage">{{processingMessage}}</label>
+            <progress id="processingMessage" style="margin-left: 0.5rem;"></progress>
+        </span>
+    </div>
+</div>

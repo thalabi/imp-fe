@@ -1,4 +1,4 @@
-<div style="margin-top: 1rem;" *ngIf="displayPortfoliosCount !== 0">
+<div style="margin-top: 1rem;">
     <p-table [value]="displayPortfolios" [paginator]="displayPortfoliosCount != 0" [rowsPerPageOptions]="[10,20,30]"
         [rows]=" 20" [totalRecords]="displayPortfoliosCount" [loading]="loadingStatus" selectionMode="single"
         [(selection)]="portfolioSelectedRow" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
@@ -11,6 +11,7 @@
             <tr>
                 <th>Name</th>
                 <th>Financial institution</th>
+                <th>Account holder</th>
                 <th>Account number</th>
                 <th>Currency</th>
                 <th>Has holdings</th>
@@ -22,6 +23,7 @@
             <tr [pSelectableRow]="portfolio" style="line-height: 1rem;">
                 <td>{{portfolio.name}}</td>
                 <td>{{portfolio.financialInstitution}}</td>
+                <td>{{portfolio.holderName}}</td>
                 <td>{{portfolio.accountNumber}}</td>
                 <td>{{portfolio.currency}}</td>
                 <td class="text-center">
@@ -82,6 +84,23 @@
                 <!-- <div *ngIf="portfolioForm.controls.financialInstitution.invalid && portfolioForm.controls.financialInstitution.touched"
                     class="red-font">
                     Field is required</div> -->
+            </div>
+
+            <!-- holder -->
+            <div class="col-4">
+                <label for="name">Account holder</label>
+            </div>
+            <div class="col-8">
+                <!-- <input id="name" type="text" pInputText formControlName="holder" class="p-inputtext" maxlength="64"
+                    size="32" /> -->
+                <p-dropdown id="holder" [options]="holderOptions" optionLabel="name" optionValue="value"
+                    formControlName="holder" placeholder="Select term" (onChange)="onChangeHolder($event)"
+                    [showClear]="true">
+                </p-dropdown>
+
+                <div *ngIf="portfolioForm.controls.holder.invalid && portfolioForm.controls.holder.touched"
+                    class="red-font">
+                    Field is required</div>
             </div>
 
             <!-- accountNumber -->

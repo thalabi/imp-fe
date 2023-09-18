@@ -8,6 +8,7 @@ import { CrudEnum } from '../../crud-enum';
 import { SessionService } from '../../service/session.service';
 import { Portfolio } from '../portfolio-holding-management/Portfolio';
 import { BaseComponent } from '../../base/base.component';
+import { HolderAndName } from './HolderAndName';
 
 export enum LogicallyDeletedOptionEnum {
     AVAILABLE = 'Available', LOGICALLY_DELETED = 'Logically deleted', ALL = 'All'
@@ -22,6 +23,7 @@ export enum LogicallyDeletedOptionEnum {
 export class PortfolioMaintenanceComponent extends BaseComponent implements OnInit {
     currencies: Array<string> = []
     financialInstitutions: Array<string> = []
+    holderOptions: Array<{ value: string, name: string }> = []
 
     logicallyDeletedOptions: LogicallyDeletedOptionEnum[] = [LogicallyDeletedOptionEnum.AVAILABLE, LogicallyDeletedOptionEnum.LOGICALLY_DELETED, LogicallyDeletedOptionEnum.ALL]
     logicallyDeletedOption: LogicallyDeletedOptionEnum = LogicallyDeletedOptionEnum.AVAILABLE
@@ -46,6 +48,7 @@ export class PortfolioMaintenanceComponent extends BaseComponent implements OnIn
 
     portfolioForm = this.formBuilder.nonNullable.group({
         name: ['', Validators.required],
+        holder: ['', Validators.required],
         financialInstitution: ['', Validators.required],
         currency: ['', Validators.required],
         accountNumber: ['', Validators.required],
@@ -64,6 +67,7 @@ export class PortfolioMaintenanceComponent extends BaseComponent implements OnIn
     ngOnInit(): void {
         this.getCurrencies()
         this.getFinancialInstitutions()
+        this.getHolders()
         this.getPortfoliosWithDependentFlags()
     }
 
@@ -122,6 +126,9 @@ export class PortfolioMaintenanceComponent extends BaseComponent implements OnIn
         console.log('onChangeLogicallyDeleted')
         this.setDisplayPortfolios()
     }
+    onChangeHolder(event: any) {
+        console.log('onChangeHolder: event', event)
+    }
 
     showDialog(crudMode: CrudEnum) {
         this.displayDialog = true;
@@ -149,6 +156,7 @@ export class PortfolioMaintenanceComponent extends BaseComponent implements OnIn
     private fillInFormWithValues(): void {
         console.log('this.instrumentInterestBearingSelectedRow', this.portfolioSelectedRow)
         this.portfolioForm.controls.name.patchValue(this.portfolioSelectedRow.name);
+        this.portfolioForm.controls.holder.patchValue(this.portfolioSelectedRow.holder);
         this.portfolioForm.controls.accountNumber.patchValue(this.portfolioSelectedRow.accountNumber);
         this.portfolioForm.controls.financialInstitution.patchValue(this.portfolioSelectedRow.financialInstitution);
         this.portfolioForm.controls.currency.patchValue(this.portfolioSelectedRow.currency);
@@ -162,6 +170,7 @@ export class PortfolioMaintenanceComponent extends BaseComponent implements OnIn
         switch (this.crudMode) {
             case CrudEnum.ADD:
                 savePortfolio.name = this.portfolioForm.controls.name.value
+                savePortfolio.holder = this.portfolioForm.controls.holder.value
                 savePortfolio.accountNumber = this.portfolioForm.controls.accountNumber.value
                 savePortfolio.financialInstitution = this.portfolioForm.controls.financialInstitution.value
                 savePortfolio.currency = this.portfolioForm.controls.currency.value
@@ -189,6 +198,7 @@ export class PortfolioMaintenanceComponent extends BaseComponent implements OnIn
                 savePortfolio.id = this.portfolioSelectedRow.id
                 savePortfolio.version = this.portfolioSelectedRow.version
                 savePortfolio.name = this.portfolioForm.controls.name.value
+                savePortfolio.holder = this.portfolioForm.controls.holder.value
                 savePortfolio.accountNumber = this.portfolioForm.controls.accountNumber.value
                 savePortfolio.financialInstitution = this.portfolioForm.controls.financialInstitution.value
                 savePortfolio.currency = this.portfolioForm.controls.currency.value
@@ -286,4 +296,23 @@ export class PortfolioMaintenanceComponent extends BaseComponent implements OnIn
                     }
                 });
     }
+
+    private getHolders() {
+        this.restService.getHolders()
+            .subscribe(
+                {
+                    next: (data: Array<HolderAndName>) => {
+                        console.log('data', data)
+                        data.forEach(holderAndName => this.holderOptions.push({ value: holderAndName.holder, name: holderAndName.name }))
+                        //console.log('this.termOptions', this.termOptions)
+                    },
+                    complete: () => {
+                        console.log('http request completed')
+                    },
+                    error: (httpErrorResponse: HttpErrorResponse) => {
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
+                    }
+                });
+    }
+
 }

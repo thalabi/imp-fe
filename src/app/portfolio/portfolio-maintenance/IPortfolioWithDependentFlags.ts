@@ -2,6 +2,8 @@ export interface IPortfolioWithDependentFlags {
     id: number;
     financialInstitution: string;
     name: string;
+    holder: string;
+    holderName: string;
     accountNumber: string;
     currency: string;
     logicallyDeleted: boolean;

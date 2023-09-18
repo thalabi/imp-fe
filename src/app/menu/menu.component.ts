@@ -32,7 +32,8 @@ export class MenuComponent implements OnInit {
                     { label: 'Purge Position Snapshot', routerLink: ['/portfolio/purgePositionSnapshot'] },
                     { label: 'Portfolio Maintenance', routerLink: ['/portfolio/portfolioMaintenance'] },
                     { label: 'Instrument Maintenance', routerLink: ['/portfolio/instrumentMaintenance'] },
-                    { label: 'Trigger Instrument Due Notification', routerLink: ['/portfolio/instrumentDueNotificationTrigger'] }
+                    { label: 'Trigger Instrument Due Notification', routerLink: ['/portfolio/instrumentDueNotificationTrigger'] },
+                    { label: 'Fixed Income Instrument Report', routerLink: ['/portfolio/fixedIncomeInstrumentReport'] }
                 ]
             },
             // {

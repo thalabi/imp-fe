@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpEvent, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpEvent, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UploadResponse } from '../file-transfer/UploadResponse';
 import { TableListResponse } from '../file-transfer/TableListResponse';
 import { SaveHoldingRequest } from '../portfolio/portfolio-holding-management/SaveHoldingRequest';
-import { map } from 'rxjs/operators';
+import { catchError, concatMap, map } from 'rxjs/operators';
 import { PositionSnapshot } from '../portfolio/purge-position-snapshot/PositionSnapshot';
 import { IHoldingDetail } from '../portfolio/portfolio-holding-management/IHoldingDetail';
 import { InstrumentInterestBearing } from '../portfolio/instrument-maintenance/InstrumentInterestBearing';
 import { IPortfolioWithDependentFlags } from '../portfolio/portfolio-maintenance/IPortfolioWithDependentFlags';
 import { Portfolio } from '../portfolio/portfolio-holding-management/Portfolio';
+import { HolderAndName } from '../portfolio/portfolio-maintenance/HolderAndName';
+import { ReportJobResponse } from '../portfolio/ReportJobResponse';
 
 @Injectable({
     providedIn: 'root'
@@ -141,6 +143,9 @@ export class RestService {
     getTerms(): Observable<Array<string>> {
         return this.http.get<Array<string>>(`${this.serviceUrl}/protected/referenceDataController/getTerms`);
     }
+    getHolders(): Observable<Array<HolderAndName>> {
+        return this.http.get<Array<HolderAndName>>(`${this.serviceUrl}/protected/referenceDataController/getHolders`);
+    }
 
     saveInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
         return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/saveInstrumentInterestBearing/`, instrumentInterestBearing);
@@ -165,6 +170,53 @@ export class RestService {
     }
     deletePortfolio(id: number): Observable<HttpResponse<any>> {
         return this.http.delete<HttpResponse<any>>(`${this.serviceUrl}/protected/portfolioController/deletePortfolio/${id}`);
+    }
+
+    // generateFixedIncomeInstrumentReport(reportDisposition: string) {
+    //     return this.http.post(`${this.serviceUrl}/protected/portfolioController/generateFixedIncomeInstrumentReport?reportDisposition=${reportDisposition}`, undefined);
+    // }
+
+    generateFixedIncomeInstrumentReportAndDownload(): Observable<any /*{ reportJobResponse: ReportJobResponse, blob: HttpEvent<Blob> }*/> {
+        return this.http.post<ReportJobResponse>(`${this.serviceUrl}/protected/instrumentController/generateFixedIncomeInstrumentReport?reportDisposition=Download`, undefined)
+            .pipe(
+                map<ReportJobResponse, ReportJobResponse>(reportJobResponse => {
+                    console.log('reportJobResponse', reportJobResponse)
+                    return reportJobResponse
+                }),
+                concatMap<ReportJobResponse, Observable<HttpEvent<Blob>>>(reportJobResponse =>
+                    this.http.get(`${this.serviceUrl}/protected/instrumentController/downloadFixedIncomeInstrumentReport?filename=${reportJobResponse.filename}`, {
+                        reportProgress: true,
+                        observe: 'events',
+                        responseType: 'blob'
+                    }).pipe(
+                        map(blob => ({ reportJobResponse: reportJobResponse, blob: blob })),
+                        catchError(this.parseErrorBlob)))
+
+            )
+    }
+    generateFixedIncomeInstrumentReportAndEmail(): Observable<ReportJobResponse> {
+        return this.http.post<ReportJobResponse>(`${this.serviceUrl}/protected/instrumentController/generateFixedIncomeInstrumentReport?reportDisposition=Email`, undefined)
+    }
+
+    // parses the error from blob to json
+    parseErrorBlob(httpErrorResponse: HttpErrorResponse): Observable<any> {
+        console.log('httpErrorResponse', httpErrorResponse)
+        const reader: FileReader = new FileReader();
+
+        const peekErrorAndReturn = (reader: FileReader) => {
+            const errorAsJson = JSON.parse(reader.result as string)
+            console.log('errorAsJson', errorAsJson)
+            return errorAsJson
+        }
+        const obs = new Observable((observer: any) => {
+            reader.onloadend = (e) => {
+                //observer.error(JSON.parse(reader.result as string))
+                observer.error(peekErrorAndReturn(reader))
+                observer.complete();
+            };
+        });
+        reader.readAsText(httpErrorResponse.error);
+        return obs;
     }
 
     public static toCamelCase(tableName: string): string {

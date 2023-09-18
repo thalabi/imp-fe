@@ -1,6 +1,7 @@
 export interface Portfolio {
     id: number;
     financialInstitution: string;
+    holder: string;
     accountNumber: string;
     name: string;
     currency: string;

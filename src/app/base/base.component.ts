@@ -9,16 +9,16 @@ import { Component } from '@angular/core';
 export class BaseComponent {
 
     extractMessage(httpErrorResponse: HttpErrorResponse): string {
-        let message: string = ''
-        if (typeof httpErrorResponse.error === 'string') {
-            message = httpErrorResponse.error
-        } else {
-            message = httpErrorResponse.error.message
-            if (httpErrorResponse.error.detailMessage) {
-                message += ` (${httpErrorResponse.error.detailMessage})`
-            }
-        }
-        return message;
+        console.log('extractMessage(), httpErrorResponse', httpErrorResponse)
+        return (typeof httpErrorResponse.error === 'string') ? httpErrorResponse.message : httpErrorResponse.error.message
+        // let message: string = ''
+
+        // if (typeof httpErrorResponse.error === 'string') {
+        //     message = httpErrorResponse.message
+        // } else {
+        //     message = httpErrorResponse.error.message
+        // }
+        // return message;
     }
 
 }
