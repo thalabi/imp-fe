@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormControl } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { CrudEnum } from '../../crud-enum';
@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Instrument } from '../portfolio-holding-management/Instrument';
 import { SessionService } from '../../service/session.service';
 import { BaseComponent } from '../../base/base.component';
+import { HolderAndName } from '../portfolio-maintenance/HolderAndName';
 
 @Component({
     selector: 'app-instrument-maintenance',
@@ -18,6 +19,7 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
 
     currencies: Array<string> = []
     financialInstitutions: Array<string> = []
+    holderOptions: Array<{ value: string, name: string }> = []
     instrumentTypes: Array<string> = []
     interestBearingTypes: Array<string> = []
     termOptions: Array<{ value: string, name: string }> = []
@@ -46,7 +48,9 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
         promotionalInterestRate: this.formBuilder.control<number | null>(null),
         promotionEndDate: this.formBuilder.control<Date | null>(null),
         notes: this.formBuilder.control<string | null>(null),
-        emailNotification: [true, Validators.required]
+        emailNotification: [true, Validators.required],
+        accountNumber: [''],
+        holder: ['']
     })
 
     constructor(
@@ -65,6 +69,7 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
         this.getInstrumentTypes()
         this.getInterestBearingTypes()
         this.getTerms()
+        this.getHolders()
     }
 
     onChangeInstrumentType(event: any) {
@@ -166,6 +171,8 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
         this.instrumentInterestBearingForm.controls.promotionalInterestRate.patchValue(this.instrumentInterestBearingSelectedRow.promotionalInterestRate);
         this.instrumentInterestBearingForm.controls.promotionEndDate.patchValue(this.instrumentInterestBearingSelectedRow.promotionEndDate);
         this.instrumentInterestBearingForm.controls.emailNotification.patchValue(this.instrumentInterestBearingSelectedRow.emailNotification);
+        this.instrumentInterestBearingForm.controls.accountNumber.patchValue(this.instrumentInterestBearingSelectedRow.accountNumber);
+        this.instrumentInterestBearingForm.controls.holder.patchValue(this.instrumentInterestBearingSelectedRow.holder);
         console.log('this.instrumentInterestBearingForm.value', this.instrumentInterestBearingForm.value)
     }
     onSubmit() {
@@ -189,6 +196,8 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
                 saveInstrumentInterestBearing.promotionalInterestRate = this.instrumentInterestBearingForm.controls.promotionalInterestRate.value
                 saveInstrumentInterestBearing.promotionEndDate = this.instrumentInterestBearingForm.controls.promotionEndDate.value
                 saveInstrumentInterestBearing.emailNotification = this.instrumentInterestBearingForm.controls.emailNotification.value
+                saveInstrumentInterestBearing.accountNumber = this.instrumentInterestBearingForm.controls.accountNumber.value
+                saveInstrumentInterestBearing.holder = this.instrumentInterestBearingForm.controls.holder.value
                 console.log('saveInstrumentInterestBearing', saveInstrumentInterestBearing)
                 this.restService.saveInstrumentInterestBearing(saveInstrumentInterestBearing)
                     .subscribe(
@@ -225,6 +234,8 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
                 saveInstrumentInterestBearing.promotionalInterestRate = this.instrumentInterestBearingForm.controls.promotionalInterestRate.value
                 saveInstrumentInterestBearing.promotionEndDate = this.instrumentInterestBearingForm.controls.promotionEndDate.value
                 saveInstrumentInterestBearing.emailNotification = this.instrumentInterestBearingForm.controls.emailNotification.value
+                saveInstrumentInterestBearing.accountNumber = this.instrumentInterestBearingForm.controls.accountNumber.value
+                saveInstrumentInterestBearing.holder = this.instrumentInterestBearingForm.controls.holder.value
 
                 saveInstrumentInterestBearing.id = this.instrumentInterestBearingSelectedRow.id;
                 saveInstrumentInterestBearing.rowVersion = this.instrumentInterestBearingSelectedRow.rowVersion;
@@ -297,6 +308,8 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
         this.instrumentInterestBearingForm.controls.promotionalInterestRate.reset();
         this.instrumentInterestBearingForm.controls.promotionEndDate.reset();
         this.instrumentInterestBearingForm.controls.emailNotification.patchValue(true);
+        this.instrumentInterestBearingForm.controls.accountNumber.reset();
+        this.instrumentInterestBearingForm.controls.holder.reset();
 
         this.setValidators(event.value);
     }
@@ -354,6 +367,10 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
     onChangeTerm(event: any) {
         console.log('onChangeTerm: event', event)
     }
+    onChangeHolder(event: any) {
+        console.log('onChangeHolder: event', event)
+    }
+
     onSelectMaturityDate(value: string) {
         console.log('onSelectMaturityDate: value', value)
         if (!this.instrumentInterestBearingForm.controls.nextPaymentDate.value) {
@@ -462,16 +479,21 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
                 });
     }
 
-    // private extractMessage(httpErrorResponse: HttpErrorResponse): string {
-    //     let message: string = ''
-    //     if (typeof httpErrorResponse.error === 'string') {
-    //         message = httpErrorResponse.error
-    //     } else {
-    //         message = httpErrorResponse.error.message
-    //         if (httpErrorResponse.error.detailMessage) {
-    //             message += ` (${httpErrorResponse.error.detailMessage})`
-    //         }
-    //     }
-    //     return message;
-    // }
+    private getHolders() {
+        this.restService.getHolders()
+            .subscribe(
+                {
+                    next: (data: Array<HolderAndName>) => {
+                        console.log('data', data)
+                        data.forEach(holderAndName => this.holderOptions.push({ value: holderAndName.holder, name: holderAndName.name }))
+                        //console.log('this.termOptions', this.termOptions)
+                    },
+                    complete: () => {
+                        console.log('http request completed')
+                    },
+                    error: (httpErrorResponse: HttpErrorResponse) => {
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
+                    }
+                });
+    }
 }

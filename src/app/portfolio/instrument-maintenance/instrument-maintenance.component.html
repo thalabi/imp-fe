@@ -35,6 +35,8 @@
                 <!-- <th>Ticker</th> -->
                 <th>Type</th>
                 <th>FI</th>
+                <th>Acc number</th>
+                <th>Holder</th>
                 <th>Price</th>
                 <th>Interest rate</th>
                 <th>Term</th>
@@ -63,6 +65,8 @@
                 <!-- <td>{{instrumentInterestBearing.instrument.ticker}}</td> -->
                 <td>{{instrumentInterestBearing.type}}</td>
                 <td>{{instrumentInterestBearing.financialInstitution}}</td>
+                <td>{{instrumentInterestBearing.accountNumber}}</td>
+                <td>{{instrumentInterestBearing.holderName}}</td>
                 <td>{{instrumentInterestBearing.price}}</td>
                 <td>{{instrumentInterestBearing.interestRate}}</td>
                 <td>{{instrumentInterestBearing.term | slice : 5}}</td>
@@ -139,6 +143,32 @@
                 <div *ngIf="instrumentInterestBearingForm.controls.financialInstitution.invalid && instrumentInterestBearingForm.controls.financialInstitution.touched"
                     class="red-font">
                     Field is required</div>
+            </div>
+
+            <!-- holder -->
+            <div class="col-4">
+                <label for="name">Account holder</label>
+            </div>
+            <div class="col-8">
+                <!-- <input id="name" type="text" pInputText formControlName="holder" class="p-inputtext" maxlength="64"
+                    size="32" /> -->
+                <p-dropdown id="holder" [options]="holderOptions" optionLabel="name" optionValue="value"
+                    formControlName="holder" placeholder="Select term" (onChange)="onChangeHolder($event)"
+                    [showClear]="true">
+                </p-dropdown>
+
+                <div *ngIf="instrumentInterestBearingForm.controls.holder.invalid && instrumentInterestBearingForm.controls.holder.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <!-- accountNumber -->
+            <div class="col-4">
+                <label for="name">Account number</label>
+            </div>
+            <div class="col-8">
+                <input id="accountNumber" type="text" pInputText formControlName="accountNumber" class="p-inputtext"
+                    maxlength="16" size="16" />
             </div>
 
             <!-- type -->
