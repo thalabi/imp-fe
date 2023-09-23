@@ -5,6 +5,7 @@ export interface InstrumentInterestBearing {
     instrument: Instrument;
     type: string;
     financialInstitution: string;
+    ticker: string;
     price: number | null;
     interestRate: number | null;
     term: string | null;

@@ -327,6 +327,8 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
                 this.instrumentInterestBearingForm.controls.nextPaymentDate.clearValidators()
                 this.instrumentInterestBearingForm.controls.promotionalInterestRate.clearValidators()
                 this.instrumentInterestBearingForm.controls.promotionEndDate.clearValidators()
+                this.instrumentInterestBearingForm.controls.accountNumber.clearValidators()
+                this.instrumentInterestBearingForm.controls.holder.clearValidators()
                 break;
             case 'CHEQUING':
             case 'SAVINGS':
@@ -338,6 +340,8 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
                 this.instrumentInterestBearingForm.controls.nextPaymentDate.clearValidators()
                 this.instrumentInterestBearingForm.controls.promotionalInterestRate.clearValidators()
                 this.instrumentInterestBearingForm.controls.promotionEndDate.clearValidators()
+                this.instrumentInterestBearingForm.controls.accountNumber.addValidators(Validators.required)
+                this.instrumentInterestBearingForm.controls.holder.addValidators(Validators.required)
                 break;
             case 'GIC':
             case 'TERM_DEPOSIT':
@@ -349,6 +353,8 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
                 this.instrumentInterestBearingForm.controls.nextPaymentDate.addValidators(Validators.required)
                 this.instrumentInterestBearingForm.controls.promotionalInterestRate.clearValidators()
                 this.instrumentInterestBearingForm.controls.promotionEndDate.clearValidators()
+                this.instrumentInterestBearingForm.controls.accountNumber.addValidators(Validators.required)
+                this.instrumentInterestBearingForm.controls.holder.addValidators(Validators.required)
                 break;
         }
         this.instrumentInterestBearingForm.controls.ticker.updateValueAndValidity()
@@ -359,6 +365,8 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
         this.instrumentInterestBearingForm.controls.nextPaymentDate.updateValueAndValidity()
         this.instrumentInterestBearingForm.controls.promotionalInterestRate.updateValueAndValidity()
         this.instrumentInterestBearingForm.controls.promotionEndDate.updateValueAndValidity()
+        this.instrumentInterestBearingForm.controls.accountNumber.updateValueAndValidity()
+        this.instrumentInterestBearingForm.controls.holder.updateValueAndValidity()
     }
 
     onChangeFinancialInstitution(event: any) {
