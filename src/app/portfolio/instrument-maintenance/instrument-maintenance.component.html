@@ -188,6 +188,9 @@
                 <div class="col-8">
                     <input id="accountNumber" type="text" pInputText formControlName="accountNumber" class="p-inputtext"
                         maxlength="16" size="16" />
+                    <div *ngIf="instrumentInterestBearingForm.controls.accountNumber.invalid && instrumentInterestBearingForm.controls.accountNumber.touched"
+                        class="red-font">
+                        Field is required</div>
                 </div>
             </ng-container>
 
