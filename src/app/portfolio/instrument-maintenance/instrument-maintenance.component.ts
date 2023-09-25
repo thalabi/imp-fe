@@ -285,6 +285,7 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
                 console.error('this.crudMode is invalid. this.crudMode: ' + this.crudMode);
         }
         this.instrumentInterestBearingForm.reset()
+        this.modifyAndDeleteButtonsDisable = true
     }
     onCancel() {
         this.resetDialoForm();

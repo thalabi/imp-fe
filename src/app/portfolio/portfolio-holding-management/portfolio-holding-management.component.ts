@@ -281,6 +281,7 @@ export class PortfolioHoldingManagementComponent extends BaseComponent implement
                 console.error('this.crudMode is invalid. this.crudMode: ' + this.crudMode);
         }
         this.holdingDetailForm.reset()
+        this.modifyAndDeleteButtonsDisable = true
     }
 
     onCancel() {

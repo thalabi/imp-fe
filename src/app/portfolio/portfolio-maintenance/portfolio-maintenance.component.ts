@@ -247,6 +247,7 @@ export class PortfolioMaintenanceComponent extends BaseComponent implements OnIn
                 console.error('this.crudMode is invalid. this.crudMode: ' + this.crudMode);
         }
         this.portfolioForm.reset()
+        this.modifyAndDeleteButtonsDisable = true
     }
 
     onCancel() {
