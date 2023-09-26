@@ -105,10 +105,10 @@ export class RestService {
     }
 
     saveHolding(saveHoldingRequest: SaveHoldingRequest): Observable<HttpResponse<any>> {
-        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioController/saveHolding/`, saveHoldingRequest);
+        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioController/saveHolding`, saveHoldingRequest);
     }
     deleteHolding(holdingId: number): Observable<HttpResponse<void>> {
-        return this.http.delete<HttpResponse<void>>(`${this.serviceUrl}/protected/investmentPortfolioController/deleteHolding/` + holdingId);
+        return this.http.delete<HttpResponse<void>>(`${this.serviceUrl}/protected/investmentPortfolioController/deleteHolding` + holdingId);
     }
 
     getDistinctPositionSnapshots(): Observable<Array<PositionSnapshot>> {
@@ -125,7 +125,7 @@ export class RestService {
                 }))
     }
     purgePositionSnapshot(positionSnapshot: PositionSnapshot): Observable<HttpResponse<any>> {
-        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioController/purgePositionSnapshot/`, positionSnapshot);
+        return this.http.post<HttpResponse<any>>(`${this.serviceUrl}/protected/investmentPortfolioController/purgePositionSnapshot`, positionSnapshot);
     }
 
     getCurrencies(): Observable<Array<string>> {
@@ -148,7 +148,7 @@ export class RestService {
     }
 
     saveInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
-        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/saveInstrumentInterestBearing/`, instrumentInterestBearing);
+        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/saveInstrumentInterestBearing`, instrumentInterestBearing);
     }
     deleteInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
         const id = RestService.idFromUrl(instrumentInterestBearing._links.self.href);
@@ -166,7 +166,7 @@ export class RestService {
     }
 
     savePortfolio(portfolio: Portfolio): Observable<HttpResponse<any>> {
-        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/portfolioController/savePortfolio/`, portfolio);
+        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/portfolioController/savePortfolio`, portfolio);
     }
     deletePortfolio(id: number): Observable<HttpResponse<any>> {
         return this.http.delete<HttpResponse<any>>(`${this.serviceUrl}/protected/portfolioController/deletePortfolio/${id}`);
