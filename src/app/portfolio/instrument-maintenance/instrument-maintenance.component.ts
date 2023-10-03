@@ -399,7 +399,7 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
         console.log('this.instrumentInterestBearingForm.valid', this.instrumentInterestBearingForm.valid)
     }
     onPromotionalInputInterestRate(event: any) {
-        if (event.value < 0.01) {
+        if (event.value !== null && event.value < 0.01) {
             this.instrumentInterestBearingForm.controls.promotionalInterestRate.setErrors({ 'error': true });
         }
         console.log('this.instrumentInterestBearingForm.valid', this.instrumentInterestBearingForm.valid)
