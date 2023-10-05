@@ -24,7 +24,6 @@ export class PortfolioHoldingManagementComponent extends BaseComponent implement
     portfolioValue: number = 0
     instrumentRowsByCurrency: Map<string | null, Array<Instrument>> = new Map()
     instrumentArrayForCurrency: Array<Instrument> = []
-    selectedInstrument: Instrument = {} as Instrument
     loadingStatus: boolean = false;
 
     holdingDetailList: Array<IHoldingDetail> = []
@@ -210,6 +209,7 @@ export class PortfolioHoldingManagementComponent extends BaseComponent implement
             case CrudEnum.ADD:
                 saveHoldingRequest.asOfDate = this.holdingDetailForm.controls.asOfDate.value
                 saveHoldingRequest.instrumentId = this.holdingDetailForm.controls.instrument.value.id
+                saveHoldingRequest.instrumentType = this.holdingDetailForm.controls.instrument.value.type
                 saveHoldingRequest.portfolioId = this.selectedPortfolio.id
                 saveHoldingRequest.quantity = this.holdingDetailForm.controls.quantity.value
                 console.log('saveHoldingRequest', saveHoldingRequest)
@@ -236,6 +236,7 @@ export class PortfolioHoldingManagementComponent extends BaseComponent implement
                 saveHoldingRequest.version = this.holdingDetailSelectedRow.version
                 saveHoldingRequest.asOfDate = this.holdingDetailForm.controls.asOfDate.value
                 saveHoldingRequest.instrumentId = RestService.idFromUrl(this.holdingDetailForm.controls.instrument.value._links.self.href)
+                saveHoldingRequest.instrumentType = this.holdingDetailForm.controls.instrument.value.type
                 saveHoldingRequest.portfolioId = RestService.idFromUrl(this.selectedPortfolio._links.self.href)
                 saveHoldingRequest.quantity = this.holdingDetailForm.controls.quantity.value
                 console.log('saveHoldingRequest', saveHoldingRequest)
