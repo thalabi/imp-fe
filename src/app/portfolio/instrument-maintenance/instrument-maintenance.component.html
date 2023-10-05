@@ -7,32 +7,30 @@
                 {{instrumentType}}
             </div>
         </ng-template>
-        <!-- <ng-template pTemplate="selectedItem">
-            <div>
-                {{selectedPortfolio.institution}} - {{selectedPortfolio.accountNumber}} - {{selectedPortfolio.name}} -
-                {{selectedPortfolio.currency}}
-            </div>
-        </ng-template> -->
     </p-dropdown>
-
-    <!-- <span *ngIf="holdingDetailListCount" style="margin-left:1rem;">Portfolio value: {{portfolioValue | currency}}</span> -->
 
 </div>
 
 <div style="margin-top: 1rem;" *ngIf="selectedInstrumentType && instrumentInterestBearings">
-    <p-table [value]="instrumentInterestBearings" [paginator]="instrumentInterestBearingCount != 0"
+    <p-table #dt [value]="instrumentInterestBearings" [paginator]="instrumentInterestBearingCount != 0"
         [rowsPerPageOptions]="[10,20,30]" [rows]=" 20" [totalRecords]="instrumentInterestBearingCount"
         [loading]="loadingStatus" selectionMode="single" [(selection)]="instrumentInterestBearingSelectedRow"
         (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
-        dataKey="_links.instrumentInterestBearing.href">
+        dataKey="_links.instrumentInterestBearing.href"
+        [globalFilterFields]="['instrument.name','instrument.currency','type','financialInstitution','instrument.ticker','accountNumber','holderName']">
         <ng-template pTemplate="caption">
-            Instrument - {{selectedInstrumentType}}
+            <div class="flex">
+                <span>Instrument - {{selectedInstrumentType}}</span>
+                <span class="ml-auto">
+                    <input type="text" pInputText (input)="applyFilterGlobal($event, 'contains')"
+                        placeholder="Search for ..." />
+                </span>
+            </div>
         </ng-template>
         <ng-template pTemplate="header">
             <tr>
                 <th>Name</th>
                 <th>Currency</th>
-                <!-- <th>Ticker</th> -->
                 <th>Type</th>
                 <th>FI</th>
                 <th>Ticker</th>
@@ -51,17 +49,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-instrumentInterestBearing>
             <tr [pSelectableRow]="instrumentInterestBearing" style="line-height: 1rem;">
-                <!-- <td>{{holdingDetail.ticker}}:{{holdingDetail.exchange}}</td> -->
-                <ng-container
-                    *ngIf="['MONEY_MARKET', 'INVESTMENT_SAVINGS'].includes(instrumentInterestBearing.type); then displayTicker; else doNotDisplayTicker">
-                </ng-container>
-                <ng-template #displayTicker>
-                    <td>{{instrumentInterestBearing.instrument.ticker}} - {{instrumentInterestBearing.instrument.name}}
-                    </td>
-                </ng-template>
-                <ng-template #doNotDisplayTicker>
-                    <td>{{instrumentInterestBearing.instrument.name}}</td>
-                </ng-template>
+                <td>{{instrumentInterestBearing.instrument.name}}</td>
                 <td>{{instrumentInterestBearing.instrument.currency}}</td>
                 <!-- <td>{{instrumentInterestBearing.instrument.ticker}}</td> -->
                 <td>{{instrumentInterestBearing.type}}</td>

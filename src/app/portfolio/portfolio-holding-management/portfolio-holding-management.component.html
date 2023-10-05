@@ -4,15 +4,17 @@
 <div>
 
     <p-dropdown [options]="portfolioRows" [(ngModel)]="selectedPortfolio" placeholder="Select a portfolio"
-        (onChange)="onChangePortfolio($event)" [showClear]="true">
+        (onChange)="onChangePortfolio($event)" [showClear]="true" [filter]="true"
+        filterBy="financialInstitution,holder,accountNumber,name,currency">
         <ng-template pTemplate="item" let-portfolio>
             <div>
-                {{portfolio.financialInstitution}}-{{portfolio.accountNumber}}-{{portfolio.name}}-{{portfolio.currency}}
+                {{portfolio.financialInstitution}}-{{portfolio.holder}}-{{portfolio.accountNumber}}-{{portfolio.name}}-{{portfolio.currency}}
             </div>
         </ng-template>
         <ng-template pTemplate="selectedItem">
             <div>
-                {{selectedPortfolio.financialInstitution}} - {{selectedPortfolio.accountNumber}} -
+                {{selectedPortfolio.financialInstitution}} - {{selectedPortfolio.holder}} -
+                {{selectedPortfolio.accountNumber}} -
                 {{selectedPortfolio.name}} -
                 {{selectedPortfolio.currency}}
             </div>

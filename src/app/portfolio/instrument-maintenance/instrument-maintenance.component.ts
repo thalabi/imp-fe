@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormControl } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { CrudEnum } from '../../crud-enum';
@@ -9,6 +9,7 @@ import { Instrument } from '../portfolio-holding-management/Instrument';
 import { SessionService } from '../../service/session.service';
 import { BaseComponent } from '../../base/base.component';
 import { HolderAndName } from '../portfolio-maintenance/HolderAndName';
+import { Table } from 'primeng/table';
 
 @Component({
     selector: 'app-instrument-maintenance',
@@ -504,5 +505,10 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
                         this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
                     }
                 });
+    }
+
+    @ViewChild('dt') dt: Table = {} as Table;
+    applyFilterGlobal($event: any, stringVal: any) {
+        this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
     }
 }
