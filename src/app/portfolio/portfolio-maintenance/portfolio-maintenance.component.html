@@ -55,7 +55,7 @@
 </div>
 
 <p-dialog header="Instrument - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
-    [modal]="true" [style]="{width: '30vw'}">
+    [modal]="true" [style]="{width: '30vw'}" (onHide)="onCancel()">
 
     <form [formGroup]="portfolioForm" (ngSubmit)="onSubmit()" novalidate>
 

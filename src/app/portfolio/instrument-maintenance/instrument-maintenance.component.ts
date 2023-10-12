@@ -137,6 +137,7 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
         console.log('this.crudMode', this.crudMode);
         switch (this.crudMode) {
             case CrudEnum.ADD:
+                // this.resetDialoForm();
                 this.instrumentInterestBearingForm.controls.emailNotification.patchValue(true);
                 this.instrumentInterestBearingForm.enable();
                 break;
@@ -508,6 +509,7 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
     }
 
     @ViewChild('dt') dt: Table = {} as Table;
+
     applyFilterGlobal($event: any, stringVal: any) {
         this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
     }
