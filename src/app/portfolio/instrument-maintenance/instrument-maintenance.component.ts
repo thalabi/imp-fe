@@ -24,6 +24,7 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
     instrumentTypes: Array<string> = []
     interestBearingTypes: Array<string> = []
     termOptions: Array<{ value: string, name: string }> = []
+    registeredAccountOptions: Array<{ value: string | null, name: string }> = []
 
     selectedInstrumentType: string = ''
     instrumentInterestBearings: InstrumentInterestBearing[] | null = null;
@@ -50,8 +51,9 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
         promotionEndDate: this.formBuilder.control<Date | null>(null),
         notes: this.formBuilder.control<string | null>(null),
         emailNotification: [true, Validators.required],
-        accountNumber: [''],
-        holder: ['']
+        accountNumber: this.formBuilder.control<string | null>(null),
+        holder: this.formBuilder.control<string | null>(null),
+        registeredAccount: this.formBuilder.control<string | null>(null)
     })
 
     constructor(
@@ -71,6 +73,8 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
         this.getInterestBearingTypes()
         this.getTerms()
         this.getHolders()
+        this.getRegisteredAccounts()
+
     }
 
     onChangeInstrumentType(event: any) {
@@ -175,6 +179,7 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
         this.instrumentInterestBearingForm.controls.emailNotification.patchValue(this.instrumentInterestBearingSelectedRow.emailNotification);
         this.instrumentInterestBearingForm.controls.accountNumber.patchValue(this.instrumentInterestBearingSelectedRow.accountNumber);
         this.instrumentInterestBearingForm.controls.holder.patchValue(this.instrumentInterestBearingSelectedRow.holder);
+        this.instrumentInterestBearingForm.controls.registeredAccount.patchValue(this.instrumentInterestBearingSelectedRow.registeredAccount);
         console.log('this.instrumentInterestBearingForm.value', this.instrumentInterestBearingForm.value)
     }
     onSubmit() {
@@ -200,6 +205,7 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
                 saveInstrumentInterestBearing.emailNotification = this.instrumentInterestBearingForm.controls.emailNotification.value
                 saveInstrumentInterestBearing.accountNumber = this.instrumentInterestBearingForm.controls.accountNumber.value
                 saveInstrumentInterestBearing.holder = this.instrumentInterestBearingForm.controls.holder.value
+                saveInstrumentInterestBearing.registeredAccount = this.instrumentInterestBearingForm.controls.registeredAccount.value
                 console.log('saveInstrumentInterestBearing', saveInstrumentInterestBearing)
                 this.restService.saveInstrumentInterestBearing(saveInstrumentInterestBearing)
                     .subscribe(
@@ -238,6 +244,7 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
                 saveInstrumentInterestBearing.emailNotification = this.instrumentInterestBearingForm.controls.emailNotification.value
                 saveInstrumentInterestBearing.accountNumber = this.instrumentInterestBearingForm.controls.accountNumber.value
                 saveInstrumentInterestBearing.holder = this.instrumentInterestBearingForm.controls.holder.value
+                saveInstrumentInterestBearing.registeredAccount = this.instrumentInterestBearingForm.controls.registeredAccount.value
 
                 saveInstrumentInterestBearing.id = this.instrumentInterestBearingSelectedRow.id;
                 saveInstrumentInterestBearing.rowVersion = this.instrumentInterestBearingSelectedRow.rowVersion;
@@ -313,6 +320,7 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
         this.instrumentInterestBearingForm.controls.emailNotification.patchValue(true);
         this.instrumentInterestBearingForm.controls.accountNumber.reset();
         this.instrumentInterestBearingForm.controls.holder.reset();
+        this.instrumentInterestBearingForm.controls.registeredAccount.reset();
 
         this.setValidators(event.value);
     }
@@ -372,15 +380,18 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
         this.instrumentInterestBearingForm.controls.holder.updateValueAndValidity()
     }
 
-    onChangeFinancialInstitution(event: any) {
-        console.log('onChangeFinancialInstitution: event', event)
-    }
-    onChangeTerm(event: any) {
-        console.log('onChangeTerm: event', event)
-    }
-    onChangeHolder(event: any) {
-        console.log('onChangeHolder: event', event)
-    }
+    // onChangeFinancialInstitution(event: any) {
+    //     console.log('onChangeFinancialInstitution: event', event)
+    // }
+    // onChangeTerm(event: any) {
+    //     console.log('onChangeTerm: event', event)
+    // }
+    // onChangeHolder(event: any) {
+    //     console.log('onChangeHolder: event', event)
+    // }
+    // onChangeRegisteredAccount(event: any) {
+    //     console.log('onChangeRegisteredAccount: event', event)
+    // }
 
     onSelectMaturityDate(value: string) {
         console.log('onSelectMaturityDate: value', value)
@@ -508,8 +519,27 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
                 });
     }
 
-    @ViewChild('dt') dt: Table = {} as Table;
+    private getRegisteredAccounts() {
+        this.restService.getRegisteredAccounts()
+            .subscribe(
+                {
+                    next: (data: Array<string>) => {
+                        console.log('data', data)
+                        this.registeredAccountOptions = [{ value: null, name: '<non registered>' }]
+                        data.forEach(registeredAccount => this.registeredAccountOptions.push({ value: registeredAccount, name: registeredAccount }))
+                    },
+                    complete: () => {
+                        console.log('http request completed')
+                    },
+                    error: (httpErrorResponse: HttpErrorResponse) => {
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
+                    }
+                });
+    }
 
+
+    @ViewChild('dt') dt: Table = {} as Table;
+    // Hack to wrap filterGlobal and be able to specify type HTMLInputElement
     applyFilterGlobal($event: any, stringVal: any) {
         this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
     }

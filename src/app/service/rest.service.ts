@@ -146,6 +146,9 @@ export class RestService {
     getHolders(): Observable<Array<HolderAndName>> {
         return this.http.get<Array<HolderAndName>>(`${this.serviceUrl}/protected/referenceDataController/getHolders`);
     }
+    getRegisteredAccounts(): Observable<Array<string>> {
+        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/referenceDataController/getRegisteredAccounts`);
+    }
 
     saveInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
         return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/saveInstrumentInterestBearing`, instrumentInterestBearing);

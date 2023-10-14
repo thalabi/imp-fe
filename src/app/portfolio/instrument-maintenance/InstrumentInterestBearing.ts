@@ -14,8 +14,9 @@ export interface InstrumentInterestBearing {
     promotionalInterestRate: number | null;
     promotionEndDate: Date | null;
     emailNotification: boolean;
-    accountNumber: string;
-    holder: string;
+    accountNumber: string | null;
+    holder: string | null;
+    registeredAccount: string | null;
     rowVersion: number;
     _links: {
         self: {
