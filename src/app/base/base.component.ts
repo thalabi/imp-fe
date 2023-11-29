@@ -11,14 +11,6 @@ export class BaseComponent {
     extractMessage(httpErrorResponse: HttpErrorResponse): string {
         console.log('extractMessage(), httpErrorResponse', httpErrorResponse)
         return (typeof httpErrorResponse.error === 'string') ? httpErrorResponse.error : httpErrorResponse.error.message
-        // let message: string = ''
-
-        // if (typeof httpErrorResponse.error === 'string') {
-        //     message = httpErrorResponse.message
-        // } else {
-        //     message = httpErrorResponse.error.message
-        // }
-        // return message;
     }
 
 }

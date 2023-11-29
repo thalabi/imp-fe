@@ -27,16 +27,13 @@
                 <td>{{portfolio.accountNumber}}</td>
                 <td>{{portfolio.currency}}</td>
                 <td class="text-center">
-                    <i class="pi"
-                        [ngClass]="{'true-icon pi-check-circle': portfolio.hasHoldings, 'false-icon pi-times-circle': !portfolio.hasHoldings}"></i>
+                    <i class="pi" [ngClass]="{'true-icon pi-check-circle': portfolio.hasHoldings}"></i>
                 </td>
                 <td class="text-center">
-                    <i class="pi"
-                        [ngClass]="{'true-icon pi-check-circle': portfolio.hasPositions, 'false-icon pi-times-circle': !portfolio.hasPositions}"></i>
+                    <i class="pi" [ngClass]="{'true-icon pi-check-circle': portfolio.hasPositions}"></i>
                 </td>
                 <td class="text-center" *ngIf="logicallyDeletedOption === logicallyDeletedOptionEnum.ALL">
-                    <i class="pi"
-                        [ngClass]="{'true-icon pi-check-circle': portfolio.logicallyDeleted, 'false-icon pi-times-circle': !portfolio.logicallyDeleted}"></i>
+                    <i class="pi" [ngClass]="{'true-icon pi-check-circle': portfolio.logicallyDeleted}"></i>
                 </td>
             </tr>
         </ng-template>

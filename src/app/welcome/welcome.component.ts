@@ -30,6 +30,7 @@ export class WelcomeComponent implements OnInit {
             .pipe(filter(userInfo => Object.keys(userInfo).length !== 0))
             .subscribe(userInfo => {
                 console.log('userInfo', userInfo);
+                this.authenticated = true;
                 this.userInfo = userInfo
             })
     }

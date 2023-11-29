@@ -13,6 +13,7 @@ import { IPortfolioWithDependentFlags } from '../portfolio/portfolio-maintenance
 import { Portfolio } from '../portfolio/portfolio-holding-management/Portfolio';
 import { HolderAndName } from '../portfolio/portfolio-maintenance/HolderAndName';
 import { ReportJobResponse } from '../portfolio/ReportJobResponse';
+import { InstrumentBond } from '../portfolio/instrument-maintenance/InstrumentBond';
 
 @Injectable({
     providedIn: 'root'
@@ -149,6 +150,9 @@ export class RestService {
     getRegisteredAccounts(): Observable<Array<string>> {
         return this.http.get<Array<string>>(`${this.serviceUrl}/protected/referenceDataController/getRegisteredAccounts`);
     }
+    getPaymentFrequencies(): Observable<Array<string>> {
+        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/referenceDataController/getPaymentFrequencies`);
+    }
 
     saveInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
         return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/saveInstrumentInterestBearing`, instrumentInterestBearing);
@@ -157,6 +161,15 @@ export class RestService {
         const id = RestService.idFromUrl(instrumentInterestBearing._links.self.href);
         return this.http.delete<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/deleteInstrumentInterestBearing/${id}`);
     }
+
+    saveInstrumentBond(instrumentBond: InstrumentBond): Observable<HttpResponse<any>> {
+        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/saveInstrumentBond`, instrumentBond);
+    }
+    deleteInstrumentBond(instrumentBond: InstrumentBond): Observable<HttpResponse<any>> {
+        const id = RestService.idFromUrl(instrumentBond._links.self.href);
+        return this.http.delete<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/deleteInstrumentBond/${id}`);
+    }
+
     getDefaultDaysToNotify(): Observable<number> {
         return this.http.get<number>(`${this.serviceUrl}/protected/instrumentController/getDefaultDaysToNotify`);
     }

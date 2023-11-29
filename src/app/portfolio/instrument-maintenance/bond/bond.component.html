@@ -1,0 +1,259 @@
+<div style="margin-top: 1rem;" *ngIf="instrumentBonds">
+    <p-table #dt [value]="instrumentBonds" [paginator]="instrumentBondCount != 0" [rowsPerPageOptions]="[10,20,30]"
+        [rows]=" 20" [totalRecords]="instrumentBondCount" [loading]="loadingStatus" selectionMode="single"
+        [(selection)]="instrumentBondSelectedRow" (onRowSelect)="onRowSelect($event)"
+        (onRowUnselect)="onRowUnselect($event)" dataKey="_links.instrumentBond.href"
+        [globalFilterFields]="['instrument.name','instrument.currency','instrument.ticker','issuer','cusip']">
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <span>Instrument - {{instrumentType}}</span>
+                <span class="ml-auto">
+                    <input type="text" pInputText (input)="applyFilterGlobal($event, 'contains')"
+                        placeholder="Search for ..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>Currency</th>
+                <th>Issuer</th>
+                <th>Cusip</th>
+                <th>Price</th>
+                <th>Coupon</th>
+                <th>Issue date</th>
+                <th>Maturity date</th>
+                <th>Payment freq</th>
+                <th>Next pymnt date</th>
+                <th>Notes</th>
+                <th>Notify email</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-instrumentBond>
+            <tr [pSelectableRow]="instrumentBond" style="line-height: 1rem;">
+                <td>{{instrumentBond.instrument.name}}</td>
+                <td>{{instrumentBond.instrument.currency}}</td>
+                <td>{{instrumentBond.issuer}}</td>
+                <td>{{instrumentBond.cusip}}</td>
+                <td>{{instrumentBond.price}}</td>
+                <td>{{instrumentBond.coupon}}</td>
+                <td>{{instrumentBond.issueDate | date:'y-MM-dd'}}</td>
+                <td>{{instrumentBond.maturityDate | date:'y-MM-dd'}}</td>
+                <td>{{instrumentBond.paymentFrequency}}</td>
+                <td>{{instrumentBond.nextPaymentDate | date:'y-MM-dd'}}</td>
+                <td class="text-center"><span pTooltip="{{instrumentBond.instrument.notes}}" class="texthastooltip"><i
+                            *ngIf="instrumentBond.instrument.notes" class="pi pi-comment"></i></span></td>
+                <td class="text-center"><i class="pi"
+                        [ngClass]="{'true-icon pi-check-circle': instrumentBond.emailNotification}"></i>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div>
+                <button type="button" pButton icon="pi pi-plus" (click)="showDialog(crudEnum.ADD)" label="Add"></button>
+                <button type="button" pButton icon="pi pi-pencil" style="margin-left:0.5rem;"
+                    (click)="showDialog(crudEnum.UPDATE)" label="Modify"
+                    [disabled]="modifyAndDeleteButtonsDisable"></button>
+                <button type="button" pButton icon="pi pi-minus" style="margin-left:0.5rem;"
+                    (click)="showDialog(crudEnum.DELETE)" label="Delete"
+                    [disabled]="modifyAndDeleteButtonsDisable"></button>
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog header="Instrument - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
+    [modal]="true" [style]="{width: '45vw'}" (onHide)="onCancel()">
+
+    <form [formGroup]="instrumentBondForm" (ngSubmit)="onSubmit()" novalidate>
+
+        <p-messages></p-messages>
+
+        <div class="grid" style="width: 30em;">
+
+            <!-- name-->
+            <div class="col-4">
+                <label for="name">Name</label>
+            </div>
+            <div class="col-8">
+                <input id="name" type="text" pInputText formControlName="name" class="p-inputtext" maxlength="64"
+                    size="50" />
+                <div *ngIf="instrumentBondForm.controls.name.invalid && instrumentBondForm.controls.name.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <!-- currency-->
+            <div class="col-4">
+                <label for="currency">Currency</label>
+            </div>
+            <div class="col-8">
+                <p-dropdown id="currency" [options]="currencies" formControlName="currency"
+                    placeholder="Select currency" [showClear]="true">
+                </p-dropdown>
+                <div *ngIf="instrumentBondForm.controls.currency.invalid && instrumentBondForm.controls.currency.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+
+            <!-- issuer -->
+            <div class="col-4">
+                <label for="issuer">Issuer</label>
+            </div>
+            <div class="col-8">
+                <input id="issuer" type="text" pInputText formControlName="issuer" class="p-inputtext" maxlength="255"
+                    size="50" />
+                <div *ngIf="instrumentBondForm.controls.issuer.invalid && instrumentBondForm.controls.issuer.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <!-- cusip -->
+            <div class="col-4">
+                <label for="cusip">Cusip</label>
+            </div>
+            <div class="col-8">
+                <input id="cusip" type="text" pInputText formControlName="cusip" class="p-inputtext" maxlength="9"
+                    size="9" />
+                <div *ngIf="instrumentBondForm.controls.cusip.invalid && instrumentBondForm.controls.cusip.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <!-- price -->
+            <div class="col-4">
+                <label for="price">Price</label>
+            </div>
+            <div class="col-8">
+                <p-inputNumber id="price" formControlName="price" mode="decimal" [minFractionDigits]="4"
+                    [maxFractionDigits]="4" (onInput)="onInputPrice($event)" appendTo="body">
+                </p-inputNumber>
+                <div *ngIf="instrumentBondForm.controls.price.invalid && instrumentBondForm.controls.price.touched"
+                    class="red-font">
+                    Field must be positive</div>
+            </div>
+
+            <!-- coupon -->
+            <div class="col-4">
+                <label for="coupon">Coupon</label>
+            </div>
+            <div class="col-8">
+                <p-inputNumber id="coupon" formControlName="coupon" mode="decimal" [minFractionDigits]="4"
+                    [maxFractionDigits]="4" (onInput)="onInputCoupon($event)" appendTo="body">
+                </p-inputNumber>
+                <div *ngIf="instrumentBondForm.controls.coupon.invalid && instrumentBondForm.controls.coupon.touched"
+                    class="red-font">
+                    Field must be positive</div>
+            </div>
+
+            <!-- paymentFrequency -->
+            <div class="col-4">
+                <label for="paymentFrequency">Payment frequency</label>
+            </div>
+            <div class="col-8">
+                <p-dropdown id="paymentFrequency" [options]="paymentFrequencies" formControlName="paymentFrequency"
+                    placeholder="Select payment freq" [showClear]="true">
+                </p-dropdown>
+                <div *ngIf="instrumentBondForm.controls.paymentFrequency.invalid && instrumentBondForm.controls.paymentFrequency.touched"
+                    class="red-font">
+                    Field is required</div>
+                <div *ngIf="!instrumentBondForm.controls.paymentFrequency.value && instrumentBondForm.controls.paymentFrequency.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <!-- issue date -->
+            <div class="col-4">
+                <label for="issueDate">Issue date</label>
+            </div>
+            <div class="col-8">
+
+                <p-calendar id="issueDate" formControlName="issueDate" [monthNavigator]="true" [showButtonBar]="true"
+                    [yearNavigator]="true" yearRange="2023:2050" [dateFormat]="'yy-mm-dd'" [showIcon]="true"
+                    [readonlyInput]="true" [showOnFocus]="false" [inputStyle]="{'width':'8rem'}"
+                    (onSelect)="onSelectIssueDate($event)" appendTo="body">
+                </p-calendar>
+
+                <div *ngIf="instrumentBondForm.controls.issueDate.touched && !instrumentBondForm.controls.issueDate.value"
+                    class="red-font">
+                    Field is required</div>
+                <ng-container
+                    *ngIf="instrumentBondForm.controls.issueDate.errors?.invalidDate; then invalidDate"></ng-container>
+            </div>
+
+            <!-- next payment date -->
+            <div class="col-4">
+                <label for="maturityDate">Next payment date</label>
+            </div>
+            <div class="col-8">
+
+                <p-calendar id="nextPaymentDate" formControlName="nextPaymentDate" [monthNavigator]="true"
+                    [showButtonBar]="true" [yearNavigator]="true" yearRange="2023:2050" [dateFormat]="'yy-mm-dd'"
+                    [showIcon]="true" [readonlyInput]="true" [showOnFocus]="false" [inputStyle]="{'width':'8rem'}"
+                    (onSelect)="onSelectNextPaymentDate($event)" appendTo="body">
+                </p-calendar>
+
+                <div *ngIf="instrumentBondForm.controls.nextPaymentDate.touched && !instrumentBondForm.controls.nextPaymentDate.value"
+                    class="red-font">
+                    Field is required</div>
+                <ng-container
+                    *ngIf="instrumentBondForm.controls.nextPaymentDate.errors?.invalidDate; then invalidDate"></ng-container>
+            </div>
+
+            <!-- maturity date -->
+            <div class="col-4">
+                <label for="maturityDate">Maturity date</label>
+            </div>
+            <div class="col-8">
+
+                <p-calendar id="maturityDate" formControlName="maturityDate" [monthNavigator]="true"
+                    [showButtonBar]="true" [yearNavigator]="true" yearRange="2023:2050" [dateFormat]="'yy-mm-dd'"
+                    [showIcon]="true" [readonlyInput]="true" [showOnFocus]="false" [inputStyle]="{'width':'8rem'}"
+                    (onSelect)="onSelectMaturityDate($event)" appendTo="body">
+                </p-calendar>
+
+                <div *ngIf="instrumentBondForm.controls.maturityDate.touched && !instrumentBondForm.controls.maturityDate.value"
+                    class="red-font">
+                    Field is required</div>
+                <ng-container
+                    *ngIf="instrumentBondForm.controls.maturityDate.errors?.invalidDate; then invalidDate"></ng-container>
+            </div>
+
+            <ng-template #invalidDate>
+                <div class="red-font">Issue date should be before Next Payment date which should be on
+                    or before Maturity date</div>
+            </ng-template>
+
+            <!-- notes -->
+            <div class="col-4">
+                <label for="notes">Notes</label>
+            </div>
+            <div class="col-8">
+                <textarea pInputTextarea formControlName="notes" cols="50"></textarea>
+            </div>
+
+            <!-- email -->
+            <div class="col-4">
+                <label for="emailNotification">Notify email</label>
+            </div>
+            <div class="col-8">
+                <p-checkbox inputId="emailNotification" [formControl]="instrumentBondForm.controls['emailNotification']"
+                    [binary]="true"></p-checkbox>
+            </div>
+
+            <p-footer>
+                <div class="formgroup-inline">
+                    <div class="field">
+                        <button pButton type="submit" label="Submit" [disabled]="instrumentBondForm.invalid"
+                            icon="pi pi-check"></button>
+                    </div>
+                    <div class="field">
+                        <button pButton type="reset" label="Cancel" (click)="onCancel()"></button>
+                    </div>
+                </div>
+            </p-footer>
+
+        </div>
+    </form>
+</p-dialog>

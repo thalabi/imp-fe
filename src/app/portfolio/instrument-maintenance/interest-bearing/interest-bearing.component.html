@@ -1,0 +1,337 @@
+<div style="margin-top: 1rem;" *ngIf="instrumentInterestBearings">
+    <p-table #dt [value]="instrumentInterestBearings" [paginator]="instrumentInterestBearingCount != 0"
+        [rowsPerPageOptions]="[10,20,30]" [rows]=" 20" [totalRecords]="instrumentInterestBearingCount"
+        [loading]="loadingStatus" selectionMode="single" [(selection)]="instrumentInterestBearingSelectedRow"
+        (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+        dataKey="_links.instrumentInterestBearing.href"
+        [globalFilterFields]="['instrument.name','instrument.currency','type','financialInstitution','instrument.ticker','accountNumber','holderName']">
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <span>Instrument - {{instrumentType}}</span>
+                <span class="ml-auto">
+                    <input type="text" pInputText (input)="applyFilterGlobal($event, 'contains')"
+                        placeholder="Search for ..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>Currency</th>
+                <th>Type</th>
+                <th>FI</th>
+                <th>Ticker</th>
+                <th>Acc number</th>
+                <th>Holder</th>
+                <th>Reg</th>
+                <th>Price</th>
+                <th>Interest rate</th>
+                <th>Term</th>
+                <th>Maturity date</th>
+                <th>Next pymnt date</th>
+                <th>Promo rate</th>
+                <th>Promo end date</th>
+                <th>Notes</th>
+                <th>Notify email</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-instrumentInterestBearing>
+            <tr [pSelectableRow]="instrumentInterestBearing" style="line-height: 1rem;">
+                <td>{{instrumentInterestBearing.instrument.name}}</td>
+                <td>{{instrumentInterestBearing.instrument.currency}}</td>
+                <!-- <td>{{instrumentInterestBearing.instrument.ticker}}</td> -->
+                <td>{{instrumentInterestBearing.type}}</td>
+                <td>{{instrumentInterestBearing.financialInstitution}}</td>
+                <td>{{['MONEY_MARKET', 'INVESTMENT_SAVINGS'].includes(instrumentInterestBearing.type) ?
+                    instrumentInterestBearing.instrument.ticker : ''}}</td>
+                <td>{{instrumentInterestBearing.accountNumber}}</td>
+                <td>{{instrumentInterestBearing.holderName}}</td>
+                <td>{{instrumentInterestBearing.registeredAccount}}</td>
+                <td>{{instrumentInterestBearing.price}}</td>
+                <td>{{instrumentInterestBearing.interestRate}}</td>
+                <td>{{instrumentInterestBearing.term | slice : 5}}</td>
+                <td>{{instrumentInterestBearing.maturityDate | date:'y-MM-dd'}}</td>
+                <td>{{instrumentInterestBearing.nextPaymentDate | date:'y-MM-dd'}}</td>
+                <td>{{instrumentInterestBearing.promotionalInterestRate}}</td>
+                <td>{{instrumentInterestBearing.promotionEndDate | date:'y-MM-dd'}}</td>
+                <td class="text-center"><span pTooltip="{{instrumentInterestBearing.instrument.notes}}"
+                        class="texthastooltip"><i *ngIf="instrumentInterestBearing.instrument.notes"
+                            class="pi pi-comment"></i></span></td>
+                <td class="text-center"><i class="pi"
+                        [ngClass]="{'true-icon pi-check-circle': instrumentInterestBearing.emailNotification}"></i>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div>
+                <button type="button" pButton icon="pi pi-plus" (click)="showDialog(crudEnum.ADD)" label="Add"></button>
+                <button type="button" pButton icon="pi pi-pencil" style="margin-left:0.5rem;"
+                    (click)="showDialog(crudEnum.UPDATE)" label="Modify"
+                    [disabled]="modifyAndDeleteButtonsDisable"></button>
+                <button type="button" pButton icon="pi pi-minus" style="margin-left:0.5rem;"
+                    (click)="showDialog(crudEnum.DELETE)" label="Delete"
+                    [disabled]="modifyAndDeleteButtonsDisable"></button>
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog header="Instrument - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
+    [modal]="true" [style]="{width: '45vw'}" (onHide)="onCancel()">
+
+    <form [formGroup]="instrumentInterestBearingForm" (ngSubmit)="onSubmit()" novalidate>
+
+        <p-messages></p-messages>
+
+        <div class="grid" style="width: 30em;">
+
+            <!-- name-->
+            <div class="col-4">
+                <label for="name">Name</label>
+            </div>
+            <div class="col-8">
+                <input id="name" type="text" pInputText formControlName="name" class="p-inputtext" maxlength="64"
+                    size="50" />
+                <div *ngIf="instrumentInterestBearingForm.controls.name.invalid && instrumentInterestBearingForm.controls.name.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <!-- currency-->
+            <div class="col-4">
+                <label for="currency">Currency</label>
+            </div>
+            <div class="col-8">
+                <p-dropdown id="currency" [options]="currencies" formControlName="currency"
+                    placeholder="Select currency" [showClear]="true">
+                </p-dropdown>
+                <div *ngIf="instrumentInterestBearingForm.controls.currency.invalid && instrumentInterestBearingForm.controls.currency.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <!-- financial institution -->
+            <div class="col-4">
+                <label for="financialInstitution">FI</label>
+            </div>
+            <div class="col-8">
+                <p-dropdown id="financialInstitution" [options]="financialInstitutions"
+                    formControlName="financialInstitution" placeholder="Select FI" [showClear]="true">
+                </p-dropdown>
+                <div *ngIf="instrumentInterestBearingForm.controls.financialInstitution.invalid && instrumentInterestBearingForm.controls.financialInstitution.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <!-- type -->
+            <div class="col-4">
+                <label for="type">Type</label>
+            </div>
+            <div class="col-8">
+                <p-dropdown id="type" [options]="interestBearingTypes" formControlName="type" placeholder="Select type"
+                    (onChange)="onChangeType($event)" [showClear]="true">
+                </p-dropdown>
+                <div *ngIf="instrumentInterestBearingForm.controls.type.invalid && instrumentInterestBearingForm.controls.type.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <ng-container
+                *ngIf=" ! ['MONEY_MARKET', 'INVESTMENT_SAVINGS'].includes(instrumentInterestBearingForm.controls.type.value!)">
+
+                <!-- holder -->
+                <div class="col-4">
+                    <label for="name">Account holder</label>
+                </div>
+                <div class="col-8">
+                    <!-- <input id="name" type="text" pInputText formControlName="holder" class="p-inputtext" maxlength="64"
+                        size="32" /> -->
+                    <p-dropdown id="holder" [options]="holderOptions" optionLabel="name" optionValue="value"
+                        formControlName="holder" placeholder="Select term" [showClear]="true">
+                    </p-dropdown>
+
+                    <div *ngIf="instrumentInterestBearingForm.controls.holder.invalid && instrumentInterestBearingForm.controls.holder.touched"
+                        class="red-font">
+                        Field is required</div>
+                </div>
+
+                <!-- accountNumber -->
+                <div class="col-4">
+                    <label for="name">Account number</label>
+                </div>
+                <div class="col-8">
+                    <input id="accountNumber" type="text" pInputText formControlName="accountNumber" class="p-inputtext"
+                        maxlength="16" size="16" />
+                    <div *ngIf="instrumentInterestBearingForm.controls.accountNumber.invalid && instrumentInterestBearingForm.controls.accountNumber.touched"
+                        class="red-font">
+                        Field is required</div>
+                </div>
+
+                <!-- registeredAccount -->
+                <div class="col-4">
+                    <label for="registeredAccount">Registered account</label>
+                </div>
+                <div class="col-8">
+                    <p-dropdown id="registeredAccount" [options]="registeredAccountOptions" optionLabel="name"
+                        optionValue="value" formControlName="registeredAccount" [showClear]="true">
+                    </p-dropdown>
+                </div>
+
+            </ng-container>
+
+            <!-- ticker -->
+            <ng-container
+                *ngIf="['MONEY_MARKET', 'INVESTMENT_SAVINGS'].includes(instrumentInterestBearingForm.controls.type.value!)">
+                <div class="col-4">
+                    <label for="ticker">Ticker</label>
+                </div>
+                <div class="col-8">
+                    <input id="ticker" type="text" pInputText formControlName="ticker" class="p-inputtext" minlength=""
+                        maxlength="16" />
+                    <div *ngIf="instrumentInterestBearingForm.controls.ticker.invalid && instrumentInterestBearingForm.controls.ticker.touched"
+                        class="red-font">
+                        Field must be between 1 and 16 characters</div>
+                </div>
+            </ng-container>
+
+            <!-- interest rate -->
+            <div class="col-4">
+                <label for="interestRate">Interest rate</label>
+            </div>
+            <div class="col-8">
+                <p-inputNumber id="interestRate" formControlName="interestRate" mode="decimal" [minFractionDigits]="2"
+                    [maxFractionDigits]="2" (onInput)="onInputInterestRate($event)" appendTo="body">
+                </p-inputNumber>
+                <div *ngIf="instrumentInterestBearingForm.controls.interestRate.invalid && instrumentInterestBearingForm.controls.interestRate.touched"
+                    class="red-font">
+                    Field must be positive</div>
+            </div>
+
+            <!-- price -->
+            <ng-container
+                *ngIf="['MONEY_MARKET', 'INVESTMENT_SAVINGS'].includes(instrumentInterestBearingForm.controls.type.value!)">
+                <div class="col-4">
+                    <label for="price">Price</label>
+                </div>
+                <div class="col-8">
+                    <p-inputNumber id="price" formControlName="price" mode="decimal" [minFractionDigits]="4"
+                        [maxFractionDigits]="4" (onInput)="onInputPrice($event)" appendTo="body">
+                    </p-inputNumber>
+                    <div *ngIf="instrumentInterestBearingForm.controls.price.invalid && instrumentInterestBearingForm.controls.price.touched"
+                        class="red-font">
+                        Field must be positive</div>
+                </div>
+            </ng-container>
+
+            <!-- term -->
+            <ng-container *ngIf="['GIC', 'TERM_DEPOSIT'].includes(instrumentInterestBearingForm.controls.type.value!)">
+                <div class="col-4">
+                    <label for="term">Term</label>
+                </div>
+                <div class="col-8">
+                    <p-dropdown id="term" [options]="termOptions" optionLabel="name" optionValue="value"
+                        formControlName="term" placeholder="Select term" [showClear]="true">
+                    </p-dropdown>
+                    <div *ngIf="!instrumentInterestBearingForm.controls.term.value && instrumentInterestBearingForm.controls.term.touched"
+                        class="red-font">
+                        Field is required</div>
+                </div>
+
+                <!-- maturity date -->
+                <div class="col-4">
+                    <label for="maturityDate">Maturity date</label>
+                </div>
+                <div class="col-8">
+
+                    <p-calendar id="maturityDate" formControlName="maturityDate" [monthNavigator]="true"
+                        [showButtonBar]="true" [yearNavigator]="true" yearRange="2023:2050" [dateFormat]="'yy-mm-dd'"
+                        [showIcon]="true" [readonlyInput]="true" [showOnFocus]="false" [inputStyle]="{'width':'8rem'}"
+                        (onSelect)="onSelectMaturityDate($event)" appendTo="body">
+                    </p-calendar>
+
+                    <div *ngIf="instrumentInterestBearingForm.controls.maturityDate.invalid && instrumentInterestBearingForm.controls.maturityDate.touched"
+                        class="red-font">
+                        Field is required</div>
+                </div>
+
+                <!-- next payment date -->
+                <div class="col-4">
+                    <label for="maturityDate">Next payment date</label>
+                </div>
+                <div class="col-8">
+
+                    <p-calendar id="nextPaymentDate" formControlName="nextPaymentDate" [monthNavigator]="true"
+                        [showButtonBar]="true" [yearNavigator]="true" yearRange="2023:2050" [dateFormat]="'yy-mm-dd'"
+                        [showIcon]="true" [readonlyInput]="true" [showOnFocus]="false" [inputStyle]="{'width':'8rem'}"
+                        appendTo="body">
+                    </p-calendar>
+
+                    <div *ngIf="instrumentInterestBearingForm.controls.nextPaymentDate.invalid && instrumentInterestBearingForm.controls.nextPaymentDate.touched"
+                        class="red-font">
+                        Field is required</div>
+                </div>
+
+            </ng-container>
+
+            <!-- promo rate -->
+            <ng-container *ngIf="['SAVINGS'].includes(instrumentInterestBearingForm.controls.type.value!)">
+                <div class="col-4">
+                    <label for="promotionalInterestRate">Promo rate</label>
+                </div>
+                <div class="col-8">
+                    <p-inputNumber id="promotionalInterestRate" formControlName="promotionalInterestRate" mode="decimal"
+                        [minFractionDigits]="2" [maxFractionDigits]="2"
+                        (onInput)="onPromotionalInputInterestRate($event)" appendTo="body">
+                    </p-inputNumber>
+                    <div *ngIf="instrumentInterestBearingForm.controls.promotionalInterestRate.invalid && instrumentInterestBearingForm.controls.promotionalInterestRate.touched"
+                        class="red-font">
+                        Field must be positive</div>
+                </div>
+
+                <!-- promo end date -->
+                <div class="col-4">
+                    <label for="promotionEndDate">Promo end date</label>
+                </div>
+                <div class="col-8">
+
+                    <p-calendar id="promotionEndDate" formControlName="promotionEndDate" [monthNavigator]="true"
+                        [showButtonBar]="true" [yearNavigator]="true" yearRange="2023:2050" [dateFormat]="'yy-mm-dd'"
+                        [showIcon]="true" [readonlyInput]="true" [showOnFocus]="false" [inputStyle]="{'width':'8rem'}"
+                        appendTo="body">
+                    </p-calendar>
+                </div>
+            </ng-container>
+
+            <!-- notes -->
+            <div class="col-4">
+                <label for="notes">Notes</label>
+            </div>
+            <div class="col-8">
+                <textarea pInputTextarea formControlName="notes" cols="50"></textarea>
+            </div>
+
+            <!-- email -->
+            <div class="col-4">
+                <label for="emailNotification">Notify email</label>
+            </div>
+            <div class="col-8">
+                <p-checkbox inputId="emailNotification"
+                    [formControl]="instrumentInterestBearingForm.controls['emailNotification']"
+                    [binary]="true"></p-checkbox>
+            </div>
+
+            <p-footer>
+                <div class="formgroup-inline">
+                    <div class="field">
+                        <button pButton type="submit" label="Submit" [disabled]="instrumentInterestBearingForm.invalid"
+                            icon="pi pi-check"></button>
+                    </div>
+                    <div class="field">
+                        <button pButton type="reset" label="Cancel" (click)="onCancel()"></button>
+                    </div>
+                </div>
+            </p-footer>
+
+        </div>
+    </form>
+</p-dialog>
