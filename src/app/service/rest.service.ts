@@ -8,12 +8,14 @@ import { SaveHoldingRequest } from '../portfolio/portfolio-holding-management/Sa
 import { catchError, concatMap, map } from 'rxjs/operators';
 import { PositionSnapshot } from '../portfolio/purge-position-snapshot/PositionSnapshot';
 import { IHoldingDetail } from '../portfolio/portfolio-holding-management/IHoldingDetail';
-import { InstrumentInterestBearing } from '../portfolio/instrument-maintenance/InstrumentInterestBearing';
+import { InstrumentInterestBearing } from '../portfolio/instrument-maintenance/interest-bearing/InstrumentInterestBearing';
 import { IPortfolioWithDependentFlags } from '../portfolio/portfolio-maintenance/IPortfolioWithDependentFlags';
 import { Portfolio } from '../portfolio/portfolio-holding-management/Portfolio';
 import { HolderAndName } from '../portfolio/portfolio-maintenance/HolderAndName';
 import { ReportJobResponse } from '../portfolio/ReportJobResponse';
-import { InstrumentBond } from '../portfolio/instrument-maintenance/InstrumentBond';
+import { InstrumentBond } from '../portfolio/instrument-maintenance/bond/InstrumentBond';
+import { InstrumentEtfStock } from '../portfolio/instrument-maintenance/etf-stock/InstrumentEtfStock';
+import { InstrumentMutualFund } from '../portfolio/instrument-maintenance/mutual-fund/InstrumentMutualFund';
 
 @Injectable({
     providedIn: 'root'
@@ -153,6 +155,9 @@ export class RestService {
     getPaymentFrequencies(): Observable<Array<string>> {
         return this.http.get<Array<string>>(`${this.serviceUrl}/protected/referenceDataController/getPaymentFrequencies`);
     }
+    getExchanges(): Observable<Array<string>> {
+        return this.http.get<Array<string>>(`${this.serviceUrl}/protected/referenceDataController/getExchanges`);
+    }
 
     saveInstrumentInterestBearing(instrumentInterestBearing: InstrumentInterestBearing): Observable<HttpResponse<any>> {
         return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/saveInstrumentInterestBearing`, instrumentInterestBearing);
@@ -168,6 +173,32 @@ export class RestService {
     deleteInstrumentBond(instrumentBond: InstrumentBond): Observable<HttpResponse<any>> {
         const id = RestService.idFromUrl(instrumentBond._links.self.href);
         return this.http.delete<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/deleteInstrumentBond/${id}`);
+    }
+
+    saveInstrumentMutualFund(instrumentMutualFund: InstrumentMutualFund): Observable<HttpResponse<any>> {
+        return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/saveInstrumentMutualFund`, instrumentMutualFund);
+    }
+    deleteInstrumentMutualFund(instrumentMutualFund: InstrumentMutualFund): Observable<HttpResponse<any>> {
+        const id = RestService.idFromUrl(instrumentMutualFund._links.self.href);
+        return this.http.delete<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/deleteInstrumentMutualFund/${id}`);
+    }
+
+    // Handles stock and etf instrument types
+    saveInstrumentDetail(instrumentDetail: InstrumentEtfStock, instrumentType: string): Observable<HttpResponse<any>> {
+        if (instrumentType === 'ETF') {
+            return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/saveInstrumentEtf`, instrumentDetail);
+        } else {
+            return this.http.put<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/saveInstrumentStock`, instrumentDetail);
+        }
+    }
+    // Handles stock and etf instrument types
+    deleteInstrumentDetail(instrumentDetail: InstrumentEtfStock, instrumentType: string): Observable<HttpResponse<any>> {
+        const id = RestService.idFromUrl(instrumentDetail._links.self.href);
+        if (instrumentType === 'ETF') {
+            return this.http.delete<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/deleteInstrumentEtf/${id}`);
+        } else {
+            return this.http.delete<HttpResponse<any>>(`${this.serviceUrl}/protected/instrumentController/deleteInstrumentStock/${id}`);
+        }
     }
 
     getDefaultDaysToNotify(): Observable<number> {

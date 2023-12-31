@@ -1,0 +1,120 @@
+<div style="margin-top: 1rem;" *ngIf="instrumentEtfStocks">
+    <p-table #dt [value]="instrumentEtfStocks" [paginator]="instrumentEtfStockCount != 0"
+        [rowsPerPageOptions]="[10,20,30]" [rows]=" 20" [totalRecords]="instrumentEtfStockCount"
+        [loading]="loadingStatus" selectionMode="single" [(selection)]="instrumentEtfStockSelectedRow"
+        (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" dataKey="id"
+        [globalFilterFields]="['instrument.name','instrument.currency','exchange']">
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <span>Instrument - {{instrumentType}}</span>
+                <span class="ml-auto">
+                    <input type="text" pInputText (input)="applyFilterGlobal($event, 'contains')"
+                        placeholder="Search for ..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>Currency</th>
+                <th>Ticker</th>
+                <th>Exchange</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-instrumentEtfStock>
+            <tr [pSelectableRow]="instrumentEtfStock" style="line-height: 1rem;">
+                <td>{{instrumentEtfStock.instrument.name}}</td>
+                <td>{{instrumentEtfStock.instrument.currency}}</td>
+                <td>{{instrumentEtfStock.instrument.ticker}}</td>
+                <td>{{instrumentEtfStock.exchange}}</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div>
+                <button type="button" pButton icon="pi pi-plus" (click)="showDialog(crudEnum.ADD)" label="Add"></button>
+                <button type="button" pButton icon="pi pi-pencil" style="margin-left:0.5rem;"
+                    (click)="showDialog(crudEnum.UPDATE)" label="Modify"
+                    [disabled]="modifyAndDeleteButtonsDisable"></button>
+                <button type="button" pButton icon="pi pi-minus" style="margin-left:0.5rem;"
+                    (click)="showDialog(crudEnum.DELETE)" label="Delete"
+                    [disabled]="modifyAndDeleteButtonsDisable"></button>
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog header="Instrument - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
+    [modal]="true" [style]="{width: '45vw'}" (onHide)="onCancel()">
+
+    <form [formGroup]="instrumentEtfStockForm" (ngSubmit)="onSubmit()" novalidate>
+
+        <p-messages></p-messages>
+
+        <div class="grid" style="width: 30em;">
+
+            <!-- name-->
+            <div class="col-4">
+                <label for="name">Name</label>
+            </div>
+            <div class="col-8">
+                <input id="name" type="text" pInputText formControlName="name" class="p-inputtext" maxlength="64"
+                    size="50" />
+                <div *ngIf="instrumentEtfStockForm.controls.name.invalid && instrumentEtfStockForm.controls.name.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <!-- currency-->
+            <div class="col-4">
+                <label for="currency">Currency</label>
+            </div>
+            <div class="col-8">
+                <p-dropdown id="currency" [options]="currencies" formControlName="currency"
+                    placeholder="Select currency" [showClear]="true">
+                </p-dropdown>
+                <div *ngIf="instrumentEtfStockForm.controls.currency.invalid && instrumentEtfStockForm.controls.currency.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+
+            <!-- exchange -->
+            <div class="col-4">
+                <label for="exchange">Exchange</label>
+            </div>
+            <div class="col-8">
+                <p-dropdown id="exchange" [options]="exchanges" formControlName="exchange" placeholder="Select exchange"
+                    [showClear]="true">
+                </p-dropdown>
+                <div *ngIf="instrumentEtfStockForm.controls.exchange.invalid && instrumentEtfStockForm.controls.exchange.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <!-- ticker -->
+            <div class="col-4">
+                <label for="ticker">Ticker</label>
+            </div>
+            <div class="col-8">
+                <input id="ticker" type="text" pInputText formControlName="ticker" class="p-inputtext" minlength=""
+                    maxlength="16" />
+                <div *ngIf="instrumentEtfStockForm.controls.ticker.invalid && instrumentEtfStockForm.controls.ticker.touched"
+                    class="red-font">
+                    Field must be between 1 and 16 characters</div>
+            </div>
+
+            <p-footer>
+                <div class="formgroup-inline">
+                    <div class="field">
+                        <button pButton type="submit" label="Submit" [disabled]="instrumentEtfStockForm.invalid"
+                            icon="pi pi-check"></button>
+                    </div>
+                    <div class="field">
+                        <button pButton type="reset" label="Cancel" (click)="onCancel()"></button>
+                    </div>
+                </div>
+            </p-footer>
+
+        </div>
+    </form>
+</p-dialog>

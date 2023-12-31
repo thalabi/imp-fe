@@ -1,4 +1,4 @@
-import { Instrument } from "../portfolio-holding-management/Instrument";
+import { Instrument } from "../../portfolio-holding-management/Instrument";
 
 export interface InstrumentBond {
     id: number;

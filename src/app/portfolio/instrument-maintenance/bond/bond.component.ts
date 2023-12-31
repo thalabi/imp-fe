@@ -5,7 +5,7 @@ import { RestService } from '../../../service/rest.service';
 import { SessionService } from '../../../service/session.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CrudEnum } from '../../../crud-enum';
-import { InstrumentBond } from '../InstrumentBond';
+import { InstrumentBond } from './InstrumentBond';
 import { InstrumentMaintenanceComponent } from '../instrument-maintenance.component';
 import { Instrument } from '../../portfolio-holding-management/Instrument';
 
@@ -58,7 +58,7 @@ export class BondComponent extends InstrumentMaintenanceComponent implements OnI
 
     ngOnInit(): void {
         this.getCurrencies()
-        this.getInstrumentTypes()
+        //this.getInstrumentTypes()
         this.getPaymentFrequencies()
         // this.getTerms()
         //this.getHolders()

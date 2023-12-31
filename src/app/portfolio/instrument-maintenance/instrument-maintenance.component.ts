@@ -13,6 +13,8 @@ import { HolderAndName } from '../portfolio-maintenance/HolderAndName';
     styleUrls: ['./instrument-maintenance.component.css']
 })
 export class InstrumentMaintenanceComponent extends BaseComponent implements OnInit {
+    selectedInstrumentType: string = ''
+
     currencies: Array<string> = []
     financialInstitutions: Array<string> = []
     holderOptions: Array<{ value: string, name: string }> = []
@@ -21,6 +23,7 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
     termOptions: Array<{ value: string, name: string }> = []
     registeredAccountOptions: Array<{ value: string | null, name: string }> = []
     paymentFrequencies: Array<string> = []
+    exchanges: Array<string> = []
 
     constructor(
         public restService: RestService,
@@ -31,6 +34,15 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
     }
     ngOnInit(): void {
         this.getInstrumentTypes()
+    }
+
+    onChangeInstrumentType(event: any) {
+        console.log('this.selectedInstrumentType', this.selectedInstrumentType)
+        if (! /* not */['INTEREST_BEARING', 'BOND', 'ETF', 'STOCK', 'MUTUAL_FUND'].includes(this.selectedInstrumentType)) {
+            this.messageService.add({ severity: 'warn', summary: 'This instrument type is not supported at this time.' })
+            return
+        }
+        this.messageService.clear()
     }
 
     getCurrencies() {
@@ -157,6 +169,23 @@ export class InstrumentMaintenanceComponent extends BaseComponent implements OnI
                     next: (data: Array<string>) => {
                         console.log('data', data)
                         this.paymentFrequencies = data
+                    },
+                    complete: () => {
+                        console.log('http request completed')
+                    },
+                    error: (httpErrorResponse: HttpErrorResponse) => {
+                        this.messageService.add({ severity: 'error', summary: httpErrorResponse.status.toString(), detail: this.extractMessage(httpErrorResponse) })
+                    }
+                });
+    }
+
+    getExchanges() {
+        this.restService.getExchanges()
+            .subscribe(
+                {
+                    next: (data: Array<string>) => {
+                        console.log('data', data)
+                        this.exchanges = data
                     },
                     complete: () => {
                         console.log('http request completed')

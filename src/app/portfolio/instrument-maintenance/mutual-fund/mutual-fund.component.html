@@ -1,0 +1,120 @@
+<div style="margin-top: 1rem;" *ngIf="instrumentMutualFunds">
+    <p-table #dt [value]="instrumentMutualFunds" [paginator]="instrumentMutualFundCount != 0"
+        [rowsPerPageOptions]="[10,20,30]" [rows]=" 20" [totalRecords]="instrumentMutualFundCount"
+        [loading]="loadingStatus" selectionMode="single" [(selection)]="instrumentMutualFundSelectedRow"
+        (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+        dataKey="_links.instrumentMutualFund.href"
+        [globalFilterFields]="['instrument.name','instrument.currency','exchange']">
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <span>Instrument - {{instrumentType}}</span>
+                <span class="ml-auto">
+                    <input type="text" pInputText (input)="applyFilterGlobal($event, 'contains')"
+                        placeholder="Search for ..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>Currency</th>
+                <th>Ticker</th>
+                <th>Company</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-instrumentMutualFund>
+            <tr [pSelectableRow]="instrumentMutualFund" style="line-height: 1rem;">
+                <td>{{instrumentMutualFund.instrument.name}}</td>
+                <td>{{instrumentMutualFund.instrument.currency}}</td>
+                <td>{{instrumentMutualFund.instrument.ticker}}</td>
+                <td>{{instrumentMutualFund.company}}</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div>
+                <button type="button" pButton icon="pi pi-plus" (click)="showDialog(crudEnum.ADD)" label="Add"></button>
+                <button type="button" pButton icon="pi pi-pencil" style="margin-left:0.5rem;"
+                    (click)="showDialog(crudEnum.UPDATE)" label="Modify"
+                    [disabled]="modifyAndDeleteButtonsDisable"></button>
+                <button type="button" pButton icon="pi pi-minus" style="margin-left:0.5rem;"
+                    (click)="showDialog(crudEnum.DELETE)" label="Delete"
+                    [disabled]="modifyAndDeleteButtonsDisable"></button>
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog header="Instrument - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
+    [modal]="true" [style]="{width: '45vw'}" (onHide)="onCancel()">
+
+    <form [formGroup]="instrumentMutualFundForm" (ngSubmit)="onSubmit()" novalidate>
+
+        <p-messages></p-messages>
+
+        <div class="grid" style="width: 30em;">
+
+            <!-- name-->
+            <div class="col-4">
+                <label for="name">Name</label>
+            </div>
+            <div class="col-8">
+                <input id="name" type="text" pInputText formControlName="name" class="p-inputtext" maxlength="64"
+                    size="50" />
+                <div *ngIf="instrumentMutualFundForm.controls.name.invalid && instrumentMutualFundForm.controls.name.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <!-- currency-->
+            <div class="col-4">
+                <label for="currency">Currency</label>
+            </div>
+            <div class="col-8">
+                <p-dropdown id="currency" [options]="currencies" formControlName="currency"
+                    placeholder="Select currency" [showClear]="true">
+                </p-dropdown>
+                <div *ngIf="instrumentMutualFundForm.controls.currency.invalid && instrumentMutualFundForm.controls.currency.touched"
+                    class="red-font">
+                    Field is required</div>
+            </div>
+
+            <!-- ticker -->
+            <div class="col-4">
+                <label for="ticker">Ticker</label>
+            </div>
+            <div class="col-8">
+                <input id="ticker" type="text" pInputText formControlName="ticker" class="p-inputtext" minlength=""
+                    maxlength="16" />
+                <div *ngIf="instrumentMutualFundForm.controls.ticker.invalid && instrumentMutualFundForm.controls.ticker.touched"
+                    class="red-font">
+                    Field must be between 1 and 16 characters</div>
+            </div>
+
+
+            <!-- company -->
+            <div class="col-4">
+                <label for="company">Company</label>
+            </div>
+            <div class="col-8">
+                <input id="company" type="text" pInputText formControlName="company" class="p-inputtext" minlength=""
+                    maxlength="255" />
+                <div *ngIf="instrumentMutualFundForm.controls.company.invalid && instrumentMutualFundForm.controls.company.touched"
+                    class="red-font">
+                    Field must be between 1 and 255 characters</div>
+            </div>
+
+            <p-footer>
+                <div class="formgroup-inline">
+                    <div class="field">
+                        <button pButton type="submit" label="Submit" [disabled]="instrumentMutualFundForm.invalid"
+                            icon="pi pi-check"></button>
+                    </div>
+                    <div class="field">
+                        <button pButton type="reset" label="Cancel" (click)="onCancel()"></button>
+                    </div>
+                </div>
+            </p-footer>
+
+        </div>
+    </form>
+</p-dialog>

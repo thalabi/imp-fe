@@ -22,6 +22,8 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { FixedIncomeInstrumentReportComponent } from './fixed-income-instrument-report/fixed-income-instrument-report.component';
 import { InterestBearingComponent } from '../portfolio/instrument-maintenance/interest-bearing/interest-bearing.component';
 import { BondComponent } from './instrument-maintenance/bond/bond.component';
+import { EtfStockComponent } from './instrument-maintenance/etf-stock/etf-stock.component';
+import { MutualFundComponent } from './instrument-maintenance/mutual-fund/mutual-fund.component';
 
 
 @NgModule({
@@ -35,7 +37,9 @@ import { BondComponent } from './instrument-maintenance/bond/bond.component';
         PortfolioMaintenanceComponent,
         FixedIncomeInstrumentReportComponent,
         InterestBearingComponent,
-        BondComponent
+        BondComponent,
+        EtfStockComponent,
+        MutualFundComponent
     ],
     imports: [
         CommonModule,

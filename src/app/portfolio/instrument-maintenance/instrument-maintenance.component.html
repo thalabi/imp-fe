@@ -1,17 +1,14 @@
 <div>
-    <p-dropdown [options]="instrumentTypes" placeholder="Select instrument type" [showClear]="true"
-        #selectedInstrumentType>
-        <ng-template pTemplate="item" let-instrumentType>
-            <div>
-                {{instrumentType}}
-            </div>
-        </ng-template>
+    <p-dropdown [options]="instrumentTypes" [(ngModel)]="selectedInstrumentType" placeholder="Select instrument type"
+        (onChange)="onChangeInstrumentType($event)" [showClear]="true">
     </p-dropdown>
-
 </div>
 
-<container-element [ngSwitch]="selectedInstrumentType.value">
+<container-element [ngSwitch]="selectedInstrumentType">
     <app-interest-bearing *ngSwitchCase="'INTEREST_BEARING'"
-        [instrumentType]="selectedInstrumentType.value"></app-interest-bearing>
-    <app-bond *ngSwitchCase="'BOND'" [instrumentType]="selectedInstrumentType.value"></app-bond>
+        [instrumentType]="selectedInstrumentType"></app-interest-bearing>
+    <app-bond *ngSwitchCase="'BOND'" [instrumentType]="selectedInstrumentType"></app-bond>
+    <app-etf *ngSwitchCase="'ETF'" [instrumentType]="selectedInstrumentType"></app-etf>
+    <app-etf *ngSwitchCase="'STOCK'" [instrumentType]="selectedInstrumentType"></app-etf>
+    <app-mutual-fund *ngSwitchCase="'MUTUAL_FUND'" [instrumentType]="selectedInstrumentType"></app-mutual-fund>
 </container-element>
