@@ -4,7 +4,7 @@
         [loading]="loadingStatus" selectionMode="single" [(selection)]="instrumentMutualFundSelectedRow"
         (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
         dataKey="_links.instrumentMutualFund.href"
-        [globalFilterFields]="['instrument.name','instrument.currency','exchange']">
+        [globalFilterFields]="['instrument.name','instrument.currency','instrument.ticker','company']">
         <ng-template pTemplate="caption">
             <div class="flex">
                 <span>Instrument - {{instrumentType}}</span>
