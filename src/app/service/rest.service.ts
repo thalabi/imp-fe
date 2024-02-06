@@ -80,6 +80,22 @@ export class RestService {
         console.log('entityNameResource', entityNameResource)
         return this.http.get(this.serviceUrl + '/protected/data-rest/' + entityNameResource + '?page=' + pageNumber + '&size=' + pageSize + sortQueryParams + projectionParam)
     }
+    getTableData2(tableName: string, searchCriteria: string, pageNumber: number, pageSize: number, sortColumns?: Array<string>, projection?: string): Observable<any> {
+        searchCriteria = encodeURIComponent(searchCriteria)
+        let sortQueryParams: string = ''
+        if (sortColumns) {
+            console.log('sortColumns', sortColumns)
+            sortColumns.forEach(sortColumnAndDirection => {
+                sortQueryParams = sortQueryParams + "&sort=" + sortColumnAndDirection
+            })
+            console.log('sortQueryParams', sortQueryParams)
+        }
+        const projectionParam: string = projection ? `&projection=${projection}` : ''
+
+        const entityNameResource = RestService.toPlural(RestService.toCamelCase(tableName))
+        console.log('entityNameResource', entityNameResource)
+        return this.http.get(this.serviceUrl + '/protected/genericEntityController/findAll?' + 'tableName=' + tableName + '&search=' + searchCriteria + '&page=' + pageNumber + '&size=' + pageSize + sortQueryParams + projectionParam)
+    }
 
     getTableMetaDataAlps(tableName: string): Observable<any> {
         const entityNameResource = RestService.toPlural(RestService.toCamelCase(tableName))

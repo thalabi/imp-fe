@@ -25,7 +25,12 @@
         [rowsPerPageOptions]="[10,20,30]" [rows]=" 20" [totalRecords]="totalRowCount" [loading]="loadingStatus">
         <ng-template pTemplate="header" let-columns>
             <tr>
-                <th *ngFor="let column of columns">{{column.header}}</th>
+                <th *ngFor="let column of columns">
+                    {{column.header}}
+                    <p-columnFilter *ngIf="column.filterable == 'true'" [type]="column.type" [field]="column.name"
+                        [minFractionDigits]="column.fractionDigits" [maxFractionDigits]="column.fractionDigits"
+                        display="menu" [showOperator]="false" [showAddButton]="false"></p-columnFilter>
+                </th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-tableRow let-columns="columns">

@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { LazyLoadEvent, MessageService } from 'primeng/api';
+import { FilterMetadata, LazyLoadEvent, MessageService } from 'primeng/api';
 import { RestService } from '../service/rest.service';
 import { TableListResponse } from './TableListResponse';
 import { UploadResponse } from './UploadResponse';
@@ -28,7 +28,7 @@ export class FileTransferComponent implements OnInit {
     tableRows = [{}]
     totalRowCount: number = 0
     loadingStatus: boolean = false;
-    columns: { name: string; header: string; order: number; format: string }[] = [];
+    columns: { name: string; header: string; order: number; format: string, filterable: boolean, type: string, fractionDigits: number }[] = [];
     tableFileName: string = ''
     sortColumns: Array<string> = []
 
@@ -256,6 +256,7 @@ export class FileTransferComponent implements OnInit {
                             console.log('columnAttributesMap', columnAttributesMap)
                             // 1) title attribute
                             let header: string = columnAttributesMap.get('title')
+                            // If title attribute is not specified use the column name to generate the header
                             if (! /* not */ header) {
                                 // use column name to generate a header. eq firstName => First Name
                                 header = columnName[0].toUpperCase() + columnName.slice(1)
@@ -265,8 +266,16 @@ export class FileTransferComponent implements OnInit {
                             let columnOrder: number = columnAttributesMap.get('columnDisplayOrder')
                             // 3) format attribute
                             let format: string = columnAttributesMap.get('format')
-                            this.columns.push({ name: columnName, header: header, order: columnOrder ?? 1, format: format })
-                            // 4) sortOrder and sortDirection attributes
+                            // 4) filterable attribute
+                            let filterable: boolean = columnAttributesMap.get('filterable')
+                            // 5) type attribute (text, numeric, boolean or date) see https://www.primefaces.org/primeng-v14-lts/table#:~:text=p%2DcolumnFilter%20component.-,Data%20Types,-ColumnFilter%20requires%20a
+                            let type: string = columnAttributesMap.get('type')
+                            // 6) fractionDigits attribute
+                            let fractionDigits: number = columnAttributesMap.get('fractionDigits')
+
+
+                            this.columns.push({ name: columnName, header: header, order: columnOrder ?? 1, format: format, filterable: filterable, type: type, fractionDigits: fractionDigits })
+                            // 7) sortOrder and sortDirection attributes
                             if (columnAttributesMap.get('sortOrder')) {
                                 const sortOrder: number = columnAttributesMap.get('sortOrder')
                                 console.log('sortOrder', sortOrder)
@@ -298,10 +307,28 @@ export class FileTransferComponent implements OnInit {
         this.loadingStatus = true
         const pageSize = lazyLoadEvent.rows ?? 20
         const pageNumber = (lazyLoadEvent.first ?? 0) / pageSize;
-        console.log(pageNumber, pageSize)
+        //const filters: { [s: string]: FilterMetadata[] } | undefined = lazyLoadEvent.filters
+        const filters: any = lazyLoadEvent.filters
+        console.log('filters', filters)
+        console.log('pageNumber', pageNumber, 'pageSize', pageSize, 'filters', filters)
+        let searchCriteria: string = ''
+        if (filters) {
+            console.log('Object.keys(filters)', Object.keys(filters))
+            Object.keys(filters).forEach(columnName => {
+                console.log('columeName', columnName, 'matchMode', filters[columnName][0].matchMode, 'value', filters[columnName][0].value)
+                //searchCriteria += columnName + filters[columnName][0].matchMode + filters[columnName][0].value + ","
+                if (filters[columnName][0].value) {
+                    searchCriteria += columnName + '|' + filters[columnName][0].matchMode + '|' + filters[columnName][0].value + ","
+                }
+            })
+            if (searchCriteria.length > 0) {
+                searchCriteria = searchCriteria.slice(0, searchCriteria.length - 1)
+            }
+            console.log('searchCriteria', searchCriteria)
+        }
         const entityNameResource = RestService.toPlural(RestService.toCamelCase(this.selectedTable))
         console.log('entityNameResource 2', entityNameResource)
-        this.restService.getTableData(this.selectedTable, pageNumber, pageSize, this.sortColumns)
+        this.restService.getTableData2(this.selectedTable, searchCriteria, pageNumber, pageSize, this.sortColumns)
             .subscribe(
                 {
                     next: (data: any) => {
@@ -327,6 +354,7 @@ export class FileTransferComponent implements OnInit {
                     }
                 });
     }
+
     /*
     downloads file and return file name
     */
