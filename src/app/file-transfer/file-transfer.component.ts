@@ -318,7 +318,11 @@ export class FileTransferComponent implements OnInit {
                 console.log('columeName', columnName, 'matchMode', filters[columnName][0].matchMode, 'value', filters[columnName][0].value)
                 //searchCriteria += columnName + filters[columnName][0].matchMode + filters[columnName][0].value + ","
                 if (filters[columnName][0].value) {
-                    searchCriteria += columnName + '|' + filters[columnName][0].matchMode + '|' + filters[columnName][0].value + ","
+                    if (filters[columnName][0].value instanceof Date) {
+                        searchCriteria += columnName + '|' + filters[columnName][0].matchMode + '|' + new Date(filters[columnName][0].value).toISOString() + ","
+                    } else {
+                        searchCriteria += columnName + '|' + filters[columnName][0].matchMode + '|' + filters[columnName][0].value + ","
+                    }
                 }
             })
             if (searchCriteria.length > 0) {
