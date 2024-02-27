@@ -60,9 +60,12 @@ export class PortfolioHoldingManagementComponent extends BaseComponent implement
             .subscribe(
                 {
                     next: (data: any) => {
-                        this.portfolioRows = data._embedded[entityNameResource]
+                        //                        this.portfolioRows = data._embedded[entityNameResource]
+                        const portfolioRowsDeletedAndNonDeleted: Array<Portfolio> = data._embedded[entityNameResource]
+                        this.portfolioRows = portfolioRowsDeletedAndNonDeleted.filter((portfolioRow) => portfolioRow.logicallyDeleted == false)
                         console.log('this.portfolioRows', this.portfolioRows)
-                        this.portfolioCount = data.page.totalElements
+                        //                        this.portfolioCount = data.page.totalElements
+                        this.portfolioCount = this.portfolioRows.length
                     },
                     complete: () => {
                         console.log('http request completed')
