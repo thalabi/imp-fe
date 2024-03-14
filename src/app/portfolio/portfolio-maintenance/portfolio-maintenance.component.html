@@ -12,7 +12,7 @@
                 <th>Name</th>
                 <th>Financial institution</th>
                 <th>Account holder</th>
-                <th>Account number</th>
+                <th>Account ID</th>
                 <th>Currency</th>
                 <th>Has holdings</th>
                 <th>Has positions</th>
@@ -24,7 +24,7 @@
                 <td>{{portfolio.name}}</td>
                 <td>{{portfolio.financialInstitution}}</td>
                 <td>{{portfolio.holderName}}</td>
-                <td>{{portfolio.accountNumber}}</td>
+                <td>{{portfolio.accountId}}</td>
                 <td>{{portfolio.currency}}</td>
                 <td class="text-center">
                     <i class="pi" [ngClass]="{'true-icon pi-check-circle': portfolio.hasHoldings}"></i>
@@ -51,7 +51,7 @@
     </p-table>
 </div>
 
-<p-dialog header="Instrument - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
+<p-dialog header="Posrtfolio - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
     [modal]="true" [style]="{width: '30vw'}" (onHide)="onCancel()">
 
     <form [formGroup]="portfolioForm" (ngSubmit)="onSubmit()" novalidate>
@@ -100,13 +100,13 @@
                     Field is required</div>
             </div>
 
-            <!-- accountNumber -->
+            <!-- accountId -->
             <div class="col-4">
-                <label for="name">Account number</label>
+                <label for="name">Account ID</label>
             </div>
             <div class="col-8">
-                <input id="accountNumber" type="text" pInputText formControlName="accountNumber" class="p-inputtext"
-                    maxlength="16" size="16" />
+                <input id="accountId" type="text" pInputText formControlName="accountId" class="p-inputtext"
+                    maxlength="64" size="32" />
             </div>
 
             <!-- currency-->

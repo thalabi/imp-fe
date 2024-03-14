@@ -5,16 +5,16 @@
 
     <p-dropdown [options]="portfolioRows" [(ngModel)]="selectedPortfolio" placeholder="Select a portfolio"
         (onChange)="onChangePortfolio($event)" [showClear]="true" [filter]="true"
-        filterBy="financialInstitution,holder,accountNumber,name,currency">
+        filterBy="financialInstitution,holder,accountId,name,currency">
         <ng-template pTemplate="item" let-portfolio>
             <div>
-                {{portfolio.financialInstitution}}-{{portfolio.holder}}-{{portfolio.accountNumber}}-{{portfolio.name}}-{{portfolio.currency}}
+                {{portfolio.financialInstitution}}-{{portfolio.holder}}-{{portfolio.accountId}}-{{portfolio.name}}-{{portfolio.currency}}
             </div>
         </ng-template>
         <ng-template pTemplate="selectedItem">
             <div>
                 {{selectedPortfolio.financialInstitution}} - {{selectedPortfolio.holder}} -
-                {{selectedPortfolio.accountNumber}} -
+                {{selectedPortfolio.accountId}} -
                 {{selectedPortfolio.name}} -
                 {{selectedPortfolio.currency}}
             </div>
@@ -25,7 +25,7 @@
 
 </div>
 
-<div style="margin-top: 1rem;" *ngIf="selectedPortfolio.accountNumber">
+<div style="margin-top: 1rem;" *ngIf="selectedPortfolio.accountId">
     <p-table [value]="holdingDetailList" [paginator]="holdingDetailListCount != 0" [rowsPerPageOptions]="[10,20,30]"
         [rows]=" 20" [totalRecords]="holdingDetailListCount" [loading]="loadingStatus" selectionMode="single"
         [(selection)]="holdingDetailSelectedRow" (onRowSelect)="onRowSelect($event)"
