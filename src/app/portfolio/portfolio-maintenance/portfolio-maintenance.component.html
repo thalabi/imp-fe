@@ -12,7 +12,7 @@
                 <th>Name</th>
                 <th>Financial institution</th>
                 <th>Account holder</th>
-                <th>Account ID</th>
+                <th>Portfolio ID</th>
                 <th>Currency</th>
                 <th>Has holdings</th>
                 <th>Has positions</th>
@@ -24,7 +24,7 @@
                 <td>{{portfolio.name}}</td>
                 <td>{{portfolio.financialInstitution}}</td>
                 <td>{{portfolio.holderName}}</td>
-                <td>{{portfolio.accountId}}</td>
+                <td>{{portfolio.portfolioId}}</td>
                 <td>{{portfolio.currency}}</td>
                 <td class="text-center">
                     <i class="pi" [ngClass]="{'true-icon pi-check-circle': portfolio.hasHoldings}"></i>
@@ -100,12 +100,12 @@
                     Field is required</div>
             </div>
 
-            <!-- accountId -->
+            <!-- portfolioId -->
             <div class="col-4">
-                <label for="name">Account ID</label>
+                <label for="name">Portfolio ID</label>
             </div>
             <div class="col-8">
-                <input id="accountId" type="text" pInputText formControlName="accountId" class="p-inputtext"
+                <input id="portfolioId" type="text" pInputText formControlName="portfolioId" class="p-inputtext"
                     maxlength="64" size="32" />
             </div>
 

@@ -116,7 +116,7 @@ export class PortfolioHoldingManagementComponent extends BaseComponent implement
     }
 
     private retrieveSelectedPortfolioHoldings() {
-        if (! /* not */ this.selectedPortfolio.accountId) {
+        if (! /* not */ this.selectedPortfolio.portfolioId) {
             this.holdingDetailList = []
             this.holdingDetailListCount = 0
             return

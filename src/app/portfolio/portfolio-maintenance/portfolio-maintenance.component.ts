@@ -51,7 +51,7 @@ export class PortfolioMaintenanceComponent extends BaseComponent implements OnIn
         holder: ['', Validators.required],
         financialInstitution: ['', Validators.required],
         currency: ['', Validators.required],
-        accountId: ['', Validators.required],
+        portfolioId: ['', Validators.required],
         logicallyDeleted: [false, Validators.required]
     })
 
@@ -157,7 +157,7 @@ export class PortfolioMaintenanceComponent extends BaseComponent implements OnIn
         console.log('this.instrumentInterestBearingSelectedRow', this.portfolioSelectedRow)
         this.portfolioForm.controls.name.patchValue(this.portfolioSelectedRow.name);
         this.portfolioForm.controls.holder.patchValue(this.portfolioSelectedRow.holder);
-        this.portfolioForm.controls.accountId.patchValue(this.portfolioSelectedRow.accountId);
+        this.portfolioForm.controls.portfolioId.patchValue(this.portfolioSelectedRow.portfolioId);
         this.portfolioForm.controls.financialInstitution.patchValue(this.portfolioSelectedRow.financialInstitution);
         this.portfolioForm.controls.currency.patchValue(this.portfolioSelectedRow.currency);
         this.portfolioForm.controls.logicallyDeleted.patchValue(this.portfolioSelectedRow.logicallyDeleted);
@@ -171,7 +171,7 @@ export class PortfolioMaintenanceComponent extends BaseComponent implements OnIn
             case CrudEnum.ADD:
                 savePortfolio.name = this.portfolioForm.controls.name.value
                 savePortfolio.holder = this.portfolioForm.controls.holder.value
-                savePortfolio.accountId = this.portfolioForm.controls.accountId.value
+                savePortfolio.portfolioId = this.portfolioForm.controls.portfolioId.value
                 savePortfolio.financialInstitution = this.portfolioForm.controls.financialInstitution.value
                 savePortfolio.currency = this.portfolioForm.controls.currency.value
                 savePortfolio.logicallyDeleted = this.portfolioForm.controls.logicallyDeleted.value
@@ -199,7 +199,7 @@ export class PortfolioMaintenanceComponent extends BaseComponent implements OnIn
                 savePortfolio.version = this.portfolioSelectedRow.version
                 savePortfolio.name = this.portfolioForm.controls.name.value
                 savePortfolio.holder = this.portfolioForm.controls.holder.value
-                savePortfolio.accountId = this.portfolioForm.controls.accountId.value
+                savePortfolio.portfolioId = this.portfolioForm.controls.portfolioId.value
                 savePortfolio.financialInstitution = this.portfolioForm.controls.financialInstitution.value
                 savePortfolio.currency = this.portfolioForm.controls.currency.value
                 savePortfolio.logicallyDeleted = this.portfolioForm.controls.logicallyDeleted.value

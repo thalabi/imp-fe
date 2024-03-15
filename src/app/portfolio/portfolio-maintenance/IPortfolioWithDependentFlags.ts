@@ -4,7 +4,7 @@ export interface IPortfolioWithDependentFlags {
     name: string;
     holder: string;
     holderName: string;
-    accountId: string;
+    portfolioId: string;
     currency: string;
     logicallyDeleted: boolean;
     hasHoldings: boolean;

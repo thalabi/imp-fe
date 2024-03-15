@@ -2,7 +2,7 @@ export interface Portfolio {
     id: number;
     financialInstitution: string;
     holder: string;
-    accountId: string;
+    portfolioId: string;
     name: string;
     currency: string;
     logicallyDeleted: boolean;

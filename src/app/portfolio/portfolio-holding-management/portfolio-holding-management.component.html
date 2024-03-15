@@ -14,7 +14,7 @@
         <ng-template pTemplate="selectedItem">
             <div>
                 {{selectedPortfolio.financialInstitution}} - {{selectedPortfolio.holder}} -
-                {{selectedPortfolio.accountId}} -
+                {{selectedPortfolio.portfolioId}} -
                 {{selectedPortfolio.name}} -
                 {{selectedPortfolio.currency}}
             </div>
@@ -25,7 +25,7 @@
 
 </div>
 
-<div style="margin-top: 1rem;" *ngIf="selectedPortfolio.accountId">
+<div style="margin-top: 1rem;" *ngIf="selectedPortfolio.portfolioId">
     <p-table [value]="holdingDetailList" [paginator]="holdingDetailListCount != 0" [rowsPerPageOptions]="[10,20,30]"
         [rows]=" 20" [totalRecords]="holdingDetailListCount" [loading]="loadingStatus" selectionMode="single"
         [(selection)]="holdingDetailSelectedRow" (onRowSelect)="onRowSelect($event)"
