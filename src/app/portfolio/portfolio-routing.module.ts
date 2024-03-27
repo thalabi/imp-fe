@@ -8,7 +8,7 @@ import { InstrumentDueNotificationTriggerComponent } from './instrument-due-noti
 import { PortfolioHoldingManagementComponent } from './portfolio-holding-management/portfolio-holding-management.component';
 import { InstrumentMaintenanceComponent } from './instrument-maintenance/instrument-maintenance.component';
 import { PortfolioMaintenanceComponent } from './portfolio-maintenance/portfolio-maintenance.component';
-import { FixedIncomeInstrumentReportComponent } from './fixed-income-instrument-report/fixed-income-instrument-report.component';
+import { HoldingsReportComponent } from './holdings-report/holdings-report.component';
 
 const routes: Routes = [
     { path: '', component: PortfolioComponent },
@@ -18,7 +18,7 @@ const routes: Routes = [
     { path: 'priceHoldings', component: PriceHoldingsComponent, canActivate: [AuthGuard] },
     { path: 'instrumentMaintenance', component: InstrumentMaintenanceComponent, canActivate: [AuthGuard] },
     { path: 'instrumentDueNotificationTrigger', component: InstrumentDueNotificationTriggerComponent, canActivate: [AuthGuard] },
-    { path: 'fixedIncomeInstrumentReport', component: FixedIncomeInstrumentReportComponent, canActivate: [AuthGuard] }
+    { path: 'holdingsReport', component: HoldingsReportComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

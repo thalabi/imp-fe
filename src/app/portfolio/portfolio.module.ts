@@ -19,7 +19,7 @@ import { PortfolioHoldingManagementComponent } from './portfolio-holding-managem
 import { InstrumentMaintenanceComponent } from './instrument-maintenance/instrument-maintenance.component';
 import { PortfolioMaintenanceComponent } from './portfolio-maintenance/portfolio-maintenance.component';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { FixedIncomeInstrumentReportComponent } from './fixed-income-instrument-report/fixed-income-instrument-report.component';
+import { HoldingsReportComponent } from './holdings-report/holdings-report.component';
 import { InterestBearingComponent } from '../portfolio/instrument-maintenance/interest-bearing/interest-bearing.component';
 import { BondComponent } from './instrument-maintenance/bond/bond.component';
 import { EtfStockComponent } from './instrument-maintenance/etf-stock/etf-stock.component';
@@ -35,7 +35,7 @@ import { MutualFundComponent } from './instrument-maintenance/mutual-fund/mutual
         PortfolioHoldingManagementComponent,
         InstrumentMaintenanceComponent,
         PortfolioMaintenanceComponent,
-        FixedIncomeInstrumentReportComponent,
+        HoldingsReportComponent,
         InterestBearingComponent,
         BondComponent,
         EtfStockComponent,

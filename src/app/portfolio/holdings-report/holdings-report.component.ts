@@ -10,11 +10,11 @@ import { formatDate } from '@angular/common';
 import { ReportJobResponse } from '../ReportJobResponse';
 
 @Component({
-    selector: 'app-fixed-income-instrument-report',
-    templateUrl: './fixed-income-instrument-report.component.html',
-    styleUrls: ['./fixed-income-instrument-report.component.css']
+    selector: 'app-holdings-report',
+    templateUrl: './holdings-report.component.html',
+    styleUrls: ['./holdings-report.component.css']
 })
-export class FixedIncomeInstrumentReportComponent extends BaseComponent implements OnInit {
+export class HoldingsReportComponent extends BaseComponent implements OnInit {
 
     reportDispositionOptions: Array<string> = ['Download', 'Email']
     reportDisposition: string = 'Download'
@@ -48,7 +48,7 @@ export class FixedIncomeInstrumentReportComponent extends BaseComponent implemen
     }
     private generateAndDownload() {
         this.processingMessage = 'Generating report:'
-        this.restService.generateFixedIncomeInstrumentReportAndDownload()
+        this.restService.generateHoldinsgReportAndDownload()
             .subscribe(
                 {
                     next: (responses) => {
@@ -106,7 +106,7 @@ export class FixedIncomeInstrumentReportComponent extends BaseComponent implemen
     }
 
     private generateAndEmail() {
-        this.restService.generateFixedIncomeInstrumentReportAndEmail()
+        this.restService.generateHoldinsgReportAndEmail()
             .subscribe(
                 {
                     next: (reportJobResponse: ReportJobResponse) => {

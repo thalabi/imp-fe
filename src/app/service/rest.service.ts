@@ -239,8 +239,8 @@ export class RestService {
     //     return this.http.post(`${this.serviceUrl}/protected/portfolioController/generateFixedIncomeInstrumentReport?reportDisposition=${reportDisposition}`, undefined);
     // }
 
-    generateFixedIncomeInstrumentReportAndDownload(): Observable<any /*{ reportJobResponse: ReportJobResponse, blob: HttpEvent<Blob> }*/> {
-        return this.http.post<ReportJobResponse>(`${this.serviceUrl}/protected/instrumentController/generateFixedIncomeInstrumentReport?reportDisposition=Download`, undefined)
+    generateHoldinsgReportAndDownload(): Observable<any /*{ reportJobResponse: ReportJobResponse, blob: HttpEvent<Blob> }*/> {
+        return this.http.post<ReportJobResponse>(`${this.serviceUrl}/protected/instrumentController/generateHoldinsgReport?reportDisposition=Download`, undefined)
             .pipe(
                 map<ReportJobResponse, ReportJobResponse>(reportJobResponse => {
                     console.log('reportJobResponse', reportJobResponse)
@@ -257,8 +257,8 @@ export class RestService {
 
             )
     }
-    generateFixedIncomeInstrumentReportAndEmail(): Observable<ReportJobResponse> {
-        return this.http.post<ReportJobResponse>(`${this.serviceUrl}/protected/instrumentController/generateFixedIncomeInstrumentReport?reportDisposition=Email`, undefined)
+    generateHoldinsgReportAndEmail(): Observable<ReportJobResponse> {
+        return this.http.post<ReportJobResponse>(`${this.serviceUrl}/protected/instrumentController/generateHoldinsgReport?reportDisposition=Email`, undefined)
     }
 
     // parses the error from blob to json

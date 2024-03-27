@@ -33,7 +33,7 @@ export class MenuComponent implements OnInit {
                     { label: 'Portfolio Maintenance', routerLink: ['/portfolio/portfolioMaintenance'] },
                     { label: 'Instrument Maintenance', routerLink: ['/portfolio/instrumentMaintenance'] },
                     { label: 'Trigger Instrument Due Notification', routerLink: ['/portfolio/instrumentDueNotificationTrigger'] },
-                    { label: 'Fixed Income Instrument Report', routerLink: ['/portfolio/fixedIncomeInstrumentReport'] }
+                    { label: 'Holdings Report', routerLink: ['/portfolio/holdingsReport'] }
                 ]
             },
             // {
