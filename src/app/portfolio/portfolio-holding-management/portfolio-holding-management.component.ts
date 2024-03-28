@@ -22,6 +22,7 @@ export class PortfolioHoldingManagementComponent extends BaseComponent implement
     portfolioCount: number = 0
     selectedPortfolio: Portfolio = {} as Portfolio
     portfolioValue: number = 0
+    instruments: Array<Instrument> = []
     instrumentRowsByCurrency: Map<string | null, Array<Instrument>> = new Map()
     instrumentArrayForCurrency: Array<Instrument> = []
     loadingStatus: boolean = false;
@@ -84,12 +85,12 @@ export class PortfolioHoldingManagementComponent extends BaseComponent implement
             .subscribe(
                 {
                     next: (data: any) => {
-                        const allInstrumentRows: Array<Instrument> = data._embedded[entityNameResource]
-                        console.log('this.instrumentRows', allInstrumentRows)
-                        allInstrumentRows.forEach(instrumentRow => {
-                            let instrumentArrayForCurrency: Array<Instrument> = this.instrumentRowsByCurrency.get(instrumentRow.currency) || []
-                            instrumentArrayForCurrency.push(instrumentRow)
-                            this.instrumentRowsByCurrency.set(instrumentRow.currency, instrumentArrayForCurrency)
+                        this.instruments = data._embedded[entityNameResource]
+                        console.log('this.instruments', this.instruments)
+                        this.instruments.forEach(instrument => {
+                            let instrumentArrayForCurrency: Array<Instrument> = this.instrumentRowsByCurrency.get(instrument.currency) || []
+                            instrumentArrayForCurrency.push(instrument)
+                            this.instrumentRowsByCurrency.set(instrument.currency, instrumentArrayForCurrency)
                         })
                         console.log('this.instrumentRowsByCurrency', this.instrumentRowsByCurrency)
                     },
@@ -170,7 +171,8 @@ export class PortfolioHoldingManagementComponent extends BaseComponent implement
         this.sessionService.setDisableParentMessages(true)
         this.crudMode = crudMode;
         console.log('this.crudMode', this.crudMode);
-        this.instrumentArrayForCurrency = this.instrumentRowsByCurrency.get(this.selectedPortfolio.currency) || []
+        console.log('this.selectedPortfolio.currency', this.selectedPortfolio.currency)
+        this.instrumentArrayForCurrency = (this.selectedPortfolio.currency ? this.instrumentRowsByCurrency.get(this.selectedPortfolio.currency) : this.instruments) || []
         switch (this.crudMode) {
             case CrudEnum.ADD:
                 this.holdingDetailForm.controls.asOfDate.patchValue(new Date(new Date().setHours(0, 0, 0, 0))); // new date with only date portion
