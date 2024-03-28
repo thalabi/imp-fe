@@ -50,7 +50,7 @@ export class PortfolioMaintenanceComponent extends BaseComponent implements OnIn
         name: ['', Validators.required],
         holder: ['', Validators.required],
         financialInstitution: ['', Validators.required],
-        currency: ['', Validators.required],
+        currency: ['""'],
         portfolioId: ['', Validators.required],
         logicallyDeleted: [false, Validators.required]
     })

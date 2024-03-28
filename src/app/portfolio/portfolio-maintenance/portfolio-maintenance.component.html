@@ -51,7 +51,7 @@
     </p-table>
 </div>
 
-<p-dialog header="Posrtfolio - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
+<p-dialog header="Portfolio - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
     [modal]="true" [style]="{width: '30vw'}" (onHide)="onCancel()">
 
     <form [formGroup]="portfolioForm" (ngSubmit)="onSubmit()" novalidate>
@@ -118,9 +118,9 @@
                     placeholder="Select currency" [showClear]="true">
 
                 </p-dropdown>
-                <div *ngIf="portfolioForm.controls.currency.invalid && portfolioForm.controls.currency.touched"
+                <!-- <div *ngIf="portfolioForm.controls.currency.invalid && portfolioForm.controls.currency.touched"
                     class="red-font">
-                    Field is required</div>
+                    Field is required</div> -->
             </div>
 
             <!-- logicallyDeleted -->
