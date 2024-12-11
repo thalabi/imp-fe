@@ -29,7 +29,8 @@
                     {{column.header}}
                     <p-columnFilter *ngIf="column.filterable == 'true'" [type]="column.type" [field]="column.name"
                         [minFractionDigits]="column.fractionDigits" [maxFractionDigits]="column.fractionDigits"
-                        display="menu" [showOperator]="false" [showAddButton]="false"></p-columnFilter>
+                        display="menu" [showOperator]="false" [showAddButton]="false"
+                        [hideOnClear]="true"></p-columnFilter>
                 </th>
             </tr>
         </ng-template>
