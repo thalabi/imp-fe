@@ -317,7 +317,7 @@ export class FileTransferComponent implements OnInit {
             Object.keys(filters).forEach(columnName => {
                 console.log('columeName', columnName, 'matchMode', filters[columnName][0].matchMode, 'value', filters[columnName][0].value)
                 //searchCriteria += columnName + filters[columnName][0].matchMode + filters[columnName][0].value + ","
-                if (filters[columnName][0].value) {
+                if (filters[columnName][0].value !== null) {
                     if (filters[columnName][0].value instanceof Date) {
                         searchCriteria += columnName + '|' + filters[columnName][0].matchMode + '|' + new Date(filters[columnName][0].value).toISOString() + ","
                     } else {
