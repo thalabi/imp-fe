@@ -5,7 +5,7 @@
 
     <p-dropdown [options]="portfolioRows" [(ngModel)]="selectedPortfolio" placeholder="Select a portfolio"
         (onChange)="onChangePortfolio($event)" [showClear]="true" [filter]="true"
-        filterBy="financialInstitution,holder,accountId,name,currency">
+        filterBy="financialInstitution,holder,portfolioId,name,currency">
         <ng-template pTemplate="item" let-portfolio>
             <div>
                 {{portfolio.financialInstitution}}-{{portfolio.holder}}-{{portfolio.portfolioId}}-{{portfolio.name}}-{{portfolio.currency}}
@@ -77,7 +77,7 @@
     </p-table>
 </div>
 
-<p-dialog header="Holdings - {{crudMode}}" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
+<p-dialog header="Holdings - {{crudMode}} instrument" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
     [modal]="true" [style]="{width: '45vw'}">
 
     <form [formGroup]="holdingDetailForm" (ngSubmit)="onSubmit()" novalidate>
@@ -92,11 +92,8 @@
             <div class="col-8">
                 <p-dropdown [options]="instrumentArrayForCurrency" formControlName="instrument"
                     placeholder="Select an instrument" (onChange)="onChangeInstrument($event)" [showClear]="true"
-                    appendTo="body">
+                    filterBy="ticker,name" [filter]="true" appendTo="body">
                     <ng-template pTemplate="item" let-instrument>
-                        <!-- <div>
-                            {{instrument.ticker}}:{{instrument.exchange}} - {{instrument.name}}
-                        </div> -->
                         <div>
                             <ng-container *ngIf="instrument.type !== 'INTEREST_BEARING'">
                                 {{instrument.ticker}} -
