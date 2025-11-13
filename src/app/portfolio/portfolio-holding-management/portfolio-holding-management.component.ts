@@ -38,6 +38,7 @@ export class PortfolioHoldingManagementComponent extends BaseComponent implement
 
     holdingDetailForm: UntypedFormGroup = {} as UntypedFormGroup
 
+    today: Date = new Date()
 
     constructor(
         private formBuilder: UntypedFormBuilder,
@@ -300,4 +301,10 @@ export class PortfolioHoldingManagementComponent extends BaseComponent implement
         this.holdingDetailForm.reset()
         this.holdingDetailSelectedRow = {} as IHoldingDetail
     }
+
+    isMatured(date: string): boolean {
+        if (!date) return false
+        return new Date(date) < this.today
+    }
+
 }
