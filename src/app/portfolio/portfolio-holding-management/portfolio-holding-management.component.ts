@@ -302,9 +302,9 @@ export class PortfolioHoldingManagementComponent extends BaseComponent implement
         this.holdingDetailSelectedRow = {} as IHoldingDetail
     }
 
-    isMatured(date: string): boolean {
-        if (!date) return false
-        return new Date(date) < this.today
+    isMatured(dateString: string): boolean {
+        if (!dateString) return false
+        return new Date(dateString) < this.today
     }
 
 }
