@@ -28,9 +28,9 @@ export class MenuComponent implements OnInit {
                 label: 'Portfolio',
                 items: [
                     { label: 'Price Holdings', routerLink: ['/portfolio/priceHoldings'] },
-                    { label: 'Portfolio Holding Management', routerLink: ['/portfolio/portfolioHoldingManagement'] },
                     { label: 'Purge Position Snapshot', routerLink: ['/portfolio/purgePositionSnapshot'] },
                     { label: 'Portfolio Maintenance', routerLink: ['/portfolio/portfolioMaintenance'] },
+                    { label: 'Portfolio Holding Management', routerLink: ['/portfolio/portfolioHoldingManagement'] },
                     { label: 'Instrument Maintenance', routerLink: ['/portfolio/instrumentMaintenance'] },
                     { label: 'Trigger Instrument Due Notification', routerLink: ['/portfolio/instrumentDueNotificationTrigger'] },
                     { label: 'Holdings Report', routerLink: ['/portfolio/holdingsReport'] }
