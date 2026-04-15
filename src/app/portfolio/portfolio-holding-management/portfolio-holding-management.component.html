@@ -125,8 +125,8 @@
                 <label for="quantity">Quantity</label>
             </div>
             <div class="col-8">
-                <p-inputNumber id="quantity" formControlName="quantity" mode="decimal" [minFractionDigits]="4"
-                    [maxFractionDigits]="4" (onInput)="onInputQuantity($event)" appendTo="body">
+                <p-inputNumber id="quantity" formControlName="quantity" mode="decimal" [minFractionDigits]="5"
+                    [maxFractionDigits]="5" (onInput)="onInputQuantity($event)" appendTo="body">
                 </p-inputNumber>
                 <div *ngIf="holdingDetailForm.controls.quantity.invalid && holdingDetailForm.controls.quantity.touched"
                     class="red-font">
